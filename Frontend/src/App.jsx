@@ -12,15 +12,20 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMember, setIsMember] = useState(false);
+  const [isInvistigateur, setIsInvistigateur] = useState(false);
+
   const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
     const fetchAuthUser = async () => {
       try {
-        const { isAuthenticated, user, isAdmin } = await fetchUserData();
+        const { isAuthenticated, user, isAdmin ,isMember,isInvistigateur} = await fetchUserData();
         setUser(user);
         setIsAuthenticated(isAuthenticated);
         setIsAdmin(isAdmin);
+        setIsMember(isMember);
+        setIsInvistigateur(isInvistigateur);
         setDataLoaded(true);
 
         if (!isAuthenticated) {
@@ -57,11 +62,30 @@ function App() {
       <Route
         path="/user/*"
         element={
-          isAuthenticated && !isAdmin ? (
+          isAuthenticated && isMember ? (
             <Dashboard
               isAuthenticated={isAuthenticated}
               user={user}
               isAdmin={isAdmin}
+              isInvistigateur={isInvistigateur}
+              isMember={isMember}
+            />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/invis/*"
+        element={
+          isAuthenticated && isInvistigateur ? (
+            <Dashboard
+              isAuthenticated={isAuthenticated}
+              user={user}
+              isMember={isMember}
+              isAdmin={isAdmin}
+              isInvistigateur={isInvistigateur}
+              
             />
           ) : (
             <Navigate to="/" />
@@ -75,8 +99,10 @@ function App() {
             <SignIn />
           ) : isAdmin ? (
             <Navigate to="/admin/home" />
-          ) : (
+          ) : isMember ?(
             <Navigate to="/user/tasks" />
+          ) :  (
+            <Navigate to="/invis/myprojects" />
           )
         }
       />

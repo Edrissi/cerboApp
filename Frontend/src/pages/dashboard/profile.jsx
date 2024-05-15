@@ -21,12 +21,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import SuccessPopup from "@/layouts/SuccessPopup";
+import amine from '../../../public/img/amine.png'
 
 export function Profile({ isAuthenticated, user, isAdmin }) {
 
     const [selectedFile, setSelectedFile] = useState(null);
     const [userImage, setUserImage] = useState(user?.img);
-
 
 
     const handleFileChange = (e) => {
@@ -38,35 +38,31 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
       };
 
       const [Data, setData] = useState({
-        firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          phone: user.phone,
-          designation: user.designation,
-          facebook_url: user.facebook_url,
-          github_url: user.github_url,
-          linkedin_url: user.linkedin_url,
-          graduation_university : user.graduation_university,
-          graduate_at: user.graduate_at,
-          currentPassword: "",
+        // nom: user.nom,
+        //   prenom: user.prenom,
+        //   email: user.email,
+        //   titre: user.titre,
+        //   affilliation: user.affilliation,
+        //   specialite: user.specialite,
+        //   adresse: user.adresse,
+        //   structureRecherche: user.structureRecherche,
+          oldPassword: "",
           newPassword: "",
-          confirmPassword: ""
+        //   confirmPassword: ""
       });
 
         const [formData, setFormData] = useState({
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          phone: user.phone,
-          designation: user.designation,
-          facebook_url: user.facebook_url,
-          github_url: user.github_url,
-          linkedin_url: user.linkedin_url,
-          graduation_university : user.graduation_university,
-          graduate_at: user.graduate_at,
-          currentPassword: "",
+            // nom: user.nom,
+            // prenom: user.prenom,
+            // email: user.email,
+            // titre: user.titre,
+            // affilliation: user.affilliation,
+            // specialite: user.specialite,
+            // adresse: user.adresse,
+            // structureRecherche: user.structureRecherche,
+          oldPassword: "",
           newPassword: "",
-          confirmPassword: ""
+        //   confirmPassword: ""
         });
 
         const [error, setError] = useState(null);
@@ -94,28 +90,25 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
           
       
         const handleSubmit = async (e) => {
-          e.preventDefault();
+         e.preventDefault();
       
           try {
             const jwtCookie = Cookies.get('jwt');
+            console.log(formData)
             if (jwtCookie) {
-                const newFormData = selectedFile
-                ? { ...formData, img: selectedFile }
-                : formData;
-                console.log(newFormData.img);
-              const response = await axios.put('http://localhost:8000/api/user/profile/edit', newFormData, {
+              const response = await axios.put('http://localhost:8000/allUser/changePassword', formData, {
                 headers: {
                   Authorization: `Bearer ${jwtCookie}`,
                 },
               });
-              if(response.data.success){
-                setData(formData);
-                setError(null);
+              if (response.status === 200) {
                 setSuccess({
-                    value:true,
-                    message:'Successfully edited user.'
+                    value: true,
+                    message: 'Password updated successfully',
                 });
-              }
+                setError(null);
+                
+            }
             } 
           } catch (error) {
             setError(error.response.data.error);
@@ -129,13 +122,18 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
 
   return (
     <>
+    <div>{success.value && (
+    <Alert variant="success" onClose={() => setSuccess({ value: false, message: null })}>
+        {success.message}
+    </Alert>
+)}</div>
       <div class="grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
 
       <div class="col-span-full xl:col-auto">
         
           <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
           <div class="flex flex-col justify-center items-center">
-          <label class="relative top-12  z-10 left-57 shadow h-10 w-10 rounded-full bg-white ml-40 hover:shadow-lg cursor-pointer">
+          {/* <label class="relative top-12  z-10 left-57 shadow h-10 w-10 rounded-full bg-white ml-40 hover:shadow-lg cursor-pointer">
                 <input
                 type="file"
                 accept="image/*"
@@ -143,32 +141,32 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                 onChange={handleFileChange}
                 />
                 <i class="fa fa-pencil ml-3 mt-3 text-gray-600 hover:text-gray-900"></i>
-            </label>
-                  <img class="relative mb-2 rounded-full w-48 h-48 sm:mb-0 xl:mb-4 2xl:mb-0" src={userImage} alt="user img"/>
+            </label> */}
+                  <img class="relative mb-2 rounded-full w-48 h-48 sm:mb-0 xl:mb-4 2xl:mb-0" src={amine} alt="user img"/>
                   <div class="text-center mt-4">
                   <Typography variant="h5" color="blue-gray" >
-                  {Data.firstname}{' '} {Data.lastname}
+                  {user.nom}{' '} {user.prenom}
                 </Typography>   
                 <Typography variant="paragraph" class="text-gray-700">
-                {Data.designation}
+                {Data.titre}
                 </Typography>                         
                   </div>
               </div>
           </div>
           <div class="p-3 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
             <div className=" items-center gap-2 ">
-            <div className="text-center flex items-center gap-6 mb-3">
+            {/* <div className="text-center flex items-center gap-6 mb-3">
                 <FaPhone className="text-md" style={{ transform: 'scaleX(-1)', color: 'gray' }} />
-                <p>{Data.phone}</p>
-            </div>
+                <p>{Data.titre}</p>
+            </div> */}
 
                 
                 <div className="text-center fl flex gap-6 items-center mb-3">
                     <FaEnvelope className="text-md" style={{ color: 'gray' }} />
-                    <p>{Data.email}</p>
+                    <p>{user.email}</p>
                 </div>
 
-                <div className="text-center  fl flex gap-6 items-center mb-3 ">
+                {/* <div className="text-center  fl flex gap-6 items-center mb-3 ">
                     <FaBriefcase className="text-md " style={{ color: 'gray' }}/>
                     <p>{Data.graduate_at}</p>
                 </div>    
@@ -176,13 +174,13 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                 <div className="text-center  fl flex gap-6 items-center mb-3 ">
                     <FaGraduationCap className="text-xl " style={{ color: 'gray' }}/>
                     <p>{Data.graduation_university} </p>                    
-                </div>
+                </div> */}
                 
                            
             </div>
 
           </div>
-          <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+          {/* <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
           <div class="flex space-x-4 gap-6 justify-center">
                       <a  href={`${Data.facebook_url}`} target="_blank" class="text-gray-600 hover:text-gray-800">
                           <i class="fab fa-facebook fa-2x"></i>
@@ -194,13 +192,13 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                           <i class="fab fa-linkedin fa-2x"></i>
                       </a>
                   </div>
-          </div>
+          </div> */}
       </div>
 
       <div class="col-span-2">
             <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
             <Typography variant="h4" color="blue-gray" className="mb-4 ">
-               Settings
+               Profil
             </Typography>
             {error && (
             <div className="mb-4">
@@ -214,60 +212,62 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
 
                         <div class="col-span-6 sm:col-span-3">
                             <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                First Name
+                                Nom
                             </Typography>                           
                             <Input
                                     type="text"
                                     placeholder="First Name"
-                                    className="!bg-gray-50 !border !border-gray-300  text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 "
+                                    className="!bg-gray-100 !border !border-gray-300 text-gray-700 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900"
                                     labelProps={{
                                     className: "hidden",
                                     }} 
                                     containerProps={{ className: "min-w-[100px]" }}
-                                    defaultValue={formData.firstname}
-                                    onChange={handleChange}
+                                    defaultValue={user.nom}
+                                    // onChange={handleChange}
                                     name="firstname"
+                                    disabled 
                             />    
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
                             <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                Last Name
+                                Prenom
                             </Typography>    
                             <Input
                                     type="text"
                                     placeholder="Last Name"
-                                    className="!bg-gray-50 !border !border-gray-300  text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 "
+                                    className="!bg-gray-100 !border !border-gray-300 text-gray-700 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900"
                                     labelProps={{
                                     className: "hidden",
                                     }} 
                                     containerProps={{ className: "min-w-[100px]" }}
-                                    defaultValue = {formData.lastname}
-                                    onChange={handleChange}
+                                    defaultValue = {user.prenom}
+                                    // onChange={handleChange}
                                     name="lastname"
+                                    disabled 
                                 />                      
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
                                 <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                   Phone Number
+                                   Titre
                                 </Typography>                              
                                 <Input
-                                    type="tel"
-                                    placeholder="Phone Number"
+                                    type="text"
+                                    placeholder="Titre"
                                     className="!bg-gray-50 !border !border-gray-300  text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 "
                                     labelProps={{
                                     className: "hidden",
                                     }} 
                                     containerProps={{ className: "min-w-[100px]" }}
-                                    defaultValue = {formData.phone}
-                                    onChange={handleChange}
-                                    name="phone"
+                                    defaultValue = {user.titre}
+                                    // onChange={handleChange}
+                                    name="titre"
                             />   
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                                 <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                   Designation
+                                   Affilliation
                                 </Typography>    
                              <Input
                                     type="text"
@@ -277,49 +277,54 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                                     className: "hidden",
                                     }} 
                                     containerProps={{ className: "min-w-[100px]" }}
-                                    defaultValue = {formData.designation}
-                                    onChange={handleChange}
+                                    defaultValue = {user.affilliation}
+                                    // onChange={handleChange}
                                     name="designation"
                                 />                   
                             </div>
 
                             <div class="col-span-6 sm:col-span-3">
                                 <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                   Graduation University
+                                   Structure de Recherche
                                 </Typography>                              
                                 <Input
                                     type="text"
-                                    placeholder="Phone Number"
+                                    placeholder="Structure de Recherche"
                                     className="!bg-gray-50 !border !border-gray-300  text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 "
                                     labelProps={{
                                     className: "hidden",
                                     }} 
                                     containerProps={{ className: "min-w-[100px]" }}
-                                    defaultValue = {formData.graduation_university}
-                                    onChange={handleChange}
-                                    name="graduation_university"
+                                    defaultValue = {user.structureRecherche}
+                                    // onChange={handleChange}
+                                    name="structureRecherche"
                             />   
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                             <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                   Graduate At
+                                   Specialite
                             </Typography>  
                              <Input
-                                    type="date"
-                                    placeholder="Last Name"
+                                    type="text"
+                                    placeholder="Specialite"
                                     className="!bg-gray-50 !border !border-gray-300  text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 "
                                     labelProps={{
                                     className: "hidden",
                                     }} 
                                     containerProps={{ className: "min-w-[100px]" }}
-                                    defaultValue = {formData.graduate_at}
-                                    onChange={handleChange}
+                                    defaultValue = {user.specialite}
+                                    // onChange={handleChange}
                                     name="graduate_at"
-                                />                   
+                                /> 
+                                <div className="col-span-1 flex justify-end items-center mt-7">
+                                        <Button className="ml-4" variant="gradient" color="blue" onClick={"handleSubmit"}>
+                                            Save changes
+                                        </Button>
+                                    </div>                   
                             </div>
                     </div> 
         </div>
-        <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+        {/* <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
             <Typography variant="h4" color="blue-gray" className="mb-4 ">
                 Updating social media URLs
             </Typography>
@@ -378,10 +383,10 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                             />                       
                         </div>
                     </div>
-        </div>
+        </div> */}
         <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
             <Typography variant="h4" color="blue-gray" className="mb-4 ">
-              Password information
+              Changer Password
             </Typography>
                 <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-3">
@@ -396,9 +401,9 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                                 className: "hidden",
                                 }} 
                                 containerProps={{ className: "min-w-[100px]" }}
-                                defaultValue={formData.currentPassword}
+                                defaultValue={formData.oldPassword}
                                 onChange={handleChange}
-                                name="currentPassword"
+                                name="oldPassword"
                             />                       
                     </div>
 
@@ -417,7 +422,12 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                                 defaultValue={formData.newPassword}
                                 onChange={handleChange}
                                 name="newPassword"
-                            />                           
+                            />     
+                             <div class="col-span-1 flex justify-end items-center mt-4">
+                                <Button variant="gradient" color="blue" onClick={handleSubmit}>
+                                    changer Password
+                                </Button>          
+                            </div>                      
                             <div data-popover id="popover-password" role="tooltip" class="absolute z-10 invisible inline-block text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
                               <div class="p-3 space-y-2">
                                   <h3 class="font-semibold text-gray-900 dark:text-white">Must have at least 6 characters</h3>
@@ -446,9 +456,9 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                           <div data-popper-arrow></div>
                           </div>
                     </div>
+                   
 
-
-                    <div class="col-span-6 sm:col-span-3">
+                    {/* <div class="col-span-6 sm:col-span-3">
                         <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
                             Confirm password
                         </Typography>                           
@@ -464,17 +474,13 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                                 onChange={handleChange}
                                 name="confirmPassword"
                             />                       
-                    </div>
+                    </div> */}
 
                 </div>
            
         </div>
 
-        <div class="col-span-6 sm:col-full ml-4 ">
-            <Button variant="gradient" color="black" onClick={handleSubmit}>
-                Save changes 
-            </Button>          
-        </div>
+        
       </div>
 </div>
 

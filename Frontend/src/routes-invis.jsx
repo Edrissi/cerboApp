@@ -10,32 +10,24 @@ import {
     ClipboardDocumentListIcon 
   } from "@heroicons/react/24/solid";
   import { Profile} from "@/pages/dashboard";
- 
+  
   import UserProjects from "./pages/dashboard/projects/userprojects";
-  import { ProjectTable ,CreateProject,EditProject,ShowProject} from "@/pages/dashboard";
-
-  import MesProjects from "./pages/dashboard/projects/mesprojects";
+import MesProjects from "./pages/dashboard/projects/mesprojects";
+  import { CreateProject ,ShowProject} from "@/pages/dashboard";
   const icon = {
     className: "w-5 h-5 text-inherit",
   };
   
-  export const routesUser = [
+  export const routesInvis = [
     {
-      layout: "user",
+      layout: "invis",
       pages: [
-        {
-          icon: <TableCellsIcon  {...icon} />,
-          name: "projects",
-          path: "/projects",
-          element:<ProjectTable />,
-        },
         {
           icon: <TableCellsIcon  {...icon} />,
           name: "Mes projets",
           path: "/myprojects",
           element: <MesProjects />,
         },
-        
         // {
         //   icon: <ClipboardDocumentListIcon  {...icon} />,
         //   name: "tasks",
@@ -52,14 +44,11 @@ import {
           path: "/project/create",
           element: <CreateProject />,
         },
-        {
-          path: "/project/edit/:id",
-          element: <EditProject />,
-        },
+        
         {
           path: "/project/show/:id",
           element: <ShowProject />,
-        }
+        },
         
       ],
     },
@@ -68,5 +57,5 @@ import {
     
   ];
   
-  export default routesUser;
+  export default routesInvis;
   

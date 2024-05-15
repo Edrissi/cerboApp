@@ -5,7 +5,7 @@ const DeleteData = async (id , object) => {
   try {
     const jwtCookie = Cookies.get('jwt');
     if (jwtCookie) {
-      const response = await axios.delete(`http://localhost:8000/api/admin/${object}/delete/${id}`, {
+      const response = await axios.delete(`http://localhost:8000/admin/${object}/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${jwtCookie}`,
         },

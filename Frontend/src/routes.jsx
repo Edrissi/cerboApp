@@ -5,11 +5,11 @@ import {
   UsersIcon,
   ClipboardDocumentListIcon 
 } from "@heroicons/react/24/solid";
-import { Home, Profile, UserTable , ProjectTable , TaskTable, CreateProject, EditProject , 
+import { Home, Profile, UserTable , ProjectTable ,  CreateProject, EditProject , 
 
-  ShowProject , CreateTask , EditTask , ShowTask , CreateUser , ShowUser
+  ShowProject , CreateUser , ShowUser
   } from "@/pages/dashboard";
-
+import MesProjects from "./pages/dashboard/projects/mesprojects";
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
@@ -31,11 +31,17 @@ export const routes = [
         element: <ProjectTable />,
       },
       {
-        icon: <ClipboardDocumentListIcon  {...icon} />,
-        name: "tasks",
-        path: "/tasks",
-        element: <TaskTable />,
-      },
+          icon: <TableCellsIcon  {...icon} />,
+          name: "Mes projets",
+          path: "/myprojects",
+          element: <MesProjects />,
+        },
+      // {
+      //   icon: <ClipboardDocumentListIcon  {...icon} />,
+      //   name: "tasks",
+      //   path: "/tasks",
+      //   element: <TaskTable />,
+      // },
       {
         icon: <UsersIcon {...icon} />,
         name: "Membres",
@@ -66,25 +72,16 @@ export const routes = [
         path: "/project/show/:id",
         element: <ShowProject />,
       },
-
-      {
-        path: "/task/create",
-        element: <CreateTask />,
-      },
-      {
-        path: "/task/edit",
-        element: <EditTask />,
-      },
-      {
-        path: "/task/show/:id",
-        element: <ShowTask />,
-      },
       {
         path: "/user/create",
         element: <CreateUser />,
       },
       {
         path: "/user/show/:id",
+        element: <ShowUser />,
+      },
+      {
+        path: "/user/delete/:id",
         element: <ShowUser />,
       },
     ],

@@ -11,6 +11,7 @@ import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
 export function Sidenav({ brandImg, brandName, routes}) {
   const [controller, dispatch] = useMaterialTailwindController();
+  
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {
     dark: "bg-gradient-to-br from-gray-800 to-gray-900",
@@ -18,11 +19,15 @@ export function Sidenav({ brandImg, brandName, routes}) {
     transparent: "bg-transparent",
   };
 
+  const handleToggleSidenav = () => {
+    setOpenSidenav(dispatch, !openSidenav); // Toggle the openSidenav state
+  };
+
   return (
     <aside
       className={`${sidenavTypes[sidenavType]} ${
         openSidenav ? "translate-x-0" : "-translate-x-80"
-      } fixed inset-0 z-50 my-4 ml-1 h-[calc(100vh-32px)] w-60 rounded-xl transition-transform duration-300 xl:translate-x-0 border border-blue-gray-100`}
+      } fixed inset-0 z-50 w-60 transition-transform duration-300 xl:translate-x-0 border border-blue-gray-100 `}
     >
       <div
         className={`relative`}
@@ -37,11 +42,11 @@ export function Sidenav({ brandImg, brandName, routes}) {
         </Link>
         <IconButton
           variant="text"
-          color="white"
+          color="black"
           size="sm"
           ripple={false}
-          className="absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
-          onClick={() => setOpenSidenav(dispatch, false)}
+          className="absolute right-0 top-0 grid rounded-br-none rounded-tl-none "
+          onClick={handleToggleSidenav}
         >
           <XMarkIcon strokeWidth={2.5} className="h-5 w-5 text-white" />
         </IconButton>
@@ -53,7 +58,7 @@ export function Sidenav({ brandImg, brandName, routes}) {
               <li className="mx-3.5 mt-4 mb-2">
                 <Typography
                   variant="small"
-                  color={sidenavType === "dark" ? "white" : "blue-gray"}
+                  color={sidenavType === "dark" ? "white" : "blue"}
                   className="font-black uppercase opacity-75"
                 >
                   {title}
@@ -65,14 +70,14 @@ export function Sidenav({ brandImg, brandName, routes}) {
               {icon && name && (
                 <NavLink to={`/${layout}${path}`}>
                   {({ isActive }) => (
-                    <Button
+                    <Button 
                       variant={isActive ? "gradient" : "text"}
                       color={
                         isActive
-                          ? sidenavColor
+                          ? "blue-gray"
                           : sidenavType === "dark"
                           ? "white"
-                          : "blue-gray"
+                          : "gray"
                       }
                       className="flex items-center gap-4 px-4 capitalize"
                       fullWidth

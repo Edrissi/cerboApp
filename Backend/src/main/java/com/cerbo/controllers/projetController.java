@@ -115,26 +115,24 @@ public class projetController {
         return projetRepository.findById(id);
 
     }
-    @PostMapping("/ppp")
-    public void convertBase64ToPdf() throws IOException {
-        // Decode the Base64 string to a byte array
-        Long id;
-        id =17L;
+    @GetMapping("myprojects")
+    public List<Projet> getMyProjets(){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        Integer id;
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        // Access the claims from the JWT token
+        String email = jwt.getSubject();
+        UserDetails userDetails = userService.loadUserByUsername(email);
+        ApplicationUser applicationUser = (ApplicationUser) userDetails;
 
 
-        Projet projet = projetRepository.findById(id).orElse(null);
 
-
-
-        byte[] decodedBytes = Base64.decodeBase64(projet.getDescriptifProjet().toString());
-
-        // Write the byte array to a PDF file
-        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\Admin\\Postman\\files\\amineSB3.pdf")) {
-            fos.write(decodedBytes);
-        } catch (IOException e) {
-            throw new IOException("Failed to write PDF file: " + e.getMessage());
-        }
+        return projetRepository.findByInvestigateur(applicationUser);
     }
+
+
 
 
 

@@ -19,6 +19,7 @@ const ProjectData=(id)=>{
                           });
                         setProject({
                             data:response.data,
+                          
                             loader:false
                         });
                     }

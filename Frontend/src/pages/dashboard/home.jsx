@@ -16,6 +16,7 @@ import {
   Chip,
   Button
 } from "@material-tailwind/react";
+import MyPDFViewer from "./pdf";
 import {
   EllipsisVerticalIcon,
   ArrowUpIcon,
@@ -26,17 +27,42 @@ import {
   statisticsChartsData,
   ordersOverviewData,
 } from "@/data";
+import { useState } from "react";
 import { CheckCircleIcon, ClockIcon,PencilSquareIcon,EyeIcon ,TrashIcon,MagnifyingGlassIcon,Cog6ToothIcon, UsersIcon, UserGroupIcon  } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import AuthorsTableData from "@/data/authors-table-data";
 import ProjectsTabledata from "@/data/projects-table-data";
 import Loading from "@/layouts/loading";
+import CodeMember from "./generateCode.jsx/CodeMember";
+import fetchGenerate from "@/api/Generate";
+import fetchUserData from "@/api/fetchUserData";
+
+
+
 
 export function Home() {
+  const [selectedValue, setSelectedValue] = useState('');
+
+
+  
+  const [generatedCode, setGeneratedCode] = useState('');
   const {projects , loader}= ProjectsTabledata()
   const { totalUsers } = AuthorsTableData();
   const [filter,setfilter]=React.useState('');
-  
+  const handleClick = async () => {
+    try {
+      const response = await fetchGenerate(selectedValue);
+      const data = await response; // assuming response is JSON
+      console.log(data);
+      setGeneratedCode(data); // assuming data contains the generated code
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  const handleSelectChange = (value) => {
+      setSelectedValue(value);
+      console.log(selectedValue)
+  };  
   const CompletedProjectstotal=projects.filter(project=>project.status==="completed").length;
   const InProgressProjects=projects.filter(project=>project.status==="in progress").length;
   const TotalUsers=totalUsers;
@@ -63,7 +89,7 @@ export function Home() {
     },
     {
       icon: UserGroupIcon,
-      title: "Total Groups",
+      title: "Total Project",
       value: Totalgrps,
     },
   ];
@@ -84,6 +110,37 @@ export function Home() {
           />
         ))}
       </div>
+       
+      <Card>
+          <CardHeader
+            floated={false}
+            shadow={false}
+            color="transparent"
+            className="m-0 flex items-center justify-between p-6"
+          >
+            <div className="flex items-center justify-between gap-4 bg-white-100 p-4 rounded-lg">
+             
+                <CodeMember  onSelectChange={handleSelectChange}/>
+                <div class="col-span-1 flex justify-end items-center mt-4">
+                <Button variant="gradient" color="blue" onClick={handleClick} style={{ marginTop: '60px' }}>
+                    Génerer un Code et l'envoyer
+
+                </Button>          
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {generatedCode && <p>Generated Code: {generatedCode}</p>}
+                </div>
+              </div>  
+                    
+            </div>
+          </CardHeader>
+          <CardBody className=" px-0 pt-0 pb-2">
+          <div className="flex items-center justify-center gap-4">
+             
+          </div>
+          </CardBody>
+        </Card>
+
+
 
       <div className="mt-12 mb-8 flex flex-col gap-12">
         <Card>
@@ -105,14 +162,14 @@ export function Home() {
                   onChange={e=>setfilter(e.target.value)}
                       />
               <Link to=".">
-                  <IconButton variant="gradient" color="black">
+                  <IconButton variant="gradient" color="blue">
                     <MagnifyingGlassIcon className="h-5 w-5 text-white" />
                   </IconButton>
               </Link>
             </div>
           </CardHeader>
          
-        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+        <CardBody className=" px-0 pt-0 pb-2">
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
@@ -219,8 +276,9 @@ export function Home() {
         </Card>
         
       </div>
-
-      <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
+                  <div><MyPDFViewer/></div>
+                 
+      {/* <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
         {statisticsChartsData.map((props) => (
           <StatisticsChart
             key={props.title}
@@ -236,7 +294,10 @@ export function Home() {
             }
           />
         ))}
-      </div>
+      </div> */}
+
+
+      
 
     </div>
   );

@@ -20,7 +20,7 @@ import {
   EllipsisVerticalIcon,
   ArrowUpIcon,
 } from "@heroicons/react/24/outline";
-import ProjectsTabledata from "@/data/projects-table-data";
+import MesProjetsData from "@/data/mes-projets-data";
 import { CheckCircleIcon, ClockIcon,PencilSquareIcon,EyeIcon ,TrashIcon,MagnifyingGlassIcon,Cog6ToothIcon  } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import react from "@heroicons/react";
@@ -31,7 +31,7 @@ import DeleteData from "@/api/DeleteData";
 import PermissionPopup from '@/layouts/PermissionPopup';
 import SuccessPopup from '@/layouts/SuccessPopup';
 
-export function ProjectTable() {
+export function MesProjects() {
   const [showDeletePopup, setShowDeletePopup] = React.useState({
     value:false,
     idvalue:null
@@ -40,7 +40,7 @@ export function ProjectTable() {
     value:false,
     message:null
   })
-  const {projects , loader }= ProjectsTabledata()
+  const {projects , loader }= MesProjetsData()
   const [filter,setfilter]=React.useState('');
   var projectsdatanew=projects;
   const [projectslist,setprojetslist]=React.useState([])
@@ -49,13 +49,13 @@ export function ProjectTable() {
     setprojetslist(projectsdatanew)
   },[projects])
 
-  console.log(projectslist)
-  function statuscolor(){
-     return "green"
-    // if(status==="in progress") return "blue"
-    // if(status==="pending") return "red"
-    // if(status==="not started") return "blue-gray"
-  }
+ 
+  // function statuscolor({status}){
+  //   if(status==="completed") return "green"
+  //   if(status==="in progress") return "blue"
+  //   if(status==="pending") return "red"
+  //   if(status==="not started") return "blue-gray"
+  // }
 
   //apres le click sur delete
   const deleteclick=(id)=>{
@@ -99,13 +99,13 @@ return (
         {showDeletePopup.value &&<PermissionPopup id={showDeletePopup.idvalue} closepopup={closepopup} handleDelete={handleDeleteProject} object="project" />}
         {showSuccessPopup.value &&<SuccessPopup closepopup={closepopup} message={showSuccessPopup.message}/>}
 
-        {/* <div className="flex justify-end mr-5">
+        <div className="flex justify-end mr-5">
           <Link to="../project/create" className="ml-2">
               <Button variant="gradient" color="black">
                  + New Project 
               </Button>
           </Link>
-        </div> */}
+        </div>
 
         <Card>
           <CardHeader
@@ -137,7 +137,7 @@ return (
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["id","intitule projet","durre d'etude", "invistigateur principale,status"].map(
+                  {["id","intitule projet","durre d'etude", "invistigateur principale,"].map(
                     (el) => (
                       <th
                         key={el}
@@ -156,7 +156,7 @@ return (
               </thead>
               <tbody>
                 {projectslist.map(
-                  ({id ,intituleProjet,dureeEtude ,investigateur}) => {
+                  ({id ,intituleProjet,dureeEtude ,investigateur,status}) => {
                     const className = `py-4 px-5`;
                     
                     return (
@@ -201,6 +201,15 @@ return (
                             {investigateur.email}
                           </Typography>
                         </td>
+
+                        <td className={className}>
+                          <Typography
+                            variant="h4"
+                            className="text-xs font-medium text-blue-gray-600"
+                          >
+                            en cours
+                          </Typography>
+                        </td>
                                           
                         {/* <td className={className}>
                           <Typography
@@ -218,16 +227,16 @@ return (
                           >
                             {reversedendDate} 
                           </Typography>
-                        </td> */}
+                        </td>
 
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={statuscolor()}
-                          value={"en cours"}
+                          color={statuscolor({status})}
+                          value={status}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
-                      </td>
+                      </td> */}
                       
                       <td className={className}>
                         
@@ -300,4 +309,4 @@ return (
   );
 }
 
-export default ProjectTable;
+export default MesProjects;

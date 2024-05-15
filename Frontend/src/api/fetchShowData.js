@@ -11,7 +11,7 @@ const fetchShowData = async (id) => {
         }
       });
 
-      return response.data; 
+      return response; 
       
     } 
   } catch (error) {

@@ -22,17 +22,22 @@ export function SignIn() {
       if (response.data) {
         setCookie("jwt", response.data.jwt, { path: "/", maxAge: 60 * 60 * 24 }); // 1 day
   
-        const { isAdmin, isAuthenticated } = await fetchUserData();
+        const { isAdmin, isAuthenticated ,isMember,isInvistigateur } = await fetchUserData();
         console.log("true");
         if (isAdmin && isAuthenticated) {
           navigate("/admin/home", { replace: true });
-        } else if (!isAdmin && isAuthenticated) {
-          navigate("/user/tasks", { replace: true });
-        console.log("true");
+        } else if (isMember && isAuthenticated) {
+          navigate("/user/tasks", { replace: true });}
+          else if (isInvistigateur && isAuthenticated) {
+            navigate("/invis/myprojects", { replace: true });
 
         }
+      }else if(response.data.jwt != ""){
+        console.error("Login failed")
       }
-    } catch (error) {
+
+    }
+     catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
         const errorMessages = Object.values(error.response.data.errors);
         setError(errorMessages[0]);

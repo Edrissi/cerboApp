@@ -41,6 +41,8 @@ export function DashboardNavbar({isAuthenticated ,user}) {
 
       if (response.status === 200) {
         Cookies.remove('jwt');
+        localStorage.removeItem('jwt');
+  
         navigate("/");
       }
     } catch (error) {

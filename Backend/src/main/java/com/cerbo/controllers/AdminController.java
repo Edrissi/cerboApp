@@ -82,20 +82,26 @@ public class AdminController {
         return adminService.getInvists();
     }
 
-    @PostMapping("/gencodemembre")
+    @PostMapping("/gencode/membre")
     public String generateCodeMem(){
         String code = codeGeneratorService.generateSaveCodeMembre();
+        return code ;
+    }
+
+    @PostMapping("/gencode/investigateur")
+    public String generateCodeInvi(){
+        String code = codeGeneratorService.generateSaveCodeInvi();
         return code;
     }
 
-    @PostMapping("/gencodeinvis")
-    public ResponseEntity<String> generateCodeInvi(){
-        String code = codeGeneratorService.generateSaveCodeInvi();
-        return ResponseEntity.ok(code);
+    @DeleteMapping("/user/delete/{id}")
+    public String deleteUser(@PathVariable Integer id){
+        userRepository.deleteById(id);
+        return "user deleted successfully";
     }
 
 
-
+//resoudre les probleme de git
 
 
 

@@ -6,11 +6,7 @@ export * from "@/pages/dashboard/projects/createproject";
 export * from "@/pages/dashboard/projects/editproject";
 export * from "@/pages/dashboard/projects/showproject";
 
-export * from "@/pages/dashboard/tasks/tasktable";
-export * from "@/pages/dashboard/tasks/usertasks";
-export * from "@/pages/dashboard/tasks/createtask";
-export * from "@/pages/dashboard/tasks/edittask";
-export * from "@/pages/dashboard/tasks/showtask";
+
 
 
 

@@ -6,22 +6,24 @@ import routes from '@/routes';
 import routesUser from '@/routes-user';
 import { useMaterialTailwindController } from '@/context';
 import { Spinner } from '@material-tailwind/react';
-
-export function Dashboard({ isAuthenticated, user, isAdmin }) {
+import { routesInvis } from '@/routes-invis';
+import "../../public/css/color.css"
+export function Dashboard({ isAuthenticated, user, isAdmin,isMember,isInvistigateur }) {
   const [controller] = useMaterialTailwindController();
   const { sidenavType } = controller;
-  
+
+ 
 
   return (
-    <div className="w-full bg-blue-gray-50/50 ml-2">
+    <div  class ="exact-color" >
       <Sidenav
-        routes={isAdmin ? routes : routesUser}
+        routes={isAdmin ? routes :(isMember ? routesUser : routesInvis)}
         brandImg={
           sidenavType === 'dark'
             ? '/img/logo-ct.png'
             : '/img/logo-ct-dark.png'
         }
-      user={user} isAdmin={isAdmin} />
+      user={user} isAdmin={isAdmin} isMember={isMember} isInvistigateur={isInvistigateur} />
       <div className="p-4 xl:ml-60">
         <DashboardNavbar user ={user}/>
         <Routes>
@@ -34,10 +36,10 @@ export function Dashboard({ isAuthenticated, user, isAdmin }) {
                     key={path}
                     exact
                     path={path}
-                    element={React.cloneElement(element, { isAuthenticated, user, isAdmin })}
+                    element={React.cloneElement(element, { isAuthenticated, user, isAdmin ,isMember,isInvistigateur})}
                   />))
                 )
-            : routesUser
+            :(isMember ? routesUser
                 .filter(({ layout }) => layout === 'user')
                 .map(({ pages }) =>
                   pages.map(({ path, element }) => (
@@ -45,9 +47,22 @@ export function Dashboard({ isAuthenticated, user, isAdmin }) {
                     key={path}
                     exact
                     path={path}
-                    element={React.cloneElement(element, { isAuthenticated, user, isAdmin })}
+                    element={React.cloneElement(element, { isAuthenticated, user, isAdmin,isMember,isInvistigateur })}
                   />))
-                )}
+                ):
+                routesInvis
+                .filter(({ layout }) => layout === 'invis')
+                .map(({ pages }) =>
+                  pages.map(({ path, element }) => (
+                    <Route
+                    key={path}
+                    exact
+                    path={path}
+                    element={React.cloneElement(element, { isAuthenticated, user, isAdmin ,isInvistigateur,isMember})}
+                  />))
+                )
+
+              )}
         </Routes>
         <div className="text-blue-gray-600">
           <Footer />
