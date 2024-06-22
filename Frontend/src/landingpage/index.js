@@ -1,0 +1,10 @@
+export * from "@/landingpage/Apropos"
+export * from "@/landingpage/Contact"
+export * from "@/landingpage/Events"
+export * from "@/landingpage/Footer"
+export * from "@/landingpage/Hero"
+export * from "@/landingpage/Navbar"
+export * from "@/landingpage/ServiceSection"
+export * from "@/landingpage/SignupSection"
+export * from "@/landingpage/LandingPage"
+
