@@ -1,9 +1,9 @@
 import React from 'react';
 import { Tooltip, Avatar, Typography, Button, Checkbox, IconButton , Input } from '@material-tailwind/react';
 
-import ListProjects from '@/widgets/cards/listtasks';
+
 import RecentProjects from '@/widgets/cards/recenttasks';
-import EndProjects from '@/widgets/cards/endtasks';
+
 import { Project } from '@/widgets/cards/project';
 
 export default function UserProjects() {

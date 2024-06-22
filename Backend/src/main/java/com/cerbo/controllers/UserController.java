@@ -1,6 +1,7 @@
 package com.cerbo.controllers;
 
 import com.cerbo.models.ApplicationUser;
+import com.cerbo.models.Commentaire;
 import com.cerbo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class UserController {
     public String helloUserController(){
         return "User access level";
     }
+
 
     @GetMapping("/info")
     public ApplicationUser infouser(){
@@ -47,8 +49,9 @@ public class UserController {
         String email = jwt.getSubject();
         UserDetails userDetails = userService.loadUserByUsername(email);
         ApplicationUser applicationUser = (ApplicationUser) userDetails;
-        return ResponseEntity.ok("dddddddd")
-               ;
+        return ResponseEntity.ok("dddddddd");
 
     }
+
+
 }

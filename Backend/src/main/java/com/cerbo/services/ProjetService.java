@@ -1,12 +1,16 @@
 package com.cerbo.services;
 
 
+import com.cerbo.Dto.ProjetDTO;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.Projet;
 import com.cerbo.repository.ProjetRepository;
 import com.cerbo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjetService {
@@ -28,9 +32,16 @@ public class ProjetService {
         // Enregistrer le projet dans la base de données
         projetRepository.save(projet);
 
-
-
-
     }
 
+    public List<ProjetDTO> getAllProjects() {
+        List<Projet> projets = projetRepository.findAll();
+        return projets.stream()
+                .map(projet -> new ProjetDTO(projet.getId(),
+                                            projet.getIntituleProjet(),
+                                            projet.getDureeEtude(),
+                                            projet.getInvestigateur(),
+                                            projet.getPopulationCible()))
+                .collect(Collectors.toList());
+    }
 }

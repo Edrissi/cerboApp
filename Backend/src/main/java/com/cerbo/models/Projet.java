@@ -32,6 +32,7 @@ public class Projet {
 
     // Attributs pour les fichiers PDF
     @Lob
+    @Column(name = "descriptif_projet", nullable = true, columnDefinition = "LONGBLOB")
     private byte[] descriptifProjet;
 
     @Lob

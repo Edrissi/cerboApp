@@ -17,5 +17,8 @@ public class CodeRegistrationInvistigateur {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String code;
 
+    @Column(nullable = false)
+    private String emailUser;
+
 
 }

@@ -19,7 +19,7 @@ public class CodeGeneratorService {
     @Autowired
     private CodeRegMembreInterface codeRegMembreInterface;
 
-    public String generateSaveCodeMembre( ){
+    public String generateSaveCodeMembre(String emailUser){
 
         // generate a code for membre signup
         String code = generateCode();
@@ -27,12 +27,13 @@ public class CodeGeneratorService {
         // save the code
         CodeRegistrationMembre codeRegistrationMembre = new CodeRegistrationMembre();
         codeRegistrationMembre.setCode(code);
+        codeRegistrationMembre.setEmailUser(emailUser);
         codeRegMembreInterface.save(codeRegistrationMembre);
 
         return code;
 
     }
-    public String generateSaveCodeInvi( ){
+    public String generateSaveCodeInvi(String emailUser){
 
         // generate a code for membre signup
         String code = generateCode();
@@ -40,6 +41,7 @@ public class CodeGeneratorService {
         // save the code
         CodeRegistrationInvistigateur codeRegistrationInvistigateur = new CodeRegistrationInvistigateur();
         codeRegistrationInvistigateur.setCode(code);
+        codeRegistrationInvistigateur.setEmailUser(emailUser);
         codeRegistrationInviInterface.save(codeRegistrationInvistigateur);
 
         return code ;

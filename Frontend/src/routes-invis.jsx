@@ -13,6 +13,7 @@ import {
   
   import UserProjects from "./pages/dashboard/projects/userprojects";
 import MesProjects from "./pages/dashboard/projects/mesprojects";
+import { ShowMesProject } from "@/pages/dashboard";
   import { CreateProject ,ShowProject} from "@/pages/dashboard";
   const icon = {
     className: "w-5 h-5 text-inherit",
@@ -48,6 +49,10 @@ import MesProjects from "./pages/dashboard/projects/mesprojects";
         {
           path: "/project/show/:id",
           element: <ShowProject />,
+        },
+        {
+          path: "/project/showMes/:id",
+          element: <ShowMesProject />,
         },
         
       ],

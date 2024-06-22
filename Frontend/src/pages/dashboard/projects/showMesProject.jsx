@@ -19,7 +19,7 @@ import {convertByteArrayToFile} from '@/api/ConvertArray';
 import addComment from '@/api/AddComment';
 import CommentInput from './commentInput';
 
-export function ShowProject(isAdmin) {
+export function ShowMesProject(isAdmin) {
   
   const [showDeletePopup, setShowDeletePopup] = React.useState({
     value:false,
@@ -51,14 +51,7 @@ export function ShowProject(isAdmin) {
    
   };
   
-   //apres le click sur delete
-   const deleteclick=(id)=>{
-    setShowDeletePopup({
-      value:true,
-      idvalue:id
-    })
-  }
-  
+
   const closepopup=()=>{
     setShowDeletePopup({
       ...showDeletePopup,
@@ -105,21 +98,7 @@ export function ShowProject(isAdmin) {
     
   }
 
-// Assuming projectdata is loaded asynchronously
 
-
-// Access data
-
-  
-  // Access data
-  
-  // setData({nom:projectdata.investigateur.nom,
-  //   prenom:projectdata.investigateur.prenom
-  // })
- // console.log(projectdata)
-  // const datecreatedat = new Date(projectdata.created_at).toLocaleDateString();
-  // const dateupdatedat = new Date(projectdata.updated_at).toLocaleDateString();
- 
   const [success,setSuccess] = React.useState({
     value:false,
     message:null
@@ -176,24 +155,7 @@ export function ShowProject(isAdmin) {
     
   ];
   
-  // var infoInvistigateur=[
-  //   {
-  //     title:"nom d'invistigateur principal",
-  //     value:data.nom
-  //   },
-  //   {
-  //     title:"prenom d'invistigateur principal",
-  //     value:data.prenom
-  //   },
-  //   {
-  //     title:"Email",
-  //     value:data.email
-  //   },
-  //   {
-  //     title:"Titre",
-  //     value:data.investigateur.titre
-  //   }
-  // ];
+  
 
   const handleDeleteProject = async (id) => {
     try {
@@ -231,24 +193,7 @@ export function ShowProject(isAdmin) {
     }
   }
 
-//   const Members = () => {
-//     return (
-//       <div className='w-full mb-5 px-9 md:px-10'>
-//   <Typography variant="h6" color="blue-gray" className="mb-1 ml-3">
-//     Investigateur Principal
-//   </Typography>
-//   <div className='flex flex-wrap justify-between p-1 w-3/4 ml-20'> 
- 
-//   <div className='flex flex-col my-2' style={{ alignItems: 'center', width: 'calc(33.33% - 16px)' }}>
-//     <span variant="h6" color="blue-gray" className="mb-1 ml-3">Nom: <span style={{ marginLeft: '4px' }}>{projectdata.investigateur.nom}</span></span>
-//     <span variant="h6" color="blue-gray" className="mb-1 ml-3">Email: <span style={{ marginLeft: '4px' }}>{projectdata.investigateur.email}</span></span>
-//     <span variant="h6" color="blue-gray" className="mb-1 ml-3">Téléphone: <span style={{ marginLeft: '4px' }}>{projectdata.investigateur.telephone}</span></span>
-//   </div> 
-// </div> 
-  
-// </div> 
-//     );
-//   }; 
+
 
   if (loader===true) return <Loading />
   return (
@@ -270,27 +215,20 @@ export function ShowProject(isAdmin) {
           <div className="flex items-center">
             <div className="ml-auto">
 
-            <Link to={`../project/examin/${id}`} className="mx-3">
+            <Link to={`../project/edit/${id}`} className="mx-3">
             
-              <Button variant="gradient" color="green">
-                Examiner
-              </Button>
-            </Link>
-
-            {/* <Link to={`../project/edit/${id}`} className="mx-3">
-            
-              <Button variant="gradient" color="black">
+              <Button variant="gradient" color="yellow">
                 Edit
               </Button>
-            </Link> */}
+            </Link>
              
-              <Button 
+              {/* <Button 
                 onClick={e=>deleteclick(id)}
                 variant="gradient" 
                 color="red"
               >                  
                 Delete
-              </Button>
+              </Button> */}
               
             </div>
           </div>   
@@ -357,35 +295,7 @@ export function ShowProject(isAdmin) {
       </CardBody>
     </Card> 
     
-    <div className="pdf-container  mx-20" ref={pdfContainerRef}>
-    {showPDFViewer && data!=null &&(<div>
-  <div className="pdf-overlay " >
-    <iframe src={`${convertByteArrayToFile(data, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
-  </div>
-     
-      <card>
-        <CardBody>
-        <CommentInput comment={comment} setComment={setComment} handleSubmit={handleCommentSubmit} />
-        </CardBody>
-      </card> 
-      </div>
-    )}
-    <div>
-      
-
-
-    {showPDFViewer && data==null &&(
-  <div className="flex items-center justify-between w-full">
-    <card>
-    <CardBody className="overflow-x-auto px-0 sm:px-6 py-4">
-    Aucun fichier pour afficher
-    </CardBody>
-    </card>
-  </div>
-    )}
-    </div>
-</div>
-
+    
 
   </div>
 

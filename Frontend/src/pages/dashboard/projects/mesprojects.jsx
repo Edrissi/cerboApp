@@ -30,6 +30,7 @@ import { StatisticsCard } from "@/widgets/cards";
 import DeleteData from "@/api/DeleteData";
 import PermissionPopup from '@/layouts/PermissionPopup';
 import SuccessPopup from '@/layouts/SuccessPopup';
+import { Pending } from "@mui/icons-material";
 
 export function MesProjects() {
   const [showDeletePopup, setShowDeletePopup] = React.useState({
@@ -49,13 +50,15 @@ export function MesProjects() {
     setprojetslist(projectsdatanew)
   },[projects])
 
+  
  
-  // function statuscolor({status}){
-  //   if(status==="completed") return "green"
-  //   if(status==="in progress") return "blue"
-  //   if(status==="pending") return "red"
-  //   if(status==="not started") return "blue-gray"
-  // }
+  function statuscolor(){
+    // if(status==="completed") return "green"
+    // if(status==="in progress") 
+    return "blue"
+    // if(status==="pending") return "red"
+    // if(status==="not started") return "blue-gray"
+  }
 
   //apres le click sur delete
   const deleteclick=(id)=>{
@@ -156,7 +159,7 @@ return (
               </thead>
               <tbody>
                 {projectslist.map(
-                  ({id ,intituleProjet,dureeEtude ,investigateur,status}) => {
+                  ({id ,intituleProjet,dureeEtude ,investigateur}) => {
                     const className = `py-4 px-5`;
                     
                     return (
@@ -203,12 +206,12 @@ return (
                         </td>
 
                         <td className={className}>
-                          <Typography
-                            variant="h4"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            en cours
-                          </Typography>
+                        <Chip
+                          variant="gradient"
+                          color={statuscolor()}
+                          value={"en cours"}
+                          className="py-0.5 px-2 text-[11px] font-medium w-fit"
+                        />
                         </td>
                                           
                         {/* <td className={className}>
@@ -247,7 +250,7 @@ return (
                               </IconButton>
                             </MenuHandler>
                             <MenuList className="w-max border-0">
-                                <Link to={`../project/show/${id}`}>
+                                <Link to={`../project/showMes/${id}`}>
                                   <MenuItem className="flex items-center gap-3">
                                       <EyeIcon className="h-5 w-5 text-blue-gray-500" />
                                     <div>

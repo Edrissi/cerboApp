@@ -15,6 +15,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
 import { MaterialTailwindControllerProvider } from "@/context";
+import { SnackbarProvider } from 'notistack';
 import "../public/css/tailwind.css";
 
 
@@ -27,7 +28,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
-          <App />
+          <SnackbarProvider maxSnack={3}>
+            <App />
+          </SnackbarProvider>
         </MaterialTailwindControllerProvider>
       </ThemeProvider>
     </BrowserRouter>

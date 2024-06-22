@@ -62,7 +62,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .cors().and()
+              .cors().and()
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/auth/**").permitAll();
@@ -70,6 +70,7 @@ public class SecurityConfiguration {
                 auth.requestMatchers("/invis/**").hasAnyRole("ADMIN","USER","INVISTIGATOR");
                 auth.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER","INVISTIGATOR");
                 auth.requestMatchers("/allUser/**").hasAnyRole("ADMIN","USER","INVISTIGATOR");
+                auth.requestMatchers("/comment/**").hasAnyRole("ADMIN","USER");
                 auth.anyRequest().authenticated();
             })
                 .exceptionHandling(exceptionHandling ->

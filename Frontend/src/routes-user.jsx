@@ -13,7 +13,7 @@ import {
  
   import UserProjects from "./pages/dashboard/projects/userprojects";
   import { ProjectTable ,CreateProject,EditProject,ShowProject} from "@/pages/dashboard";
-
+  import { ShowMesProject } from "@/pages/dashboard";
   import MesProjects from "./pages/dashboard/projects/mesprojects";
   const icon = {
     className: "w-5 h-5 text-inherit",
@@ -36,12 +36,7 @@ import {
           element: <MesProjects />,
         },
         
-        // {
-        //   icon: <ClipboardDocumentListIcon  {...icon} />,
-        //   name: "tasks",
-        //   path: "/tasks",
-        //   element: <UserTasks />,
-        // },
+        
         {
           icon: <UserCircleIcon {...icon} />,
           name: "profile",
@@ -59,7 +54,11 @@ import {
         {
           path: "/project/show/:id",
           element: <ShowProject />,
-        }
+        },
+        {
+          path: "/project/showMes/:id",
+          element: <ShowMesProject />,
+        },
         
       ],
     },

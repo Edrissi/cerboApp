@@ -3,13 +3,15 @@ import {
   UserCircleIcon,
   TableCellsIcon,
   UsersIcon,
+  
   ClipboardDocumentListIcon 
 } from "@heroicons/react/24/solid";
-import { Home, Profile, UserTable , ProjectTable ,  CreateProject, EditProject , 
+import { Home,ExaminProject,Profile, UserTable , ProjectTable ,  CreateProject, EditProject ,ShowMesProject, 
 
   ShowProject , CreateUser , ShowUser
   } from "@/pages/dashboard";
 import MesProjects from "./pages/dashboard/projects/mesprojects";
+import ExaminProjectRapport from "./pages/dashboard/projects/examinprojectrapport";
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
@@ -30,18 +32,13 @@ export const routes = [
         path: "/projects",
         element: <ProjectTable />,
       },
+     
       {
-          icon: <TableCellsIcon  {...icon} />,
-          name: "Mes projets",
-          path: "/myprojects",
-          element: <MesProjects />,
-        },
-      // {
-      //   icon: <ClipboardDocumentListIcon  {...icon} />,
-      //   name: "tasks",
-      //   path: "/tasks",
-      //   element: <TaskTable />,
-      // },
+        icon: <TableCellsIcon  {...icon} />,
+        name: "Mes projets",
+        path: "/myprojects",
+        element: <MesProjects />,
+      },
       {
         icon: <UsersIcon {...icon} />,
         name: "Membres",
@@ -60,6 +57,14 @@ export const routes = [
         path: "/profile",
         element: <Profile />,
       },
+      // {
+      //   path: "/project/examin/:id",
+      //   element: <ExaminProject />,
+      // },
+      // {
+      //   path: "/project/rapport/:id",
+      //   element: <ExaminProjectRapport />,
+      // },
       {
         path: "/project/create",
         element: <CreateProject />,
@@ -71,6 +76,10 @@ export const routes = [
       {
         path: "/project/show/:id",
         element: <ShowProject />,
+      },
+      {
+        path: "/project/showMes/:id",
+        element: <ShowMesProject />,
       },
       {
         path: "/user/create",
@@ -85,10 +94,9 @@ export const routes = [
         element: <ShowUser />,
       },
     ],
-  },
-  
-  
-  
+  },  
 ];
+
+
 
 export default routes;

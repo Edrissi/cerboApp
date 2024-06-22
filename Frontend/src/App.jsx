@@ -5,6 +5,10 @@ import { SignIn } from "./pages/auth";
 import { Navigate } from "react-router-dom";
 import fetchUserData from "./api/fetchUserData";
 import Loading from "./layouts/loading";
+import MembSignup from "./pages/auth/MembSignup";
+import InvestSignup from "./pages/auth/InvestSignup";
+import { ExaminProject } from "./pages/dashboard";
+import ExaminProjectRapport from "./pages/dashboard/projects/examinprojectrapport";
 
 function App() {
   const navigate = useNavigate();
@@ -27,10 +31,10 @@ function App() {
         setIsMember(isMember);
         setIsInvistigateur(isInvistigateur);
         setDataLoaded(true);
-
-        if (!isAuthenticated) {
-          navigate('/');
-        }
+        console.log(isAuthenticated)
+        // if (!isAuthenticated) {
+        //   navigate('/');
+        // }
       } catch (error) {
         console.error('Error fetching user data', error);
         setDataLoaded(true); 
@@ -106,6 +110,17 @@ function App() {
           )
         }
       />
+      <Route path="/signup/membre"
+              element={ !isAuthenticated ? <MembSignup/> : <Navigate to="/"/>} />
+      <Route path="/signup/invis"
+              element={ !isAuthenticated ? <InvestSignup/> : <Navigate to="/" />} />
+      <Route path="/signin" 
+                element={ !isAuthenticated ? <SignIn/> : <Navigate to="/"/>}    />
+
+      <Route path="admin/project/examin/:id" 
+                element={<ExaminProject/>} />
+      <Route path="admin/project/rapport/:id" 
+                element={<ExaminProjectRapport/>}/>
     </Routes>
   );
 }

@@ -22,9 +22,9 @@ import {
   ArrowUpIcon,
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
-import { StatisticsChart } from "@/widgets/charts";
+
 import {
-  statisticsChartsData,
+  
   ordersOverviewData,
 } from "@/data";
 import { useState } from "react";
@@ -51,6 +51,7 @@ export function Home() {
   const [filter,setfilter]=React.useState('');
   const handleClick = async () => {
     try {
+      
       const response = await fetchGenerate(selectedValue);
       const data = await response; // assuming response is JSON
       console.log(data);
@@ -95,6 +96,7 @@ export function Home() {
   ];
   
   if(loader) return <Loading />
+
   return (
     <div className="mt-12">
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
@@ -124,9 +126,8 @@ export function Home() {
                 <div class="col-span-1 flex justify-end items-center mt-4">
                 <Button variant="gradient" color="blue" onClick={handleClick} style={{ marginTop: '60px' }}>
                     Génerer un Code et l'envoyer
-
                 </Button>          
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="flex flex-col">
                   {generatedCode && <p>Generated Code: {generatedCode}</p>}
                 </div>
               </div>  
@@ -152,7 +153,7 @@ export function Home() {
           >
             <div className="flex items-center justify-between gap-4">
               <Typography variant="h5" color="blue-gray" className="mb-1">
-                Completed Projects
+                Projects Examinés
               </Typography>
             </div>
             <div className="flex items-center justify-between mr-5 gap-4">
@@ -173,7 +174,7 @@ export function Home() {
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Projects", "Members", "Date Start" , "Date End" , "Status" , "show"].map(
+                  {["Intitule Projet", "Invistigateur", "Date Depot" , "Date Examination" , "Rapport" , "show"].map(
                     (el) => (
                       <th
                         key={el}

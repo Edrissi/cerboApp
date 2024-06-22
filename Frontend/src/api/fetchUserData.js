@@ -46,7 +46,7 @@ const fetchUserData = async () => {
           Authorization: `Bearer ${jwtCookie}`,
         },
       });
-
+      
       const userData = response.data;
 
       return {

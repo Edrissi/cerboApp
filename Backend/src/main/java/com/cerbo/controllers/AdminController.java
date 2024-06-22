@@ -1,5 +1,6 @@
 package com.cerbo.controllers;
 
+import com.cerbo.Dto.CodeRegistDTO;
 import com.cerbo.models.ApplicationUser;
 
 import com.cerbo.repository.UserRepository;
@@ -83,14 +84,15 @@ public class AdminController {
     }
 
     @PostMapping("/gencode/membre")
-    public String generateCodeMem(){
-        String code = codeGeneratorService.generateSaveCodeMembre();
+    public String generateCodeMem(@RequestBody CodeRegistDTO codeRegistDTO){
+        String code = codeGeneratorService.generateSaveCodeMembre(codeRegistDTO.getEmailUser());
+
         return code ;
     }
 
     @PostMapping("/gencode/investigateur")
-    public String generateCodeInvi(){
-        String code = codeGeneratorService.generateSaveCodeInvi();
+    public String generateCodeInvi(@RequestBody CodeRegistDTO codeRegistDTO){
+        String code = codeGeneratorService.generateSaveCodeInvi(codeRegistDTO.getEmailUser());
         return code;
     }
 
