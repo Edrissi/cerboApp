@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .code {
+            font-size: 1.5em;
+            color: #14452F;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2> code d'inscription </h2>
+        </div>
+        <p>Bonjour,</p>
+        <p>Suite à votre demande d'inscription . Votre Code d'inscription est :</p>
+        <div class="code" th:text="${code}">123456</div>
+        <p>Merci d'utiliser ce code avant 48 heures .</p>
+        <p>.</p>
+        <div class="footer">
+            <p>&copy; 2024 CERBO. Comité Ethique.</p>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+

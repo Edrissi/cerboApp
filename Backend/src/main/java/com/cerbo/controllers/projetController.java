@@ -1,6 +1,7 @@
 
 package com.cerbo.controllers;
 
+import com.cerbo.Dto.ProjetDTO;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.Projet;
 import com.cerbo.repository.ProjetRepository;
@@ -106,8 +107,8 @@ public class projetController {
     }
 
     @GetMapping("/projects")
-    public List<Projet> getAllProjects() {
-        return projetRepository.findAll();
+    public List<ProjetDTO> getAllProjects() {
+        return projetService.getAllProjects();
     }
 
     @GetMapping("/projet/{id}")

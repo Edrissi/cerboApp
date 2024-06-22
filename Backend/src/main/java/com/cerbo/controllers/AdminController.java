@@ -1,14 +1,13 @@
 package com.cerbo.controllers;
 
+import com.cerbo.Dto.CodeRegistDTO;
 import com.cerbo.models.ApplicationUser;
 
 import com.cerbo.repository.UserRepository;
-import com.cerbo.services.AdminService;
-import com.cerbo.services.BlackListJwtService;
-import com.cerbo.services.CodeGeneratorService;
-import com.cerbo.services.TokenService;
+import com.cerbo.services.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,8 @@ public class AdminController {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-
+    @Autowired
+    private EmailService emailService;
     //
     @GetMapping("/")
     public Boolean helloAdmineController(){
@@ -83,14 +83,19 @@ public class AdminController {
     }
 
     @PostMapping("/gencode/membre")
-    public String generateCodeMem(){
-        String code = codeGeneratorService.generateSaveCodeMembre();
+    public String generateCodeMem(@RequestBody CodeRegistDTO codeRegistDTO){
+        String code = codeGeneratorService.generateSaveCodeMembre(codeRegistDTO.getEmailUser());
+        emailService.sendEmail(codeRegistDTO.getEmailUser(),"code d'inscription",code);
+
         return code ;
     }
 
     @PostMapping("/gencode/investigateur")
-    public String generateCodeInvi(){
-        String code = codeGeneratorService.generateSaveCodeInvi();
+    public String generateCodeInvi(@RequestBody CodeRegistDTO codeRegistDTO){
+
+        String code = codeGeneratorService.generateSaveCodeInvi(codeRegistDTO.getEmailUser());
+        emailService.sendEmail(codeRegistDTO.getEmailUser(),"code d'inscription",code);
+
         return code;
     }
 
