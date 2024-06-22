@@ -13,8 +13,10 @@
     display: 'flex',
     flexDirection: 'column',
   }));
-  function CodeMember({ onSelectChange }) {
-    
+  function CodeMember({ onSelectChange ,email,onHandleEmailChange }) {
+
+      
+
       const [selectedValue, setSelectedValue] = useState('');
     
       const handleChange = (event) => {
@@ -51,16 +53,18 @@
           </Select>
         </FormGrid>
         <FormGrid item xs={6} md={6}>
-          <FormLabel htmlFor="city" required>
+          <FormLabel htmlFor="Email" required>
             Email
           </FormLabel>
           <OutlinedInput
-            id="city"
-            name="city"
-            type="city"
+            id="Email"
+            name="Email"
+            type="Email"
             placeholder="Email"
-            autoComplete="City"
+            autoComplete="Email"
             required
+            value={email}
+            onChange={onHandleEmailChange}
           />
           </FormGrid>
         

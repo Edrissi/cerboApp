@@ -8,7 +8,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import{ShowDetails} from "@/widgets/layout/ShowDetails";
-import { CheckCircleIcon, ClockIcon,PencilSquareIcon,EyeIcon ,TrashIcon,MagnifyingGlassIcon,Cog6ToothIcon  } from "@heroicons/react/24/solid";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ProjectData from "@/data/project-data";
 import Loading from "@/layouts/loading";
@@ -16,27 +16,102 @@ import DeleteData from "@/api/DeleteData";
 import SuccessPopup from '@/layouts/SuccessPopup';
 import PermissionPopup from '@/layouts/PermissionPopup';
 import {convertByteArrayToFile} from '@/api/ConvertArray';
+import addComment from '@/api/AddComment';
+import CommentInput from './commentInput';
 
-export function ShowProject() {
-  
+import Box from '@mui/material/Box';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import StepContent from '@mui/material/StepContent';
+import Paper from '@mui/material/Paper';
+
+
+export function ShowProject(isAdmin) {
+  console.log(isAdmin.isAdmin);
+  const [showDeletePopup, setShowDeletePopup] = React.useState({
+    value:false,
+    idvalue:null
+  }); 
+  const [showSuccessPopup, setShowSuccessPopup] = React.useState({
+    value:false,
+    message:null
+  })
+  const [comment, setComment] = useState('');
+  const [fileToComment,setFileToComment] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
   const {projectdata,loader}=ProjectData(id);
- 
+  
   const [showPDFViewer, setShowPDFViewer] = useState(false);
 
   
   const pdfContainerRef = useRef(null);
   const [data,setData] = useState();
-  const togglePDFViewer = (dataChosed) => {
+  const togglePDFViewer = (nameFile,dataChosed) => {
     
-    
+      setFileToComment(nameFile)
+      console.log(nameFile);
       setData(dataChosed);
       setShowPDFViewer(true);
       pdfContainerRef.current.scrollIntoView({ behavior: 'smooth' });
+     
    
   };
   
+   //apres le click sur delete
+   const deleteclick=(id)=>{
+    setShowDeletePopup({
+      value:true,
+      idvalue:id
+    })
+  }
+  
+  const closepopup=()=>{
+    setShowDeletePopup({
+      ...showDeletePopup,
+      value:false
+    })
+    setShowSuccessPopup({
+      ...showSuccessPopup,
+      value:false
+    })
+  }
+  
+  
+     
+  const handleCommentSubmit = () => {
+    if (window.confirm('Are you sure you want to submit this comment?')) {
+        handleSubmit();
+    }
+    
+    };
+  
+
+ 
+
+  const handleSubmit = async () => {
+    try {
+      // Assume projetId and userId are available from somewhere
+      
+      const response = await addComment(id, comment ,fileToComment);
+      closepopup()
+      setShowSuccessPopup({
+        value:true,
+        message:'Successfully removed project.'
+      });
+      setShowDeletePopup({
+        value:false,
+        message:null 
+      })
+
+      // Handle success (e.g., clear the form, show a success message)
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      // Handle error (e.g., show an error message)
+    }
+    
+  }
 
 // Assuming projectdata is loaded asynchronously
 
@@ -58,52 +133,49 @@ export function ShowProject() {
     message:null
   });
 
-  const [showDeletePopup, setShowDeletePopup] = React.useState({
-    value:false,
-    idvalue:null
-  }); 
+  
   
   var infosproject=[
 
     {
-      title:"Consideration Ethique",
+      title:"Descriptif",
       value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer(projectdata.descriptifProjet)}> descriptif</button>
+      onClick={() => togglePDFViewer("Descriptif",projectdata.descriptifProjet)}> descriptif</button>
     },
     {
       title:"Fiche Information Arabe",
       value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer(projectdata.descriptifProjet)}> fiche d'information en arabe</button>
+      onClick={() => togglePDFViewer("FicheInfoArabe",projectdata.descriptifProjet)}> fiche d'information en arabe</button>
     },
     {
       title:"fiche information Francais",
       value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer(projectdata.descriptifProjet)}> fiche d'information en francais</button>
+      onClick={() => togglePDFViewer("FicheInfoFr",projectdata.descriptifProjet)}> fiche d'information en francais</button>
     },
     {
       title:"fiche de Consentement Arabe",
       value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer(projectdata.typeConsentment)}> fiche de consentement arabe </button>
+      onClick={() => togglePDFViewer("FicheConstArabe",projectdata.typeConsentment)}> fiche de consentement arabe </button>
     },
     {
       title:"Attestation Engagment",
       value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer(projectdata.descriptifProjet)}> attestation Engagment </button>
+      onClick={() => togglePDFViewer("AttesEngagment",projectdata.descriptifProjet)}> attestation Engagment </button>
     },
     {
       title:"Attestation CNDP",
       value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer(projectdata.descriptifProjet)}> Attestation Cndp </button>
+      onClick={() => togglePDFViewer("CNDP",projectdata.descriptifProjet)}> Attestation Cndp </button>
     },
     {
       title:"CV Investigateur Principal",
       value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer(projectdata.descriptifProjet)}> CV invPrincipal </button>
+      onClick={() => togglePDFViewer("CvInvestPrinci",projectdata.descriptifProjet)}> CV invPrincipal </button>
     },
     {
       title:"Autres document",
       value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-       onClick={() => convertByteArrayToFile(projectdata.descriptifProjet, 'document.pdf', 'application/pdf')}> AUTRES</button>
+       onClick={() => convertByteArrayToFile("Autres",projectdata.descriptifProjet, 'document.pdf', 'application/pdf')}> AUTRES</button>
     },
     
     
@@ -148,12 +220,7 @@ export function ShowProject() {
     }
   };
 
-  const deleteclick=(id)=>{
-    setShowDeletePopup({
-      value:true,
-      idvalue:id
-    })
-  }
+ 
   const closesuccesspopup=()=>{
     setShowDeletePopup({
       showDeletePopup,
@@ -164,6 +231,12 @@ export function ShowProject() {
       value:false,
       message:null
     })
+    const deleteclick=(id)=>{
+      setShowDeletePopup({
+        value:true,
+        idvalue:id
+      })
+    }
   }
 
 //   const Members = () => {
@@ -184,6 +257,21 @@ export function ShowProject() {
 // </div> 
 //     );
 //   }; 
+  // new steppper for test 
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  // nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
   if (loader===true) return <Loading />
   return (
@@ -203,13 +291,23 @@ export function ShowProject() {
             Project Informations
           </Typography>   
           <div className="flex items-center">
+            {isAdmin.isAdmin && (
             <div className="ml-auto">
-              <Link to={`../project/edit/${id}`} className="mx-3">
-                <Button variant="gradient" color="black">
-                  Edit
-                </Button>
-              </Link>
-              
+
+            <Link to={`../project/examin/${id}`} className="mx-3">
+            
+              <Button variant="gradient" color="green">
+                Examiner
+              </Button>
+            </Link>
+
+            {/* <Link to={`../project/edit/${id}`} className="mx-3">
+            
+              <Button variant="gradient" color="black">
+                Edit
+              </Button>
+            </Link> */}
+             
               <Button 
                 onClick={e=>deleteclick(id)}
                 variant="gradient" 
@@ -219,6 +317,7 @@ export function ShowProject() {
               </Button>
               
             </div>
+            )}
           </div>   
         </div>      
       </CardHeader>
@@ -235,19 +334,19 @@ export function ShowProject() {
               className="w-1/2 mb-1 px-3 py-3" 
             /> 
             <ShowDetails 
-              key={"invi"} 
+              key={"invi1"} 
               title={"prenom"} 
               data={projectdata.investigateur.prenom} 
               className="w-1/2 mb-1 px-3 py-3" 
             /> 
             <ShowDetails 
-              key={"invi"} 
+              key={"invi2"} 
               title={"titre"} 
               data={projectdata.investigateur.titre} 
               className="w-1/2 mb-1 px-3 py-3" 
             /> 
             <ShowDetails 
-              key={"invi"} 
+              key={"invi3"} 
               title={"structure de recherche"} 
               data={projectdata.investigateur.StructureRecherche} 
               className="w-1/2 mb-1 px-3 py-3" 
@@ -259,11 +358,12 @@ export function ShowProject() {
       <CardBody className="overflow-x-auto px-0 sm:px-6 pt-0 pb-2">
        
         <CardBody>
-        <thead>
+        {/* <thead>
                   {infosproject.map(
                     (el) => (
                       <th
                         className="w-1/4 mb-1 px-3 py-3"
+                        key={el.title}
                       >
                         <Typography
                           variant="small"
@@ -275,40 +375,81 @@ export function ShowProject() {
                     )
                   )}
                 
-              </thead>
+              </thead> */}
     </CardBody>
-        
-        
+        {/* ndndnd
+     new stepper  */}
+    <Box  >
+      <Stepper activeStep={activeStep} orientation="vertical">
+        {infosproject.map((step, index) => (
+          <Step key={step.title}>
+            <StepLabel
+              optional={
+                index === 2 ? (
+                  <Typography variant="caption">Last step</Typography>
+                ) : null
+              }
+            >
+              {step.title}
+            </StepLabel>
+            <StepContent>
+              <Typography>
+                          {step.value}
+                          <div className="pdf-overlay" style={{ Width: 200 }} >
+                            <iframe src={`${convertByteArrayToFile(projectdata.descriptifProjet, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
+                          </div>
+  
+              </Typography>
+              <Box className="right-4" sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    {index === infosproject.length - 1 ? 'Finish' : 'Continue'}
+                  </Button>
+                  <Button
+                    color="white"
+                    disabled={index === 0}
+                    onClick={handleBack}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
+        ))}
+      </Stepper>
+      {activeStep === infosproject.length && (
+        <Paper square elevation={0} sx={{ p: 3 }}>
+          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+            Reset
+          </Button>
+        </Paper>
+      )}
+    </Box>
       </CardBody>
     </Card> 
     
     <div className="pdf-container  mx-20" ref={pdfContainerRef}>
     {showPDFViewer && data!=null &&(<div>
-  <div className="pdf-overlay ">
+  <div className="pdf-overlay " >
     <iframe src={`${convertByteArrayToFile(data, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
   </div>
-
+     
       <card>
         <CardBody>
-        <textarea
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-              rows="4"
-              placeholder="Entrer vos commentaires..."
-            />
-
-          <div className="flex justify-start">
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
-              Ajouter
-            </button>
-          </div>
+        <CommentInput comment={comment} setComment={setComment} handleSubmit={handleCommentSubmit} />
         </CardBody>
-      </card>
+      </card> 
       </div>
     )}
     <div>
+      
 
 
     {showPDFViewer && data==null &&(

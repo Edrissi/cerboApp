@@ -1,11 +1,12 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const fetchGenerate = async (object) => {
+const fetchGenerate = async (object,email) => {
+  const data = { emailUser: email };
   try {
     const jwtCookie = Cookies.get('jwt');
     if (jwtCookie) {
-      const response = await axios.post(`http://localhost:8000/admin/gencode/${object}`, null, {
+      const response = await axios.post(`http://localhost:8000/admin/gencode/${object}`, data, {
         headers: {
           Authorization: `Bearer ${jwtCookie}`,
         },

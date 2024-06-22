@@ -14,6 +14,7 @@ class MyPDFViewer extends Component {
 
   render() {
     const { error } = this.state;
+    const { dataUrl } =this.props;
 
     if (error) {
       return <div>Error loading PDF: {error.message}</div>;
@@ -24,7 +25,7 @@ class MyPDFViewer extends Component {
 
         <div className="pdf-container">
             <div className="pdf-overlay">
-                <iframe src={`${site}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
+                <iframe src={`${dataUrl}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
             </div>
       </div>
       </div>

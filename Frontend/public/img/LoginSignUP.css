@@ -1,0 +1,130 @@
+.login-container {
+  background-color: #ddeaf0;
+  border: 1px solid #2486e9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 100px;
+}
+.login-container  h2 {
+  color: #645bff;
+  margin-bottom: 30px;
+}
+
+.login-container .form-group {
+  margin-bottom: 20px;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"] {
+  border: 1px solid #2486e9;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.login-container .button {
+  --primary-color: #645bff;
+  --secondary-color: #fff;
+  --hover-color: #111;
+  --arrow-width: 10px;
+  --arrow-stroke: 2px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 20px;
+  color: var(--secondary-color);
+  padding: 1em 1.8em;
+  background: var(--primary-color);
+  display: flex;
+  transition: 0.2s background;
+  align-items: center;
+  gap: 0.6em;
+  font-weight: bold;
+}
+
+.login-container .button .arrow-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container .button .arrow {
+  margin-top: 1px;
+  width: var(--arrow-width);
+  background: var(--primary-color);
+  height: var(--arrow-stroke);
+  position: relative;
+  transition: 0.2s;
+}
+
+.login-container .button .arrow::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  border: solid var(--secondary-color);
+  border-width: 0 var(--arrow-stroke) var(--arrow-stroke) 0;
+  display: inline-block;
+  top: -3px;
+  right: 3px;
+  transition: 0.2s;
+  padding: 3px;
+  transform: rotate(-45deg);
+}
+
+.login-container .button:hover {
+  background-color: var(--hover-color);
+}
+
+.login-container .button:hover .arrow {
+  background: var(--secondary-color);
+}
+
+.login-container .button:hover .arrow:before {
+  right: 0;
+}
+.login-container .additional-links {
+  margin-top: 20px;
+}
+
+.login-container .additional-links a {
+  color: #645bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.login-container .additional-links a:hover {
+  color: #0056b3;
+}
+
+
+
+
+
+
+/*Sign up FORM*/
+.signup-container  {
+  background-color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+
+  
+  margin-left: auto;
+  margin-right: auto;
+  max-height: auto; /* Définir la hauteur maximale du conteneur à 80% de la hauteur de la fenêtre */
+  max-width: 800px;
+}
+.text-danger {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+.signup-container h2{
+    text-align: center;
+    font-size:25px; font-weight:500; color:#143e68; letter-spacing:1px;
+    text-transform: uppercase;
+    margin-top: 30px;
+  
+}
+.signup-container input {
+  border: 1px solid #2486e9;
+  align-items: center;
+}

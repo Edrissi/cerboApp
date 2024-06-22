@@ -26,7 +26,7 @@ import { Link } from "react-router-dom";
 import react from "@heroicons/react";
 import axios from "axios";
 import Loading from "@/layouts/loading";
-import { StatisticsCard } from "@/widgets/cards";
+
 import DeleteData from "@/api/DeleteData";
 import PermissionPopup from '@/layouts/PermissionPopup';
 import SuccessPopup from '@/layouts/SuccessPopup';
@@ -92,7 +92,7 @@ export function ProjectTable() {
   };
 
   
-
+  if(loader) return <Loading/>
 
 return (
       <div className="mt-12 mb-8 flex flex-col gap-12">
@@ -156,11 +156,12 @@ return (
               </thead>
               <tbody>
                 {projectslist.map(
-                  ({id ,intituleProjet,dureeEtude ,investigateur}) => {
+                  (project,index) => {
+                    const {id ,intituleProjet,dureeEtude ,investigateur}=project;
                     const className = `py-4 px-5`;
                     
                     return (
-                      <tr>
+                      <tr key={index+1}>
                         <td className={className}>
                           <div className="flex items-center gap-4">
                             <Typography
@@ -168,7 +169,7 @@ return (
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {id}
+                              {index+1}
                             </Typography>
                           </div>
                         </td>
@@ -253,21 +254,7 @@ return (
                                   </MenuItem>
                                 </Link>
 
-                                <Link to={`../project/edit/${id}`}>
-                                <MenuItem className="flex items-center gap-3">
-                                    <PencilSquareIcon className="h-5 w-5 text-blue-gray-500" />
-                                    <div>
-                                      <Typography
-                                        variant="small"
-                                        color="text-blue-gray-500"
-                                        className="font-normal"
-                                      >
-                                        Edit
-                                      </Typography>
-                                    </div>
-                                </MenuItem>
-                                </Link>
-
+                               
                                   <MenuItem className="flex items-center gap-3"
                                             onClick={e=>deleteclick(id)}>
                                       <TrashIcon className="h-5 w-5 text-blue-gray-500" />

@@ -16,15 +16,18 @@ import {
   Chip,
   Button
 } from "@material-tailwind/react";
+
 import MyPDFViewer from "./pdf";
+
 import {
   EllipsisVerticalIcon,
   ArrowUpIcon,
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
-import { StatisticsChart } from "@/widgets/charts";
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import {
-  statisticsChartsData,
+  
   ordersOverviewData,
 } from "@/data";
 import { useState } from "react";
@@ -35,12 +38,52 @@ import ProjectsTabledata from "@/data/projects-table-data";
 import Loading from "@/layouts/loading";
 import CodeMember from "./generateCode.jsx/CodeMember";
 import fetchGenerate from "@/api/Generate";
-import fetchUserData from "@/api/fetchUserData";
+
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 
 
 export function Home() {
+
+  // pour dialogue apres click sur le button
+  const [open, setOpen] = React.useState(false);
+  const [error, setError] = useState('');
+  const handleClickOpen = () => {
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      setError('Veuillez entrer une adresse email valide.');
+      setShowAlertError(true);
+      return;
+    }
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // -----------------
+  const [email, setEmail] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [showAlertError, setShowAlertError] = useState(false);
+
+
+  
+
+  const handleEmailChange = (event) => {
+    setShowAlertError(false);
+    setEmail(event.target.value);
+  };
+
+
   const [selectedValue, setSelectedValue] = useState('');
 
 
@@ -51,16 +94,28 @@ export function Home() {
   const [filter,setfilter]=React.useState('');
   const handleClick = async () => {
     try {
-      const response = await fetchGenerate(selectedValue);
+      
+      const response = await fetchGenerate(selectedValue,email);
       const data = await response; // assuming response is JSON
       console.log(data);
       setGeneratedCode(data); // assuming data contains the generated code
+      setShowAlert(true);
+      setEmail('');
+     
+      setOpen(false);
+      
+      
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 5000);
     } catch (error) {
       console.error('Error:', error);
     }
   };
   const handleSelectChange = (value) => {
+      
       setSelectedValue(value);
+      setShowAlertError(false);
       console.log(selectedValue)
   };  
   const CompletedProjectstotal=projects.filter(project=>project.status==="completed").length;
@@ -95,9 +150,10 @@ export function Home() {
   ];
   
   if(loader) return <Loading />
+
   return (
     <div className="mt-12">
-      <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
+      {/* <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
         {statisticsCardsData.map(({ icon, title, ...rest }) => (
           <StatisticsCard
             key={title}
@@ -109,7 +165,7 @@ export function Home() {
             })}
           />
         ))}
-      </div>
+      </div> */}
        
       <Card>
           <CardHeader
@@ -119,23 +175,72 @@ export function Home() {
             className="m-0 flex items-center justify-between p-6"
           >
             <div className="flex items-center justify-between gap-4 bg-white-100 p-4 rounded-lg">
-             
-                <CodeMember  onSelectChange={handleSelectChange}/>
+                <CodeMember  onSelectChange={handleSelectChange} email={email} onHandleEmailChange={handleEmailChange}/>
                 <div class="col-span-1 flex justify-end items-center mt-4">
-                <Button variant="gradient" color="blue" onClick={handleClick} style={{ marginTop: '60px' }}>
-                    Génerer un Code et l'envoyer
+                  
+                <Button variant="gradient" color="blue" onClick={handleClickOpen} style={{ marginTop: '60px' }}>
+                  Génerer un Code et l'envoyer
+                </Button>  
 
-                </Button>          
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {generatedCode && <p>Generated Code: {generatedCode}</p>}
-                </div>
-              </div>  
+                {showAlertError && (
+                  <div className="fixed bottom-4 right-4 z-50">
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert variant="filled" severity="warning" onClose={() => setShowAlertError(false)}>
+                        {error} 
+                      </Alert>
+                    </Stack>
                     
+                  </div>
+              )}        
+                    
+                    {/* dialogue afficher apres click sur le button  */}
+                    
+                    <Dialog
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                    >
+                      <DialogTitle id="alert-dialog-title">
+                        {"Are You Sure That you Want to Send Code Registration ? "}
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                          Ce Code va permet au {email} d'inscrire en tant que {selectedValue}. 
+                          confirmer ?
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button color="white" onClick={handleClose}>Cancel</Button>
+                        <Button  color="blue" onClick={handleClick} autoFocus>
+                          envoyer
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+    
+
+                {showAlert && (
+                  <div className="fixed bottom-4 right-4 z-50">
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert variant="filled" severity="success" onClose={() => setShowAlert(false)}>
+                        Code envoyé avec success 
+                      </Alert>
+                    </Stack>
+                    
+                  </div>
+              )}      
+                {/* <div className="flex flex-col">
+                  {generatedCode && <p>Generated Code: {generatedCode}</p>}
+                </div> */}
+              </div>  
+
             </div>
           </CardHeader>
           <CardBody className=" px-0 pt-0 pb-2">
           <div className="flex items-center justify-center gap-4">
-             
+                  
+              
+                    
           </div>
           </CardBody>
         </Card>
@@ -152,7 +257,7 @@ export function Home() {
           >
             <div className="flex items-center justify-between gap-4">
               <Typography variant="h5" color="blue-gray" className="mb-1">
-                Completed Projects
+                Projects Examinés
               </Typography>
             </div>
             <div className="flex items-center justify-between mr-5 gap-4">
@@ -173,7 +278,7 @@ export function Home() {
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Projects", "Members", "Date Start" , "Date End" , "Status" , "show"].map(
+                  {["Ref", "Intitule", "Date Depot" , "Date Examination" , "Rapport" , "show"].map(
                     (el) => (
                       <th
                         key={el}
@@ -276,7 +381,8 @@ export function Home() {
         </Card>
         
       </div>
-                  <div><MyPDFViewer/></div>
+                  <div><MyPDFViewer dataUrl={"../../../public/rapport.pdf"}/></div>
+                 
                  
       {/* <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
         {statisticsChartsData.map((props) => (

@@ -5,6 +5,11 @@ import { SignIn } from "./pages/auth";
 import { Navigate } from "react-router-dom";
 import fetchUserData from "./api/fetchUserData";
 import Loading from "./layouts/loading";
+import MembSignup from "./pages/auth/MembSignup";
+import InvestSignup from "./pages/auth/InvestSignup";
+import { ExaminProject } from "./pages/dashboard";
+import ExaminProjectRapport from "./pages/dashboard/projects/examinprojectrapport";
+import LandingPage from "./landingpage/LandingPage";
 
 function App() {
   const navigate = useNavigate();
@@ -27,10 +32,10 @@ function App() {
         setIsMember(isMember);
         setIsInvistigateur(isInvistigateur);
         setDataLoaded(true);
-
-        if (!isAuthenticated) {
-          navigate('/');
-        }
+        console.log(isAuthenticated)
+        // if (!isAuthenticated) {
+        //   navigate('/');
+        // }
       } catch (error) {
         console.error('Error fetching user data', error);
         setDataLoaded(true); 
@@ -55,7 +60,7 @@ function App() {
               isAdmin={isAdmin}
             />
           ) : (
-            <Navigate to="/" />
+            <Navigate to="/signin" />
           )
         }
       />
@@ -71,7 +76,7 @@ function App() {
               isMember={isMember}
             />
           ) : (
-            <Navigate to="/" />
+            <Navigate to="/signin" />
           )
         }
       />
@@ -88,12 +93,12 @@ function App() {
               
             />
           ) : (
-            <Navigate to="/" />
+            <Navigate to="/signin" />
           )
         }
       />
       <Route
-        path="/"
+        path="/signin"
         element={
           !isAuthenticated ? (
             <SignIn />
@@ -106,6 +111,31 @@ function App() {
           )
         }
       />
+      <Route
+        path="/"
+        element={
+          !isAuthenticated ? (
+            <LandingPage/>
+          ) : isAdmin ? (
+            <Navigate to="/admin/home" />
+          ) : isMember ?(
+            <Navigate to="/user/tasks" />
+          ) :  (
+            <Navigate to="/invis/myprojects" />
+          )
+        }
+      />
+      <Route path="/signup/membre"
+              element={ !isAuthenticated ? <MembSignup/> : <Navigate to="/signin"/>} />
+      <Route path="/signup/invis"
+              element={ !isAuthenticated ? <InvestSignup/> : <Navigate to="/signin" />} />
+      <Route path="/signin" 
+                element={ !isAuthenticated ? <SignIn/> : <Navigate to="/signin"/>}    />
+
+      <Route path="admin/project/examin/:id" 
+                element={ isAuthenticated && isAdmin ? <ExaminProject/> : <Navigate to="/signin"/>} />
+      <Route path="admin/project/rapport/:id" 
+                element={ isAuthenticated && isAdmin ? <ExaminProjectRapport/> : <Navigate to="/signin"/> }/>
     </Routes>
   );
 }

@@ -14,7 +14,7 @@ export function Sidenav({ brandImg, brandName, routes}) {
   
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {
-    dark: "bg-gradient-to-br from-gray-800 to-gray-900",
+    dark: "bg-gradient-to-br from-gray-800 to-gray-900", 
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
   };
@@ -103,7 +103,7 @@ export function Sidenav({ brandImg, brandName, routes}) {
 }
 
 Sidenav.defaultProps = {
-  brandImg: "/img/twitter-logo.svg",
+  // brandImg: "/img/logo cerbo",
   brandName: "CERBO",
 };
 
