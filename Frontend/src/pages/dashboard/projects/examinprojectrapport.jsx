@@ -1,12 +1,15 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import PDFGenerator from '@/auteComponents/report';
 import PrintComponent from '@/template/PrintComponent';
 import { PDFDownloadLink , BlobProvider} from '@react-pdf/renderer';
+import Input from '@material-tailwind/react';
 import InvoiceDocument from '@/template/PrintComponent';
 import FetchCommentTrue from '@/api/fetchCommentTrue';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
 import { pink } from '@mui/material/colors';
 import Checkbox from '@mui/material/Checkbox';
+import { ajouteRef, ajouteReunion } from '@/api/ValiderRapp';
 
 import {
   Typography,
@@ -26,7 +29,7 @@ import AuthorsTableData
 
 
 const ExaminProjectRapport= () => {
-
+  const navigate = useNavigate();
   const { id } = useParams();
   const {comments , loader }= FetchCommentTrue(id);
   const  {
@@ -34,8 +37,75 @@ const ExaminProjectRapport= () => {
     dataLoaded,
   } = AuthorsTableData("users"); 
   var usersnewdata = authorsTableData;
-  console.log(usersnewdata)
+  
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+
+  const [isValid, setIsValid] = useState(true);
+
+  const [valueRef, setValueRef] = useState('');
+  
+  const handleChangeRef = (event) => {
+    const newValue = event.target.value;
+    setValueRef(newValue);
+
+    // Regular expression to validate the format "XX/XX"
+    const regex = /^\d{2}\/\d{2}$/;
+    setIsValid(regex.test(newValue));
+
+  };
+  
+
+
+     
+
+  const [checkedState, setCheckedState] = useState([]);
+
+  // useEffect to update checkedState when usersnewdata changes
+  useEffect(() => {
+    // Initialize checkedState with an array filled with false values
+    setCheckedState(new Array(usersnewdata.length).fill(false));
+  }, [usersnewdata]);
+
+
+  const handleCheckboxChange = (position) => {
+      const updatedCheckedState = checkedState.map((item, index) =>
+          index === position ? !item : item
+      );
+      setCheckedState(updatedCheckedState);
+  };
+
+  const getCheckedItems = () => {
+
+    if (!Array.isArray(usersnewdata)) {
+      console.error('usersnewdata is falsy:', usersnewdata);
+      return []; // or handle this case according to your application logic
+  }
+  
+      return usersnewdata.filter((user, index) => checkedState[index]);
+  };
+  console.log(getCheckedItems())
+
+
+  const handleSubmit = async () => {
+    try {
+      // Assume projetId and userId are available from somewhere
+      console.log(valueRef);
+      console.log(getCheckedItems());
+      const response = await ajouteRef(id,valueRef);
+      const responsee = await ajouteReunion(id,getCheckedItems());
+      console.log(response)
+      console.log(responsee)
+      
+      navigate('/admin/home');
+
+      // Handle success (e.g., clear the form, show a success message)
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      // Handle error (e.g., show an error message)
+    }
+    
+  }
 
   if(loader) return <Loading/>
   return (
@@ -56,6 +126,9 @@ const ExaminProjectRapport= () => {
               </Typography>
             </div>   
           </CardHeader>
+
+         
+
 
             <List>
 
@@ -89,18 +162,18 @@ const ExaminProjectRapport= () => {
                                 <IconButton variant="text" color="green">
                                     <div>
                                       
-                                      <Checkbox {...label} defaultChecked color="success" />
+                                      <Checkbox key={key}
+                                              {...label}  
+                                              color="success" 
+                                              checked={checkedState[key]}
+                                              onChange={() => handleCheckboxChange(key)}
+                                              />
                                       
                                       
                                     </div>
 
                                 </IconButton>
-                                <IconButton variant="text" color="red">
-                                  {/* <Radio  checked={selectedValues[id] === false}
-                                          onChange={() => handleRadioChange(id,false)}
-                                          disabled={disabledSelection}          */}
-                                        
-                                </IconButton>
+                               
                             </div>
                             </ListItemSuffix>
                             </ListItem>
@@ -111,6 +184,11 @@ const ExaminProjectRapport= () => {
                       }
                       )} */}
               </List>
+
+              <div >
+              
+              </div>
+             
               {/* <div className="flex justify-end col-span-6 sm:col-full ml-4 mt-4 mb-4 mr-4">
                         <Button 
                           variant="gradient" 
@@ -125,22 +203,43 @@ const ExaminProjectRapport= () => {
               </Card>
 
               </div>
+
+              
     <div className="mx-2 mt-4 w-2/5">
     <Card>
         <div class="ml-6 mr-6">
-          
-        
+                
+       
 
           <CardBody className=" px-0 pt-0 pb-2">
+          <div className="flex flex-col ">
+                <label htmlFor="outlined-required" className="text-lg font-bold mr-4 mb-6 padding-4 ">
+                  Reference : 
+                </label>
+                <div className="flex flex-row mb-6 items-center">
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Num Reference"
+                  value={valueRef}
+                  onChange={handleChangeRef}
+                  placeholder="05/49"
+                  className={`p-2 border-2 ${isValid ? 'border-black' : 'border-red-500'} rounded`}
+                />
                 
-              <PDFDownloadLink document={<InvoiceDocument commentData={comments} dateOf={"20/06/2024"} invis={"Edrissi"} intitule={"BIO medical"}/>} fileName="rapport.pdf">
+                </div>
+                {!isValid && <span className="text-red-500">Format must be 99/99</span>}
+              </div>
+                
+              {/* <PDFDownloadLink document={<InvoiceDocument commentData={comments} dateOf={"20/06/2024"} invis={"Edrissi"} intitule={"BIO medical"}/>} fileName="rapport.pdf">
                   {({ blob, url, loading, error }) =>
                     loading ? 'Loading document...' : <div className='underline text-blue-600'>Download Rapport</div>
                   }
-                </PDFDownloadLink>
+                </PDFDownloadLink> */}
 
                     <div> 
-                      <BlobProvider document={<InvoiceDocument commentData={comments} dateOf="20/06/2024" invis={"Edrissi"}  intitule={"BIO medical"}/>}>
+                     {/* affichage du rapport -------------- */}
+                      {/* <BlobProvider document={<InvoiceDocument commentData={comments} dateOf="20/06/2024" invis={"Edrissi"}  intitule={"BIO medical"}/>}>
                               {({ blob, url, loading, error }) => ( 
                                 <div >
                                   {console.log(blob)}
@@ -156,7 +255,7 @@ const ExaminProjectRapport= () => {
                                   )}
                                 </div>
                         )}
-                      </BlobProvider>
+                      </BlobProvider> */}
                     </div>
              
           </CardBody>
@@ -168,7 +267,7 @@ const ExaminProjectRapport= () => {
                           variant="gradient" 
                           color="green"
                           // disabled={disabledSelection}
-                          // onClick={handleSubmit}
+                          onClick={handleSubmit}
                         >
                           FIN d'Examination
                         </Button>   

@@ -4,6 +4,8 @@ package com.cerbo.Dto;
 import com.cerbo.models.ApplicationUser;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 
 @Data
 public class ProjetDTO {
@@ -11,16 +13,27 @@ public class ProjetDTO {
     public ProjetDTO(){
 
     }
-   public ProjetDTO(Long id, String intituleProjet,String dureeEtude,ApplicationUser investigateur,String populationCible){
+   public ProjetDTO(Long id,
+                    String intituleProjet,
+                    String dureeEtude,
+                    ApplicationUser investigateur,
+                    String populationCible, String statut,
+                             String ref,
+                             LocalDate date
+                    ){
        this.id=id;
        this.intituleProjet=intituleProjet;
        this.investigateur=investigateur;
        this.dureeEtude=dureeEtude;
        this.populationCible=populationCible;
+       this.statut=statut;
+       this.ref=ref;
+       this.date=date;
    }
     private ApplicationUser investigateur;
 
     private Long id;
+
 
     private String intituleProjet;
     private String dureeEtude;
@@ -30,6 +43,10 @@ public class ProjetDTO {
     private String typePrelevement;
     private String quantitePrelevement;
     private String sourcefinancement;
+
+    private String statut;
+    private String ref;
+    private LocalDate date;
 
 
 

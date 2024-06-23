@@ -8,7 +8,8 @@ import {
   Button,
 } from "@material-tailwind/react";
 import{ShowDetails} from "@/widgets/layout/ShowDetails";
-
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import FetchCommentTrue from '@/api/fetchCommentTrue';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ProjectData from "@/data/project-data";
 import Loading from "@/layouts/loading";
@@ -25,9 +26,13 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Paper from '@mui/material/Paper';
+import InvoiceDocument from '@/template/PrintComponent';
+
 
 
 export function ShowProject(isAdmin) {
+ 
+
   console.log(isAdmin.isAdmin);
   const [showDeletePopup, setShowDeletePopup] = React.useState({
     value:false,
@@ -38,7 +43,7 @@ export function ShowProject(isAdmin) {
     message:null
   })
   const [comment, setComment] = useState('');
-  const [fileToComment,setFileToComment] = useState('');
+  const [fileToComment,setFileToComment] = useState('Descriptif');
   const navigate = useNavigate();
   const { id } = useParams();
   const {projectdata,loader}=ProjectData(id);
@@ -95,15 +100,7 @@ export function ShowProject(isAdmin) {
       // Assume projetId and userId are available from somewhere
       
       const response = await addComment(id, comment ,fileToComment);
-      closepopup()
-      setShowSuccessPopup({
-        value:true,
-        message:'Successfully removed project.'
-      });
-      setShowDeletePopup({
-        value:false,
-        message:null 
-      })
+      console.log(response.data)
 
       // Handle success (e.g., clear the form, show a success message)
     } catch (error) {
@@ -134,48 +131,40 @@ export function ShowProject(isAdmin) {
   });
 
   
-  
+  console.log(projectdata)
   var infosproject=[
 
     {
       title:"Descriptif",
-      value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer("Descriptif",projectdata.descriptifProjet)}> descriptif</button>
+      value:projectdata.descriptifProjet,
     },
     {
       title:"Fiche Information Arabe",
-      value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer("FicheInfoArabe",projectdata.descriptifProjet)}> fiche d'information en arabe</button>
+      value:projectdata.ficheInformaionArabe,
     },
     {
       title:"fiche information Francais",
-      value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer("FicheInfoFr",projectdata.descriptifProjet)}> fiche d'information en francais</button>
+      value:projectdata.ficheInformaionFrancais,
     },
     {
       title:"fiche de Consentement Arabe",
-      value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer("FicheConstArabe",projectdata.typeConsentment)}> fiche de consentement arabe </button>
+      value:projectdata.ficheConsentementArabe,
     },
     {
-      title:"Attestation Engagment",
-      value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer("AttesEngagment",projectdata.descriptifProjet)}> attestation Engagment </button>
+      title:"Attestation Engagement",
+      value:projectdata.attestationEngagement,
     },
     {
       title:"Attestation CNDP",
-      value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer("CNDP",projectdata.descriptifProjet)}> Attestation Cndp </button>
+      value:projectdata.attestationCNDP,
     },
     {
       title:"CV Investigateur Principal",
-      value: <button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-      onClick={() => togglePDFViewer("CvInvestPrinci",projectdata.descriptifProjet)}> CV invPrincipal </button>
+      value:projectdata.cvInvestigateurPrincipal,
     },
     {
       title:"Autres document",
-      value:<button className="text-blue-500 border-b-2 border-blue-500 hover:border-blue-700 hover:text-blue-700"
-       onClick={() => convertByteArrayToFile("Autres",projectdata.descriptifProjet, 'document.pdf', 'application/pdf')}> AUTRES</button>
+      value:projectdata.autresDocuments,
     },
     
     
@@ -183,7 +172,6 @@ export function ShowProject(isAdmin) {
    
     
   ];
-  
   // var infoInvistigateur=[
   //   {
   //     title:"nom d'invistigateur principal",
@@ -260,8 +248,15 @@ export function ShowProject(isAdmin) {
   // new steppper for test 
   const [activeStep, setActiveStep] = React.useState(0);
 
+ 
+
   const handleNext = () => {
+    scrollToStepperTop();
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    
+    const fileName = infosproject[activeStep]?.title || 'Unknown file';
+    setFileToComment(fileName);
+    setComment('');
   };
 
   const handleBack = () => {
@@ -272,6 +267,15 @@ export function ShowProject(isAdmin) {
     setActiveStep(0);
   };
   // nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
+  const stepperRef = useRef(null);
+
+  // Function to scroll to the top of the stepper
+  const scrollToStepperTop = () => {
+    stepperRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const {comments , loading }= FetchCommentTrue(id);
 
   if (loader===true) return <Loading />
   return (
@@ -325,7 +329,7 @@ export function ShowProject(isAdmin) {
       <Typography variant="h5" color="blue" className="mb-4 ml-10">
         Investigateur Principal
       </Typography>
-      <div class="flex flex-wrap  mb-5 px-6 md:px-10 border-b-2 ">
+      <div  class="flex flex-wrap  mb-5 px-6 md:px-10 border-b-2 ">
           
             <ShowDetails 
               key={"invi"} 
@@ -373,19 +377,34 @@ export function ShowProject(isAdmin) {
                         </Typography>
                       </th>
                     )
-                  )}
+                  )}  
                 
               </thead> */}
+             { (projectdata.statut === "revised") && <div>
+                <Typography
+                          variant="small"
+                          className="text-[20px] font-medium uppercase text-orange-600"
+                        >
+                          Rapport : 
+                        </Typography>
+                        <PDFDownloadLink document={<InvoiceDocument commentData={comments} dateOf={"20/06/2024"} invis={"Edrissi"} intitule={"BIO medical"}/>} fileName="rapport.pdf">
+                          {({ blob, url, loading, error }) =>
+                            loading ? 'Loading document...' : <div className='underline text-blue-600'>Download Rapport</div>
+                          }
+                        </PDFDownloadLink>
+
+                        </div>
+                }
     </CardBody>
         {/* ndndnd
      new stepper  */}
-    <Box  >
-      <Stepper activeStep={activeStep} orientation="vertical">
+    <Box> 
+      <Stepper ref={stepperRef} activeStep={activeStep} orientation="vertical">
         {infosproject.map((step, index) => (
           <Step key={step.title}>
             <StepLabel
               optional={
-                index === 2 ? (
+                index === 7 ? (
                   <Typography variant="caption">Last step</Typography>
                 ) : null
               }
@@ -394,10 +413,44 @@ export function ShowProject(isAdmin) {
             </StepLabel>
             <StepContent>
               <Typography>
-                          {step.value}
-                          <div className="pdf-overlay" style={{ Width: 200 }} >
-                            <iframe src={`${convertByteArrayToFile(projectdata.descriptifProjet, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
-                          </div>
+                          {step.title}
+                          
+                          {/* {data==null &&(
+                            <div className="flex items-center justify-between w-full">
+                              <card>
+                              <CardBody className="overflow-x-auto px-0 sm:px-6 py-4">
+                              Aucun fichier pour afficher
+                              </CardBody>
+                              </card>
+                            </div>
+                              )} */}
+                             
+                          {step.value ? ( 
+                            <div className="pdf-overlay">
+                              <iframe style={{ maxWidth: 700 , display: 'block', margin: 'auto' }}  src={`${convertByteArrayToFile(step.value, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
+
+                              <div className="mt-4 mx-auto max-w-md bg-white p-4 rounded-lg shadow-md">
+                              <card>
+                                  <CardBody>
+                                  <CommentInput  comment={comment} setComment={setComment} handleSubmit={handleCommentSubmit} />
+                                  </CardBody>
+                              </card> 
+                            </div>
+                              
+                            </div>
+                            
+                          ) : 
+                          (
+                            <div className="flex items-center justify-between w-full">
+                              <card>
+                              <CardBody className="overflow-x-auto px-0 sm:px-6 py-4">
+                              Aucun fichier pour afficher
+                              </CardBody>
+                              </card>
+                            </div>
+                              )}
+                            
+                          
   
               </Typography>
               <Box className="right-4" sx={{ mb: 2 }}>
@@ -425,7 +478,7 @@ export function ShowProject(isAdmin) {
       </Stepper>
       {activeStep === infosproject.length && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Typography>Vous avez terminé tous les Sections - Terminé</Typography>
           <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
             Reset
           </Button>
@@ -436,7 +489,7 @@ export function ShowProject(isAdmin) {
     </Card> 
     
     <div className="pdf-container  mx-20" ref={pdfContainerRef}>
-    {showPDFViewer && data!=null &&(<div>
+    {/* {showPDFViewer && data!=null &&(<div>
   <div className="pdf-overlay " >
     <iframe src={`${convertByteArrayToFile(data, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
   </div>
@@ -447,20 +500,12 @@ export function ShowProject(isAdmin) {
         </CardBody>
       </card> 
       </div>
-    )}
+    )} */}
     <div>
       
 
 
-    {showPDFViewer && data==null &&(
-  <div className="flex items-center justify-between w-full">
-    <card>
-    <CardBody className="overflow-x-auto px-0 sm:px-6 py-4">
-    Aucun fichier pour afficher
-    </CardBody>
-    </card>
-  </div>
-    )}
+    
     </div>
 </div>
 

@@ -41,6 +41,7 @@ export function ProjectTable() {
     message:null
   })
   const {projects , loader }= ProjectsTabledata()
+  
   const [filter,setfilter]=React.useState('');
   var projectsdatanew=projects;
   const [projectslist,setprojetslist]=React.useState([])
@@ -50,10 +51,10 @@ export function ProjectTable() {
   },[projects])
 
   console.log(projectslist)
-  function statuscolor(){
-     return "green"
-    // if(status==="in progress") return "blue"
-    // if(status==="pending") return "red"
+  function statuscolor(status){
+    if(status=== null) return "blue-gray"
+    if(status==="revised") return "orange" 
+    //if(status==="pending") return "red"
     // if(status==="not started") return "blue-gray"
   }
 
@@ -137,7 +138,7 @@ return (
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["id","intitule projet","durre d'etude", "invistigateur principale,status"].map(
+                  {["id","intitule projet","durre d'etude", "invistigateur principale","status"].map(
                     (el) => (
                       <th
                         key={el}
@@ -157,7 +158,7 @@ return (
               <tbody>
                 {projectslist.map(
                   (project,index) => {
-                    const {id ,intituleProjet,dureeEtude ,investigateur}=project;
+                    const {id ,intituleProjet,dureeEtude ,investigateur,statut}=project;
                     const className = `py-4 px-5`;
                     
                     return (
@@ -224,8 +225,8 @@ return (
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={statuscolor()}
-                          value={"en cours"}
+                          color={statuscolor(statut)}
+                          value={statut}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
                       </td>

@@ -23,9 +23,10 @@ export function ShowUser() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchShowData(id);
-        setUserData(data); 
+        const response = await fetchShowData(id);
+        setUserData(response.data); 
         setDataLoaded(true);
+        console.log(userData)
       } catch (error) {
         console.error('Error fetching user data', error);
         setDataLoaded(true);
@@ -61,19 +62,7 @@ export function ShowUser() {
               </div>
               
           </div>
-          <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-                  <div class="flex space-x-4 gap-6 justify-center">
-                      <a  href={`${userData.email}`} target="_blank" class="text-gray-600 hover:text-gray-800">
-                          <i class="fab fa-facebook fa-2x"></i>
-                      </a>
-                      <a href={`${userData.email}`} target="_blank" class="text-gray-600 hover:text-gray-800">
-                          <i class="fab fa-github fa-2x"></i>
-                      </a>
-                      <a  href={`${userData.email}`} target="_blank" class="text-gray-600 hover:text-gray-800">
-                          <i class="fab fa-linkedin fa-2x"></i>
-                      </a>
-                  </div>
-          </div>
+          
       </div>
 
       <div class="col-span-2">

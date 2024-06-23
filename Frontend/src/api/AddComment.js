@@ -19,7 +19,7 @@ const addComment = async (projetId,comment,fileToComment) => {
         },
       });
 
-      return response.data;
+      return response;
     }
   } catch (error) {
     console.error('Error creating user', error);

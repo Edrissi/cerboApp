@@ -3,6 +3,9 @@ package com.cerbo.models;
 import lombok.Data;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "projet")
@@ -20,6 +23,16 @@ public class Projet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = true)
+    private String ref;
+
+    @Column(nullable = true)
+    // en cours - en revision - revisé - decision final
+    private String statut;
+
+    @Column(nullable = true)
+    private LocalDate premiereExamination;
 
     private String intituleProjet;
     private String dureeEtude;

@@ -9,6 +9,7 @@ import com.cerbo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,18 @@ public class ProjetService {
                                             projet.getIntituleProjet(),
                                             projet.getDureeEtude(),
                                             projet.getInvestigateur(),
-                                            projet.getPopulationCible()))
+                                            projet.getPopulationCible(),projet.getStatut(),
+                        projet.getRef(),
+                        projet.getPremiereExamination()))
                 .collect(Collectors.toList());
+    }
+
+    public void ajouterReferenceEtFinPremiereExamination(String ref, LocalDate date, Long id){
+        Projet projet;
+        projet = projetRepository.findById(id).orElseThrow(() -> new RuntimeException("Projet not found"));
+        projet.setRef(ref);
+        projet.setPremiereExamination(date);
+        projet.setStatut("revised");
+        projetRepository.save(projet);
     }
 }

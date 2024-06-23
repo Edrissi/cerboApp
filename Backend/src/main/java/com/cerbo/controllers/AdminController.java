@@ -1,13 +1,13 @@
 package com.cerbo.controllers;
 
 import com.cerbo.Dto.CodeRegistDTO;
+import com.cerbo.Dto.RefDTO;
+import com.cerbo.Dto.ReunionReqDTO;
 import com.cerbo.models.ApplicationUser;
 
 import com.cerbo.repository.UserRepository;
 import com.cerbo.services.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -33,9 +33,14 @@ public class AdminController {
     private BlackListJwtService blackListJwtService;
     @Autowired
     private CodeGeneratorService codeGeneratorService;
+    @Autowired
+    private ProjetService projetService;
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private ReunionService reunionService;
     //
     @GetMapping("/")
     public Boolean helloAdmineController(){
@@ -105,8 +110,21 @@ public class AdminController {
         return "user deleted successfully";
     }
 
+    // ajouter ref et statut
+    @PutMapping("/projet/ref/{id}")
+    public ResponseEntity<String> ajouteRefPourProjet(@RequestBody RefDTO refDTO, @PathVariable Long id){
+        projetService.ajouterReferenceEtFinPremiereExamination(refDTO.getRef(),refDTO.getDate(),id);
+        return ResponseEntity.ok("reference ajouter avec success");
+    }
 
-//resoudre les probleme de git
+    // creer une Reunion si n'existe pas
+
+    @PutMapping("/Reunion/addprojet/{id}")
+    public ResponseEntity<String> CreerReunion(@RequestBody ReunionReqDTO reunionReqDTO, @PathVariable Long id){
+        String message = reunionService.ajouterProjetAuReunion(reunionReqDTO.getDate(),reunionReqDTO.getMembersPresent(),id);
+        return ResponseEntity.ok(message);
+    }
+
 
 
 

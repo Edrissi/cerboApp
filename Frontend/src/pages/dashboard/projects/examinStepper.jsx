@@ -6,7 +6,7 @@ import Loading from "@/layouts/loading";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import SendIcon from '@mui/icons-material/Send';
-import StepHelloCreate from "./stepsCreateProject/StepHelloCreate";
+import StepHelloCreate from "./stepsCreateProject/StepExamin";
 
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography';
 import { Navigate } from "react-router-dom";
 import ProjectData
  from "@/data/project-data";
+import StepExamin from "./stepsCreateProject/StepExamin";
 
 
 const steps = ["descr", 'ConsEth', 'fichInfo',"FichCons","attCndp","CV","FichCons","FichCons","attCndp","CV","FichCons"];
@@ -37,6 +38,9 @@ export function ExaminStepper({id}) {
   const isStepOptional = (step) => {
     return step === 1;
   };
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scrolls to the top of the page
+  }, [activeStep]);
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -143,23 +147,23 @@ export function ExaminStepper({id}) {
                         margin:1,
                         padding:1
                      }} >
-                      { activeStep == 0 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet} /> }
-                      { activeStep == 1 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 2 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 3 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 4 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 5 && <StepHelloCreate id={id} fileCommented={"CNDP"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 6 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 7 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 8 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 9 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 10 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 11 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 0 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet} /> }
+                      { activeStep == 1 && <StepExamin id={id} fileCommented={"Consideration Ethique"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 2 && <StepExamin id={id} fileCommented={"fiche Information Arabe"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 3 && <StepExamin id={id} fileCommented={"fiche Information Francais"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 4 && <StepExamin id={id} fileCommented={"fiche Consentement Arabe"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 5 && <StepExamin id={id} fileCommented={"CNDP"} data={projectdata.attestationcndp}/> }
+                      { activeStep == 6 && <StepExamin id={id} fileCommented={"CNDP"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 7 && <StepExamin id={id} fileCommented={"attestation Engagement"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 8 && <StepExamin id={id} fileCommented={"CNDP"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 9 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 10 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 11 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
 
-                      { activeStep == 12 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 13 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 14 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 15 && <StepHelloCreate id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 12 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 13 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 14 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
+                      { activeStep == 15 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
 
 
                      </Box>

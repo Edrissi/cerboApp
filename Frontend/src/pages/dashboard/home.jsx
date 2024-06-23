@@ -30,7 +30,7 @@ import {
   
   ordersOverviewData,
 } from "@/data";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { CheckCircleIcon, ClockIcon,PencilSquareIcon,EyeIcon ,TrashIcon,MagnifyingGlassIcon,Cog6ToothIcon, UsersIcon, UserGroupIcon  } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import AuthorsTableData from "@/data/authors-table-data";
@@ -90,7 +90,9 @@ export function Home() {
   
   const [generatedCode, setGeneratedCode] = useState('');
   const {projects , loader}= ProjectsTabledata()
-  const { totalUsers } = AuthorsTableData();
+
+
+  
   const [filter,setfilter]=React.useState('');
   const handleClick = async () => {
     try {
@@ -118,36 +120,44 @@ export function Home() {
       setShowAlertError(false);
       console.log(selectedValue)
   };  
-  const CompletedProjectstotal=projects.filter(project=>project.status==="completed").length;
-  const InProgressProjects=projects.filter(project=>project.status==="in progress").length;
-  const TotalUsers=totalUsers;
-  const Totalgrps=projects.length;
-  const CompletedProjects=projects.filter(project=>project.status==="completed")
+  
+  // const TotalUsers=totalUsers;
+  
 
-  var projectsdatanew=CompletedProjects.filter(project=>project.name.toLowerCase().startsWith(filter.toLowerCase()))
+  const [projectslist, setProjectslist] = useState('');
 
-  const statisticsCardsData = [
-    {
-      icon: UsersIcon,
-      title: "Total Users",
-      value: TotalUsers,
-    },
-    {
-      icon: CheckCircleIcon,
-      title: "Completed Projects",
-      value:CompletedProjectstotal ,
-    },
-    {
-      icon: ClockIcon,
-      title: "In Progress Projects",
-      value: InProgressProjects,
-    },
-    {
-      icon: UserGroupIcon,
-      title: "Total Project",
-      value: Totalgrps,
-    },
-  ];
+const desiredRole = 'revised'; // Replace 'specificRole' with the actual role you want to filter by
+
+useEffect(() => {
+  const projectsdatanew = projects.filter(project => project.statut === desiredRole);
+  setProjectslist(projectsdatanew);
+}, [projects]);
+
+
+ 
+
+  // const statisticsCardsData = [
+  //   {
+  //     icon: UsersIcon,
+  //     title: "Total Users",
+  //     value: TotalUsers,
+  //   },
+  //   {
+  //     icon: CheckCircleIcon,
+  //     title: "Completed Projects",
+  //     value:CompletedProjectstotal ,
+  //   },
+  //   {
+  //     icon: ClockIcon,
+  //     title: "In Progress Projects",
+  //     value: InProgressProjects,
+  //   },
+  //   {
+  //     icon: UserGroupIcon,
+  //     title: "Total Project",
+  //     value: Totalgrps,
+  //   },
+  // ];
   
   if(loader) return <Loading />
 
@@ -278,7 +288,7 @@ export function Home() {
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Ref", "Intitule", "Date Depot" , "Date Examination" , "Rapport" , "show"].map(
+                  {["Ref", "Intitule", "Date Examination" , "rapport" , "Statut" , "show"].map(
                     (el) => (
                       <th
                         key={el}
@@ -296,12 +306,11 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {projectsdatanew
+                {projectslist
                 .map(
-                  ({id ,name , datestart , dateend ,status,users }) => {
+                  ({id,ref,intituleProjet,date, investigateur ,statut }) => {
                     const className = `py-4 px-5`;
-                    const reversedstartDate = datestart.split("-").reverse().join("-");
-                    const reversedendDate = dateend.split("-").reverse().join("-");
+                   
 
                     return (
                       <tr>
@@ -312,27 +321,9 @@ export function Home() {
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {name}
+                              {ref}
                             </Typography>
                           </div>
-                        </td>
-
-                        <td className="py-4 px-5">
-                          {users
-                                .map(({ id,img, firstname,lastname }, key) => (
-                                  <Tooltip key={id} content={`${firstname} ${lastname}`}>
-                                    <Avatar
-                                      key={id}
-                                      src={img}
-                                      alt={`${firstname} ${lastname}`}
-                                      size="xs"
-                                      variant="circular"
-                                      className={`cursor-pointer border-2 border-white ${
-                                        "-ml-2.5"
-                                      }`}
-                                    />
-                                  </Tooltip>
-                            ))}
                         </td>
                                           
                         <td className={className}>
@@ -340,7 +331,7 @@ export function Home() {
                             variant="small"
                             className="text-xs font-medium text-blue-gray-600"
                           >
-                            {reversedstartDate} 
+                            {intituleProjet} 
                           </Typography>
                         </td>
                   
@@ -349,15 +340,24 @@ export function Home() {
                             variant="small"
                             className="text-xs font-medium text-blue-gray-600"
                           >
-                            {reversedendDate} 
+                            {date} 
+                          </Typography>
+                        </td>
+
+                        <td className={className}>
+                          <Typography
+                            variant="small"
+                            className="text-xs font-medium text-blue-gray-600"
+                          >
+                            {date} 
                           </Typography>
                         </td>
 
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={status=="completed" ?  "green" : "blue-gray"}
-                          value={status}
+                          color={statut=="revised" ?  "green" : "blue-gray"}
+                          value={statut}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
                       </td>
@@ -384,23 +384,7 @@ export function Home() {
                   <div><MyPDFViewer dataUrl={"../../../public/rapport.pdf"}/></div>
                  
                  
-      {/* <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
-        {statisticsChartsData.map((props) => (
-          <StatisticsChart
-            key={props.title}
-            {...props}
-            footer={
-              <Typography
-                variant="small"
-                className="flex items-center font-normal text-blue-gray-600"
-              >
-                <ClockIcon strokeWidth={2} className="h-4 w-4 text-blue-gray-400" />
-                &nbsp;{props.footer}
-              </Typography>
-            }
-          />
-        ))}
-      </div> */}
+    
 
 
       

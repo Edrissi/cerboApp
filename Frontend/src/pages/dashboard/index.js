@@ -12,7 +12,7 @@ export * from "@/pages/dashboard/projects/examinProject";
 export * from "@/pages/dashboard/projects/examinStepper";
 export * from "@/pages/dashboard/projects/examinprojectrapport"
 export * from "@/pages/dashboard/projects/commentInput";
-export * from "@/pages/dashboard/projects/stepsCreateProject/StepHelloCreate"
+export * from "@/pages/dashboard/projects/stepsCreateProject/StepExamin"
 export * from "@/pages/dashboard/users/usertable";
 export * from "@/pages/dashboard/users/createuser";
 export * from "@/pages/dashboard/users/showuser";

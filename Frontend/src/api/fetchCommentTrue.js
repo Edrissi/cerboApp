@@ -19,7 +19,7 @@ const FetchCommentTrue = (id) => {
                 Authorization: `Bearer ${jwtCookie}`,
               },
             });
-            console.log(response.data[0].commentaire);
+       
             setCommentData({
               comments: response.data,
               loader: false,

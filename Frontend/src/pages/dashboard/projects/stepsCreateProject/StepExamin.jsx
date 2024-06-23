@@ -23,7 +23,7 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 
 
-const StepHelloCreate = ({id,fileCommented,data}) => {
+const StepExamin = ({id,fileCommented,data}) => {
 
   const navigate = useNavigate(); 
   
@@ -59,7 +59,7 @@ const StepHelloCreate = ({id,fileCommented,data}) => {
           id: parseInt(key),  // Convert key to integer if needed
           statut: selectedValues[key] // Use the boolean value from the original object
         }));
-        console.log(selectedValuesNew)
+        
         await updateCommentStatuses(selectedValuesNew);
 
         setDisabledSelection(true);
@@ -82,7 +82,8 @@ const StepHelloCreate = ({id,fileCommented,data}) => {
 
 
       <Card className="w-full md:w-1/2 lg:w-2/5 mx-2" >
-        
+      
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' ,color:"green" }} >{fileCommented}</div>
           <List>
             <ListItem  ripple={false} className="py-1 pr-1 pl-4 flex items-center border-b border-gray-200">
                         <h2 className="text-lg font-bold mr-4">Commetaire</h2>
@@ -98,7 +99,13 @@ const StepHelloCreate = ({id,fileCommented,data}) => {
                         </ListItemSuffix>
                         </ListItem>
 
-                {commentslist.map(
+                
+               {commentslist.length === 0 ? (
+                <div className="py-4 px-5">
+                  No comments available.
+                </div>
+              ) :(
+              commentslist.map(
                   ({id,commentaire,statut}) => {
                     const className = `py-4 px-5`;
                     return(
@@ -124,8 +131,9 @@ const StepHelloCreate = ({id,fileCommented,data}) => {
                         </ListItem>
                     );
                   }
-                  )}
+                  ))}
           </List>
+          { commentslist>0 && (
           <div className="flex justify-end col-span-6 sm:col-full ml-4 mt-4 mb-4 mr-4">
                     <Button 
                       variant="gradient" 
@@ -136,13 +144,19 @@ const StepHelloCreate = ({id,fileCommented,data}) => {
                       Valider 
                     </Button>   
                 </div>
-                  
+          )}
       </Card>
 
-      <Card className='w-full md:w-1/2 lg:w-3/5' >
+      <Card className='w-full md:w-1/2 lg:w-3/5' style={{ maxHeight:600}} >
         
-      <div className="pdf-overlay " style={{ width: '100%', height: '100%' }}>
+      <div className="pdf-overlay " style={{ maxHeight:600 ,width: '100%', height: '100%' }}>
+        {data ? ( 
           <iframe src={`${convertByteArrayToFile(data, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer" style={{ width: '100%', height: '100%', minHeight: '400px',border: 'none' }} ></iframe>
+        ): 
+        <div className="flex justify-center items-center h-full min-h-[400px] bg-gray-100 text-gray-500 text-lg font-bold">
+          No PDF available.
+        </div>
+        }
       </div>
                   
       </Card>
@@ -158,4 +172,4 @@ const StepHelloCreate = ({id,fileCommented,data}) => {
   );
 };
 
-export default StepHelloCreate;
+export default StepExamin;

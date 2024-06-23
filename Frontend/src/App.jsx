@@ -10,6 +10,7 @@ import InvestSignup from "./pages/auth/InvestSignup";
 import { ExaminProject } from "./pages/dashboard";
 import ExaminProjectRapport from "./pages/dashboard/projects/examinprojectrapport";
 import LandingPage from "./landingpage/LandingPage";
+import SignupSection from "./landingpage/SignupSection";
 
 function App() {
   const navigate = useNavigate();
@@ -129,6 +130,9 @@ function App() {
               element={ !isAuthenticated ? <MembSignup/> : <Navigate to="/signin"/>} />
       <Route path="/signup/invis"
               element={ !isAuthenticated ? <InvestSignup/> : <Navigate to="/signin" />} />
+      <Route path="/signup"
+              element={ !isAuthenticated ? <SignupSection/> : <Navigate to="/signin" />} />
+
       <Route path="/signin" 
                 element={ !isAuthenticated ? <SignIn/> : <Navigate to="/signin"/>}    />
 
@@ -136,6 +140,8 @@ function App() {
                 element={ isAuthenticated && isAdmin ? <ExaminProject/> : <Navigate to="/signin"/>} />
       <Route path="admin/project/rapport/:id" 
                 element={ isAuthenticated && isAdmin ? <ExaminProjectRapport/> : <Navigate to="/signin"/> }/>
+
+
     </Routes>
   );
 }
