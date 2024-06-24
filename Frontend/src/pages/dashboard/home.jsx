@@ -96,7 +96,7 @@ export function Home() {
   const [filter,setfilter]=React.useState('');
   const handleClick = async () => {
     try {
-      
+      setOpen(false);
       const response = await fetchGenerate(selectedValue,email);
       const data = await response; // assuming response is JSON
       console.log(data);
@@ -104,7 +104,7 @@ export function Home() {
       setShowAlert(true);
       setEmail('');
      
-      setOpen(false);
+      
       
       
       setTimeout(() => {
@@ -126,12 +126,12 @@ export function Home() {
 
   const [projectslist, setProjectslist] = useState('');
 
-const desiredRole = 'revised'; // Replace 'specificRole' with the actual role you want to filter by
-
-useEffect(() => {
-  const projectsdatanew = projects.filter(project => project.statut === desiredRole);
-  setProjectslist(projectsdatanew);
-}, [projects]);
+  const desiredStatus1= 'revised'; // Replace 'specificRole' with the actual role you want to filter by
+  const desiredStatus2 = 'valider';
+  useEffect(() => {
+    const projectsdatanew = projects.filter(project => project.statut === desiredStatus1 || project.statut === desiredStatus2);
+    setProjectslist(projectsdatanew);
+  }, [projects]);
 
 
  
@@ -356,7 +356,7 @@ useEffect(() => {
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={statut=="revised" ?  "green" : "blue-gray"}
+                          color={statut=="revised" ?  "orange" : ("valider" ? "green" : "blue-gray")}
                           value={statut}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />

@@ -11,4 +11,6 @@ public interface CodeRegistrationInviInterface extends JpaRepository<CodeRegistr
     void deleteByCode(String code);
 
     Optional<CodeRegistrationInvistigateur> findByCode(String code);
+
+    Optional<CodeRegistrationInvistigateur> findByCodeAndEmailUser(String code , String email);
 }

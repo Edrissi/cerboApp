@@ -66,7 +66,7 @@ function Footer() {
       © 2024 Copyright : 
       <a
         className="text-white"
-        href="https://tw-elements.com/"
+        
       > CERBO</a>
     </div>
   </footer>

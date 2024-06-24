@@ -28,7 +28,7 @@ export function SignIn() {
         if (isAdmin && isAuthenticated) {
           navigate("/admin/home", { replace: true });
         } else if (isMember && isAuthenticated) {
-          navigate("/user/tasks", { replace: true });}
+          navigate("/user/projects", { replace: true });}
           else if (isInvistigateur && isAuthenticated) {
             navigate("/invis/myprojects", { replace: true });
 
@@ -113,8 +113,8 @@ export function SignIn() {
           <Button className="mt-6" fullWidth onClick={handleSignIn}>
             Sign In
           </Button>
-          <Typography variant="body2" align="center" className="mt-3">
-            Don't have an account? <Link to="/signup">Sign Up</Link>
+          <Typography variant="body2"  align="center" className="mt-3">
+            Don't have an account? <Link style={{ color: 'blue' }} to="/signup">Sign Up</Link>
           </Typography>
         </form>
       </div>

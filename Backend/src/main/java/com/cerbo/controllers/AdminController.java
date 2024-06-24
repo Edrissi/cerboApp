@@ -10,11 +10,15 @@ import com.cerbo.services.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -123,6 +127,17 @@ public class AdminController {
     public ResponseEntity<String> CreerReunion(@RequestBody ReunionReqDTO reunionReqDTO, @PathVariable Long id){
         String message = reunionService.ajouterProjetAuReunion(reunionReqDTO.getDate(),reunionReqDTO.getMembersPresent(),id);
         return ResponseEntity.ok(message);
+    }
+
+    @PutMapping("/valider/{id}")
+    public ResponseEntity<String> validerProjet(@PathVariable Long id , @RequestParam("file") MultipartFile file){
+        try {
+        byte[] finalDecision = file.getBytes();
+        return ResponseEntity.ok(projetService.validerProjet(id,finalDecision));
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
+        }
     }
 
 

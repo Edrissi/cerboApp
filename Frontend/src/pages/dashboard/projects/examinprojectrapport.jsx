@@ -36,7 +36,7 @@ const ExaminProjectRapport= () => {
     authorsTableData,
     dataLoaded,
   } = AuthorsTableData("users"); 
-  var usersnewdata = authorsTableData;
+  var usersnewdata = Array.isArray(authorsTableData) ? authorsTableData : [];
   
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -151,7 +151,7 @@ const ExaminProjectRapport= () => {
                         const className = `py-4 px-5`;
                         return( */}
 
-              {usersnewdata?.map((user, key) => {
+              {usersnewdata.map((user, key) => {
                   
                                   return (
                             <ListItem  key={key} ripple={false} className={`py-1 pr-1 pl-4 flex items-center border-b border-gray-200 `}>

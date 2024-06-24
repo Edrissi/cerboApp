@@ -40,6 +40,7 @@ export default function MembSignup() {
   });
 
   const [formErrors, setFormErrors] = useState({});
+  const [severity,setSeverity] = useState({});
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -104,7 +105,10 @@ export default function MembSignup() {
         axios.post('http://localhost:8000/auth/register/memb', formData)
             .then(response => {
               console.log('Inscription réussie:', response.data);
+              setSeverity('success')
+             
               setSnackMessage('Sign up successful');
+
               setSnackOpen(true);
               setTimeout(() => {
                 window.location.href = '/signin'; // Redirection après deux secondes
@@ -112,10 +116,15 @@ export default function MembSignup() {
             })
             .catch(error => {
                 console.error('Erreur lors de l\'inscription:', error.response ? error.response.data : error.message);
+                setSeverity('error')
+                setSnackMessage(error.response.data);
+                setSnackOpen(true);
                 // Gérer les erreurs (par exemple, afficher un message d'erreur à l'utilisateur)
             });
     } else {
+        setSeverity('error')
         setSnackMessage('Please fix the errors in the form');
+
         setSnackOpen(true);
     }
 };
@@ -371,7 +380,7 @@ export default function MembSignup() {
             autoHideDuration={6000}
             onClose={handleCloseSnack}
           >
-            <Alert onClose={handleCloseSnack} severity="success" sx={{ width: '100%' }}>
+            <Alert onClose={handleCloseSnack} severity={severity} sx={{ width: '100%' }}>
               {snackMessage}
             </Alert>
           </Snackbar>

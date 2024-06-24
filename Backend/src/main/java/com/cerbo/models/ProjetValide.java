@@ -1,38 +1,39 @@
 package com.cerbo.models;
 
-import lombok.Data;
+
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "projet")
+@Table(name = "projet_valide")
 
-public class Projet {
+
+public class ProjetValide {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String code;
+
 
     @ManyToOne
     @JoinTable(
-            name="user_projet_junction",
+            name="user_projetvalide_junction",
             joinColumns = {@JoinColumn(name="user_id")},
             inverseJoinColumns = {@JoinColumn(name="projet_id")}
     )
 
     private ApplicationUser investigateur;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
 
     @Column(nullable = true)
-    private String ref;
+    private LocalDate dateDepot;
 
-    @Column(nullable = true)
-    // en cours - en revision - revisé - decision final
-    private String statut;
-
-    @Column(nullable = true)
-    private LocalDate premiereExamination;
+    private LocalDate dateValidation;
 
     private String intituleProjet;
     private String dureeEtude;
@@ -45,9 +46,6 @@ public class Projet {
 
     // Attributs pour les fichiers PDF
 
-    public boolean getPrelevement(){
-        return prelevement;
-    }
     // decision final
     @Lob
     private byte[] decisionFinal;

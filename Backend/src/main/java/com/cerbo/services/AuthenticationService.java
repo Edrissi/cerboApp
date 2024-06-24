@@ -3,6 +3,8 @@ package com.cerbo.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.cerbo.exception.EmailAlreadyExistsException;
+import com.cerbo.exception.InvalidRegistrationCodeException;
 import com.cerbo.models.CodeRegistrationInvistigateur;
 import com.cerbo.repository.CodeRegMembreInterface;
 import com.cerbo.repository.CodeRegistrationInviInterface;
@@ -50,43 +52,56 @@ public class AuthenticationService {
 
     // authentication member -----------
 
-    public ResponseEntity<String> registerUser(String code , String email, String password , String specialite , String affiliation , String titre , String nom, String prenom){
+    public ResponseEntity<String> registerUser(String code , String email, String password , String specialite , String affiliation , String titre , String nom, String prenom) {
+        try {
+            if (codeRegMembreInterface.findByCodeAndEmailUser(code,email).isPresent()) {
 
-        if (codeRegMembreInterface.findByCode(code).isPresent()){
+                if (userRepository.existsByEmail(email)) {
+                    throw new EmailAlreadyExistsException("Email already exists");
+                }
 
-            if (userRepository.existsByEmail(email)) {
-                return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
+                String encodedPassword = passwordEncoder.encode(password);
+                Role userRole = roleRepository.findByAuthority("USER").get();
+
+                Set<Role> authorities = new HashSet<>();
+
+                authorities.add(userRole);
+
+                ApplicationUser applicationUser = new ApplicationUser(0, email, encodedPassword, authorities);
+                applicationUser.setSpecialite(specialite);
+                applicationUser.setAffilliation(affiliation);
+                applicationUser.setTitre(titre);
+                applicationUser.setPrenom(prenom);
+                applicationUser.setNom(nom);
+                userRepository.save(applicationUser);
+
+                codeRegMembreInterface.deleteByCode(code);
+
+                return ResponseEntity.ok("registration successful");
+
+
+            } else {
+                throw new InvalidRegistrationCodeException("Invalid registration code");
             }
-
-            String encodedPassword = passwordEncoder.encode(password);
-            Role userRole = roleRepository.findByAuthority("USER").get();
-
-            Set<Role> authorities = new HashSet<>();
-
-            authorities.add(userRole);
-
-            ApplicationUser applicationUser = new ApplicationUser(0, email, encodedPassword, authorities);
-            applicationUser.setSpecialite(specialite);
-            applicationUser.setAffilliation(affiliation);
-            applicationUser.setTitre(titre);
-            applicationUser.setPrenom(prenom);
-            applicationUser.setNom(nom);
-            userRepository.save(applicationUser);
-
-            codeRegMembreInterface.deleteByCode(code);
-
-            return ResponseEntity.ok("registration successful");
-
-
-        }else{ return ResponseEntity.ok("invalid code");}
+        } catch (EmailAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (InvalidRegistrationCodeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            // Handle any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 
 
     ////authentication invistigator ---------------------
     public ResponseEntity<String> registerUserInvi(String code, String email, String password , String specialite , String adresse , String titre , String nom, String prenom){
 
-
-        if (codeRegistrationInviInterface.findByCode(code).isPresent()) {
+        try {
+        if (codeRegistrationInviInterface.findByCodeAndEmailUser(code,email).isPresent()) {
+            if (userRepository.existsByEmail(email)) {
+                throw new EmailAlreadyExistsException("Email already exists");
+            }
             String encodedPassword = passwordEncoder.encode(password);
             Role userRole = roleRepository.findByAuthority("INVISTIGATOR").get();
 
@@ -106,7 +121,15 @@ public class AuthenticationService {
 
             return ResponseEntity.ok("register user successfuly");
         }else{
-            return ResponseEntity.ok("invalid code");
+            throw new InvalidRegistrationCodeException("Invalid registration code");
+        }
+        } catch (EmailAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (InvalidRegistrationCodeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            // Handle any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
 

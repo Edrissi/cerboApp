@@ -13,4 +13,6 @@ public interface CodeRegMembreInterface extends JpaRepository<CodeRegistrationMe
 
     Optional<CodeRegistrationMembre> findByCode(String Code);
     void deleteByCode(String code);
+    Optional<CodeRegistrationMembre> findByCodeAndEmailUser(String code , String email);
+
 }

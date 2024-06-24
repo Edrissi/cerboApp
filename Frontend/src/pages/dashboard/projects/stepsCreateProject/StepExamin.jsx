@@ -133,7 +133,7 @@ const StepExamin = ({id,fileCommented,data}) => {
                   }
                   ))}
           </List>
-          { commentslist>0 && (
+          { commentslist.length>0 && (
           <div className="flex justify-end col-span-6 sm:col-full ml-4 mt-4 mb-4 mr-4">
                     <Button 
                       variant="gradient" 

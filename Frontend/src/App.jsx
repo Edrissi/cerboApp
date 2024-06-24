@@ -106,7 +106,7 @@ function App() {
           ) : isAdmin ? (
             <Navigate to="/admin/home" />
           ) : isMember ?(
-            <Navigate to="/user/tasks" />
+            <Navigate to="/user/projects" />
           ) :  (
             <Navigate to="/invis/myprojects" />
           )
@@ -120,7 +120,7 @@ function App() {
           ) : isAdmin ? (
             <Navigate to="/admin/home" />
           ) : isMember ?(
-            <Navigate to="/user/tasks" />
+            <Navigate to="/user/projects" />
           ) :  (
             <Navigate to="/invis/myprojects" />
           )

@@ -38,7 +38,7 @@ export default function InvestSignup() {
     codeRegistration: '',
     adresse: ''
   });
-
+  const [severity,setSeverity] =useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -104,6 +104,7 @@ export default function InvestSignup() {
         axios.post('http://localhost:8000/auth/register/invi', formData)
             .then(response => {
               console.log('Inscription réussie:', response.data);
+              setSeverity('success');
               setSnackMessage('Sign up successful');
               setSnackOpen(true);
               setTimeout(() => {
@@ -112,9 +113,14 @@ export default function InvestSignup() {
             })
             .catch(error => {
                 console.error('Erreur lors de l\'inscription:', error.response ? error.response.data : error.message);
+                setSeverity('error');
+                setSnackMessage(error.response.data);
+                setSnackOpen(true);
                 // Gérer les erreurs (par exemple, afficher un message d'erreur à l'utilisateur)
             });
     } else {
+      setSeverity('error');
+        
         setSnackMessage('Please fix the errors in the form');
         setSnackOpen(true);
     }
@@ -372,7 +378,7 @@ export default function InvestSignup() {
             autoHideDuration={6000}
             onClose={handleCloseSnack}
           >
-            <Alert onClose={handleCloseSnack} severity="success" sx={{ width: '100%' }}>
+            <Alert onClose={handleCloseSnack} severity={severity} sx={{ width: '100%' }}>
               {snackMessage}
             </Alert>
           </Snackbar>

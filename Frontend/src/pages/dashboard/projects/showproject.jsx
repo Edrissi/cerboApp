@@ -19,7 +19,6 @@ import PermissionPopup from '@/layouts/PermissionPopup';
 import {convertByteArrayToFile} from '@/api/ConvertArray';
 import addComment from '@/api/AddComment';
 import CommentInput from './commentInput';
-
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -29,6 +28,12 @@ import Paper from '@mui/material/Paper';
 import InvoiceDocument from '@/template/PrintComponent';
 
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import ValiderProjet from '@/api/ValiderProjet';
 
 export function ShowProject(isAdmin) {
  
@@ -172,24 +177,7 @@ export function ShowProject(isAdmin) {
    
     
   ];
-  // var infoInvistigateur=[
-  //   {
-  //     title:"nom d'invistigateur principal",
-  //     value:data.nom
-  //   },
-  //   {
-  //     title:"prenom d'invistigateur principal",
-  //     value:data.prenom
-  //   },
-  //   {
-  //     title:"Email",
-  //     value:data.email
-  //   },
-  //   {
-  //     title:"Titre",
-  //     value:data.investigateur.titre
-  //   }
-  // ];
+ 
 
   const handleDeleteProject = async (id) => {
     try {
@@ -246,6 +234,16 @@ export function ShowProject(isAdmin) {
 //     );
 //   }; 
   // new steppper for test 
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const [activeStep, setActiveStep] = React.useState(0);
 
  
@@ -277,6 +275,27 @@ export function ShowProject(isAdmin) {
 
   const {comments , loading }= FetchCommentTrue(id);
 
+  const [pdfFile, setPdfFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setPdfFile(event.target.files[0]);
+    
+  };
+  console.log(pdfFile)
+
+  const handleSubmitValider = async () => {
+    if (!pdfFile) {
+      alert('Please select a file first.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', pdfFile);
+    const response = await ValiderProjet(id,formData);
+    console.log(response.data)
+    
+  };
+
   if (loader===true) return <Loading />
   return (
     
@@ -295,14 +314,53 @@ export function ShowProject(isAdmin) {
             Project Informations
           </Typography>   
           <div className="flex items-center">
-            {isAdmin.isAdmin && (
+          {isAdmin.isAdmin && projectdata.statut === "revised" && (
             <div className="ml-auto">
+                <Button  variant="gradient" onClick={handleClickOpen} color="orange">
+                  Valider
+                </Button>
+
+                  
+                     <Dialog
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          {"Validation Du Projet "}
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText style={{ color: 'black', textIndent: '20px' }} id="alert-dialog-description">
+                          <svg style={{ width: '48px', height: '36px', marginRight: '8px' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="red" class="size-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                          </svg>
+
+                          Il faut prendre en considération qu'après la validation du projet, <span style={{ color: 'red' }} >ni les membres ni l'administrateur </span>ne seront capables d'accéder aux données de ce projet .
+                          </DialogContentText>
+                          <input
+                            type="file"
+                            accept="application/pdf"
+                            className="mt-5 p-2 text-lg border-2 border-gray-300 rounded-md bg-gray-100 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
+                            onChange={handleFileChange}
+                            style={{ marginTop: '20px' }}
+                          />
+                        </DialogContent>
+                        <DialogActions>
+                          <Button color="white" onClick={handleClose}>Cancel</Button>
+                          <Button  color="red"  onClick={handleSubmitValider} autoFocus>
+                            VALIDER
+                          </Button>
+                        </DialogActions>
+                    </Dialog>
 
             <Link to={`../project/examin/${id}`} className="mx-3">
             
-              <Button variant="gradient" color="green">
+              <Button variant="gradient"  color="green">
                 Examiner
               </Button>
+
+
             </Link>
 
             {/* <Link to={`../project/edit/${id}`} className="mx-3">
@@ -311,14 +369,14 @@ export function ShowProject(isAdmin) {
                 Edit
               </Button>
             </Link> */}
-             
+{/* 
               <Button 
                 onClick={e=>deleteclick(id)}
                 variant="gradient" 
                 color="red"
               >                  
                 Delete
-              </Button>
+              </Button> */}
               
             </div>
             )}
