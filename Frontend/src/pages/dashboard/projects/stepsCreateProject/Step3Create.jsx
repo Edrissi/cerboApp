@@ -1,45 +1,75 @@
-import React, { useState } from 'react';
-import { Grid, TextField, Button } from '@mui/material';
+import React from 'react';
+import { Grid, TextField, Button, MenuItem } from '@mui/material';
 
-function Step3Create() {
-  const [users, setUsers] = useState([{ name: '', email: '' }]);
-
+function Step3Create({ data = [], setData }) {
   const handleAddUser = () => {
-    setUsers([...users, { name: '', email: '' }]);
+    const updatedUsers = [...data, { nom: '', prenom: '', titre: '', email: '', affiliation: '', adresse: '' }];
+    setData(updatedUsers);
   };
 
   const handleUserChange = (index, key, value) => {
-    const updatedUsers = [...users];
+    const updatedUsers = [...data];
     updatedUsers[index][key] = value;
-    setUsers(updatedUsers);
-  };
-
-  const handleSubmit = () => {
-    // Handle submitting users data
-    console.log(users);
+    setData(updatedUsers);
+    console.log('Updated Step 3 Data:', updatedUsers);
   };
 
   return (
     <Grid container spacing={2}>
-      {users.map((user, index) => (
+      {data.map((user, index) => (
         <Grid item xs={12} md={6} key={index}>
           <TextField
-            label="Name"
-            value={user.name}
-            onChange={(e) => handleUserChange(index, 'name', e.target.value)}
+            label="Nom"
+            value={user.nom}
+            onChange={(e) => handleUserChange(index, 'nom', e.target.value)}
             fullWidth
+            margin="normal"
           />
+          <TextField
+            label="Prenom"
+            value={user.prenom}
+            onChange={(e) => handleUserChange(index, 'prenom', e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Titre"
+            value={user.titre}
+            onChange={(e) => handleUserChange(index, 'titre', e.target.value)}
+            select
+            fullWidth
+            margin="normal"
+          >
+            <MenuItem value="Professeur">Professeur</MenuItem>
+            <MenuItem value="Docteur">Docteur</MenuItem>
+            <MenuItem value="Doctorant">Doctorant</MenuItem>
+            <MenuItem value="Autre">Autre</MenuItem>
+          </TextField>
           <TextField
             label="Email"
             value={user.email}
             onChange={(e) => handleUserChange(index, 'email', e.target.value)}
             fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Affiliation/Structure de recherche"
+            value={user.affiliation}
+            onChange={(e) => handleUserChange(index, 'affiliation', e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Adresse"
+            value={user.adresse}
+            onChange={(e) => handleUserChange(index, 'adresse', e.target.value)}
+            fullWidth
+            margin="normal"
           />
         </Grid>
       ))}
       <Grid item xs={12}>
         <Button variant="contained" onClick={handleAddUser}>Add User</Button>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
       </Grid>
     </Grid>
   );

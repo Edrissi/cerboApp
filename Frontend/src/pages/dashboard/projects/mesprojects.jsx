@@ -53,7 +53,7 @@ export function MesProjects() {
   
  
   function statuscolor(status){
-    if(status===null) return "orange"
+    if(status==="nouveau") return "orange"
     if(status==="revised") return "yellow"
     if(status==="valider") return "green"
     

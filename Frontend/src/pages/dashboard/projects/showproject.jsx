@@ -38,6 +38,7 @@ import ValiderProjet from '@/api/ValiderProjet';
 export function ShowProject(isAdmin) {
  
 
+  console.log(isAdmin)
   console.log(isAdmin.isAdmin);
   const [showDeletePopup, setShowDeletePopup] = React.useState({
     value:false,
@@ -97,6 +98,7 @@ export function ShowProject(isAdmin) {
     
     };
   
+
   const handleSubmit = async () => {
     try {
       // Assume projetId and userId are available from somewhere

@@ -1,8 +1,10 @@
-import React,{useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Typography from '@mui/material/Typography';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -16,37 +18,57 @@ const VisuallyHiddenInput = styled('input')({
   width: 0.4,
 });
 
+export default function InputFileUpload({ file, onFileChange }) {
+  const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(file);
 
-export default function InputFileUpload() {
-  const [loading, setLoading] = React.useState(false);
+  useEffect(() => {
+    setSelectedFile(file);
+  }, [file]);
 
   const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Set loading to true to indicate that file is being uploaded
+    const selectedFile = event.target.files[0];
+    if (selectedFile && selectedFile.type === 'application/pdf') {
       setLoading(true);
 
       // Simulate uploading delay
       setTimeout(() => {
-        // After a delay, you can perform any upload logic here
-        // Once upload is complete, you can set loading back to false
+        setSelectedFile(selectedFile);
+        onFileChange(selectedFile);
         setLoading(false);
       }, 2000); // Simulated 2 seconds delay for demonstration purposes
+    } else {
+      alert('Please upload a PDF file.');
     }
-  }
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    onFileChange(null);
+  };
+
   return (
-
-
-    <Button
-      component="label"
-      role={undefined}
-      variant="contained"
-      tabIndex={-1}
-      startIcon={<CloudUploadIcon />}
-      disabled={loading}
-    >
-      Upload file
-      <VisuallyHiddenInput type="file" onChange={handleFileUpload}/>
-    </Button>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      {!selectedFile ? (
+        <>
+          <Button
+            variant="contained"
+            component="label"
+            startIcon={<CloudUploadIcon />}
+            disabled={loading}
+          >
+            {loading ? 'Uploading...' : 'Upload PDF'}
+            <VisuallyHiddenInput type="file" accept=".pdf" onChange={handleFileUpload} />
+          </Button>
+        </>
+      ) : (
+        <div>
+          <Typography variant="body1">{selectedFile.name}</Typography>
+          <IconButton onClick={handleRemoveFile}>
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      )}
+    </div>
   );
 }

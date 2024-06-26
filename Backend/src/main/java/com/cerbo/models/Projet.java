@@ -39,8 +39,10 @@ public class Projet {
     private String typeConsentement;
     private String populationCible;
     private boolean prelevement;
+    private String typesDonnees;
     private String typePrelevement;
     private String quantitePrelevement;
+    private String programmeEmploiFinancement;
     private String sourcefinancement;
 
     // Attributs pour les fichiers PDF
