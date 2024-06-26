@@ -102,7 +102,7 @@ public class projetController {
             projet.setAttestationCNDP(attestationCNDP.getBytes());
             projet.setCvInvestigateurPrincipal(cvInvestigateurPrincipal.getBytes());
             projet.setAutresDocuments(autresDocuments.getBytes());
-
+            projet.setStatut("nouveau");
             projetService.enregistrerProjet(projet, id);
             return ResponseEntity.ok().body("Projet soumis avec succès !");
         } catch (Exception e) {
