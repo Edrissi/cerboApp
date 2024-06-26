@@ -19,7 +19,7 @@ import {convertByteArrayToFile} from '@/api/ConvertArray';
 import addComment from '@/api/AddComment';
 import CommentInput from './commentInput';
 
-export function ShowMesProject(isAdmin) {
+export function ShowMesProject() {
   
   const [showDeletePopup, setShowDeletePopup] = React.useState({
     value:false,

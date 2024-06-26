@@ -15,7 +15,7 @@ import {
   Button,
   Alert
 } from "@material-tailwind/react";
-import { platformSettingsData, conversationsData } from "@/data";
+
 import { FaPhone, FaEnvelope, FaMapMarker,FaGraduationCap,FaBriefcase } from 'react-icons/fa';
 import axios from "axios";
 import Cookies from "js-cookie";

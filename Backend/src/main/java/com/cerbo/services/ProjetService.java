@@ -105,8 +105,8 @@ public class ProjetService {
         projetValide.setAutresDocuments(projet.getAutresDocuments());
 
         projetValideRepository.save(projetValide);
+        projet.setDecisionFinal(finalDecision);
 
-        projet.setDecisionFinal(null);
         projet.setDescriptifProjet(null);
         projet.setAttestationCNDP(null);
         projet.setAttestationEngagement(null);

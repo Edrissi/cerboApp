@@ -52,9 +52,9 @@ export function ProjectTable() {
 
   console.log(projectslist)
   function statuscolor(status){
-    if(status=== null) return "blue-gray"
-    if(status==="revised") return "orange" 
-    //if(status==="pending") return "red"
+    if(status=== null) return "orange"
+    if(status==="revised") return "yellow" 
+    if(status==="valider") return "green"
     // if(status==="not started") return "blue-gray"
   }
 

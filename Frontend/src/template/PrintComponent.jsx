@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     
   },
   imageContainer: {
+   
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -102,13 +103,13 @@ const styles = StyleSheet.create({
   image1:{
     marginTop:20,
     textAlign: 'center',
-    width: 151, 
-    height: 113,
+    width: 100, 
+    height: 80,
   },
   
 });
 
-const InvoiceDocument = ({commentData,dateOf,invis,intitule}) => {
+const InvoiceDocument = ({commentData,dateOf,dateDepot,invis,intitule}) => {
   console.log(commentData)
   
 
@@ -135,7 +136,7 @@ const InvoiceDocument = ({commentData,dateOf,invis,intitule}) => {
         </View>
 
         <View style={styles.header3}>
-          <Text>Le Comité d’Ethique pour la Recherche Biomédicale d’Oujda (CERBO) a été saisi le ………….. d’une demande d’avis concernant votre projet de recherche intitulé « <Text style={styles.blueText} >{intitule}</Text>. ».</Text>
+          <Text>Le Comité d’Ethique pour la Recherche Biomédicale d’Oujda (CERBO) a été saisi le {dateDepot}. d’une demande d’avis concernant votre projet de recherche intitulé « <Text style={styles.blueText} >{intitule}</Text>. ».</Text>
         </View>
 
         <View style={styles.header3}>

@@ -52,10 +52,11 @@ export function MesProjects() {
 
   
  
-  function statuscolor(){
-    // if(status==="completed") return "green"
-    // if(status==="in progress") 
-    return "blue"
+  function statuscolor(status){
+    if(status===null) return "orange"
+    if(status==="revised") return "yellow"
+    if(status==="valider") return "green"
+    
     // if(status==="pending") return "red"
     // if(status==="not started") return "blue-gray"
   }
@@ -159,7 +160,7 @@ return (
               </thead>
               <tbody>
                 {projectslist.map(
-                  ({id ,intituleProjet,dureeEtude ,investigateur}) => {
+                  ({id ,intituleProjet,dureeEtude ,investigateur,statut}) => {
                     const className = `py-4 px-5`;
                     
                     return (
@@ -208,8 +209,8 @@ return (
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={statuscolor()}
-                          value={"en cours"}
+                          color={statuscolor(statut)}
+                          value={statut}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
                         </td>

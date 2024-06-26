@@ -381,7 +381,7 @@ export function Home() {
         </Card>
         
       </div>
-                  <div><MyPDFViewer dataUrl={"../../../public/rapport.pdf"}/></div>
+      <div><MyPDFViewer dataUrl={"../../../public/rapport.pdf"}/></div>
                  
                  
     

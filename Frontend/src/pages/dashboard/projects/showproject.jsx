@@ -97,9 +97,6 @@ export function ShowProject(isAdmin) {
     
     };
   
-
- 
-
   const handleSubmit = async () => {
     try {
       // Assume projetId and userId are available from somewhere
@@ -283,8 +280,11 @@ export function ShowProject(isAdmin) {
   };
   console.log(pdfFile)
 
+  const [successValider, setSuccessValider] = useState(false);
+
   const handleSubmitValider = async () => {
-    if (!pdfFile) {
+
+    try{if (!pdfFile) {
       alert('Please select a file first.');
       return;
     }
@@ -292,9 +292,21 @@ export function ShowProject(isAdmin) {
     const formData = new FormData();
     formData.append('file', pdfFile);
     const response = await ValiderProjet(id,formData);
+    setSuccessValider(true);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
     console.log(response.data)
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    alert('Failed to submit the form. Please try again.');
+  }
     
+
   };
+  console.log(projectdata.decisionFinal)
+
 
   if (loader===true) return <Loading />
   return (
@@ -347,10 +359,14 @@ export function ShowProject(isAdmin) {
                           />
                         </DialogContent>
                         <DialogActions>
+                          {successValider ? (<span style={{color:"green",}} > Success ! The page will reload shortly...</span>) :(<>
                           <Button color="white" onClick={handleClose}>Cancel</Button>
                           <Button  color="red"  onClick={handleSubmitValider} autoFocus>
                             VALIDER
                           </Button>
+                          </>)
+                            }
+
                         </DialogActions>
                     </Dialog>
 
@@ -410,7 +426,7 @@ export function ShowProject(isAdmin) {
             <ShowDetails 
               key={"invi3"} 
               title={"structure de recherche"} 
-              data={projectdata.investigateur.StructureRecherche} 
+              data={projectdata.investigateur.structureRecherche} 
               className="w-1/2 mb-1 px-3 py-3" 
             /> 
         
@@ -445,11 +461,23 @@ export function ShowProject(isAdmin) {
                         >
                           Rapport : 
                         </Typography>
-                        <PDFDownloadLink document={<InvoiceDocument commentData={comments} dateOf={"20/06/2024"} invis={"Edrissi"} intitule={"BIO medical"}/>} fileName="rapport.pdf">
+                        <PDFDownloadLink document={<InvoiceDocument commentData={comments} dateOf={projectdata.premiereExamination} dateDepot={projectdata.premiereExamination} invis={projectdata.investigateur.nom +''+ projectdata.investigateur.prenom} intitule={projectdata.intituleProjet}/>} fileName="rapport.pdf">
                           {({ blob, url, loading, error }) =>
                             loading ? 'Loading document...' : <div className='underline text-blue-600'>Download Rapport</div>
                           }
                         </PDFDownloadLink>
+
+                        </div>
+                }
+
+            { (projectdata.statut === "valider") && <div>
+                <Typography
+                          variant="small"
+                          className="text-[20px] font-medium uppercase text-orange-600"
+                        >
+                          Decision Final : 
+                        </Typography>
+                        <iframe style={{ maxWidth: 500 , display: 'block', margin: 'auto' }}  src={`${convertByteArrayToFile(projectdata.decisionFinal, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
 
                         </div>
                 }

@@ -11,7 +11,7 @@ const ValiderProjet = async (id , formData) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert('File uploaded successfully!');
+      
       return response; 
     } 
   } catch (error) {
