@@ -131,6 +131,15 @@ export function UserTable({userOrInvis}) {
     })
   }
 
+  const typeMemb=(userOrInvis)=>{
+    if(userOrInvis === "users"){
+      return "Membres";
+    }
+    if(userOrInvis === "invis"){
+      return "Investigateurs";
+    }
+  }
+
   if (!dataLoaded) {
     return <Loading />;
   }
@@ -159,7 +168,7 @@ export function UserTable({userOrInvis}) {
           >
             <div className="flex items-center justify-between gap-4">
               <Typography variant="h5" color="blue-gray" className="mb-1">
-                Users Table
+                liste des {typeMemb(userOrInvis)}
               </Typography>
             </div>
             <div className="flex items-center justify-between mr-5 gap-4">
@@ -180,7 +189,7 @@ export function UserTable({userOrInvis}) {
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["user","email", "prenom", "manage"].map((el) => (
+                  {["","nom","prenom", "email", "manage"].map((el) => (
                     <th
                       key={el}
                       className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -202,27 +211,29 @@ export function UserTable({userOrInvis}) {
               }`;
                     return (
                       <tr key={key}>
+                       
                         <td className={className}>
-                          <div className="flex items-center gap-4">
-                            
-                            <div>
-                              <Typography variant="small" color="blue-gray" className="font-semibold">
-                                {` ${user.nom}`}
-                              </Typography>
-                              <Typography className="text-xs font-normal text-blue-gray-500">{user.email}</Typography>
-                            </div>
-                          </div>
+                          <Typography className="text-xs font-semibold text-blue-gray-600">
+                            {key+1}
+                          </Typography>
+                          
                         </td>
                         <td className={className}>
                           <Typography className="text-xs font-semibold text-blue-gray-600">
-                            {user.email}
+                            {user.nom}
+                          </Typography>
+                          
+                        </td>
+                        <td className={className}>
+                          <Typography className="text-xs font-semibold text-blue-gray-600">
+                            {user.prenom}
                           </Typography>
                           
                         </td>
                         
                         <td className={className}>
                           <Typography className="text-xs font-semibold text-blue-gray-600">
-                            {user.prenom}
+                            {user.email}
                           </Typography>
                         </td>
                         <td className={className}>
@@ -242,7 +253,7 @@ export function UserTable({userOrInvis}) {
                                     color="text-blue-gray-500"
                                     className="font-normal"
                                   >
-                                    Show
+                                    Voir
                                   </Typography>
                                 </div>
                               </MenuItem>
@@ -258,7 +269,7 @@ export function UserTable({userOrInvis}) {
                                     color="text-blue-gray-500"
                                     className="font-normal"
                                   >
-                                    Delete
+                                    Supprimer
                                   </Typography>
                                 </div>
                               </MenuItem>

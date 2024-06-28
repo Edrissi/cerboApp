@@ -86,7 +86,7 @@ const StepExamin = ({id,fileCommented,data}) => {
           <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' ,color:"green" }} >{fileCommented}</div>
           <List>
             <ListItem  ripple={false} className="py-1 pr-1 pl-4 flex items-center border-b border-gray-200">
-                        <h2 className="text-lg font-bold mr-4">Commetaire</h2>
+                        <h2 className="text-lg font-bold mr-4">Commentaire</h2>
                         <ListItemSuffix>
                         <div className="flex items-center space-x-4">
                             <IconButton variant="text" color="blue-gray">
@@ -154,7 +154,7 @@ const StepExamin = ({id,fileCommented,data}) => {
           <iframe src={`${convertByteArrayToFile(data, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer" style={{ width: '100%', height: '100%', minHeight: '400px',border: 'none' }} ></iframe>
         ): 
         <div className="flex justify-center items-center h-full min-h-[400px] bg-gray-100 text-gray-500 text-lg font-bold">
-          No PDF available.
+          Aucun Fichier Entrer par l'investigateur .
         </div>
         }
       </div>

@@ -136,29 +136,38 @@ export function Home() {
 
  
 
-  // const statisticsCardsData = [
-  //   {
-  //     icon: UsersIcon,
-  //     title: "Total Users",
-  //     value: TotalUsers,
-  //   },
-  //   {
-  //     icon: CheckCircleIcon,
-  //     title: "Completed Projects",
-  //     value:CompletedProjectstotal ,
-  //   },
-  //   {
-  //     icon: ClockIcon,
-  //     title: "In Progress Projects",
-  //     value: InProgressProjects,
-  //   },
-  //   {
-  //     icon: UserGroupIcon,
-  //     title: "Total Project",
-  //     value: Totalgrps,
-  //   },
-  // ];
+
+  // search 
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Function to handle search input change
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const normalizeString = (str) => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  };
+  // Filtered projects list based on search term
+  const filteredProjects = Array.isArray(projectslist)
+    ? projectslist.filter((project) =>
+      normalizeString(project.intituleProjet).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
+      )
+    : [];
+
+    function statuscolor(status){
+      if(status==="nouveau") return "orange"
+      if(status==="revisé") return "yellow"
+      if(status==="validé") return "green"
+      
+      // if(status==="pending") return "red"
+      // if(status==="not started") return "blue-gray"
+    }
   
+    function statusText(status){
+      if(status==="revised") return "revisé"
+      if(status==="valider") return "validé"
+    }
+   
   if(loader) return <Loading />
 
   return (
@@ -267,15 +276,17 @@ export function Home() {
           >
             <div className="flex items-center justify-between gap-4">
               <Typography variant="h5" color="blue-gray" className="mb-1">
-                Projects Examinés
+                Projets Examinés
               </Typography>
             </div>
             <div className="flex items-center justify-between mr-5 gap-4">
-              <Input 
-                  label="Search By Name" 
-                  value={filter}
-                  onChange={e=>setfilter(e.target.value)}
-                      />
+            <input
+          type="text"
+          placeholder="Search Intitule Projet"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="p-2 border border-gray-300 rounded"
+        />
               <Link to=".">
                   <IconButton variant="gradient" color="blue">
                     <MagnifyingGlassIcon className="h-5 w-5 text-white" />
@@ -288,7 +299,7 @@ export function Home() {
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Ref", "Intitule", "Date Examination" , "rapport" , "Statut" , "show"].map(
+                  {["Ref", "Intitule", "Date Examination" , "rapport" , "Status" , "voir"].map(
                     (el) => (
                       <th
                         key={el}
@@ -306,7 +317,7 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {projectslist
+                {filteredProjects
                 .map(
                   ({id,ref,intituleProjet,date, investigateur ,statut }) => {
                     const className = `py-4 px-5`;
@@ -356,8 +367,8 @@ export function Home() {
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={statut=="revised" ?  "orange" : ("valider" ? "green" : "blue-gray")}
-                          value={statut}
+                          color={statuscolor(statusText(statut))}
+                          value={statusText(statut)}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
                       </td>
@@ -381,7 +392,7 @@ export function Home() {
         </Card>
         
       </div>
-      <div><MyPDFViewer dataUrl={"../../../public/rapport.pdf"}/></div>
+    
                  
                  
     

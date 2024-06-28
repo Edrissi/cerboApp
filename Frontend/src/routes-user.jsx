@@ -25,7 +25,7 @@ import {
       pages: [
         {
           icon: <TableCellsIcon  {...icon} />,
-          name: "projects",
+          name: "projets",
           path: "/projects",
           element:<ProjectTable />,
         },

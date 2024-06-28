@@ -20,7 +20,7 @@ import ProjectData
 import StepExamin from "./stepsCreateProject/StepExamin";
 
 
-const steps = ["descr", 'ConsEth', 'fichInfo',"FichCons","attCndp","CV","FichCons","FichCons","attCndp","CV","FichCons"];
+const steps = ["descriptif", 'Consideration ethique', 'Informations AR',"Informations FR","Consentement FR","Consentement FR","Engagement","CNDP","CV","autre"];
 
 export function ExaminStepper({id}) {
   
@@ -39,7 +39,7 @@ export function ExaminStepper({id}) {
     return step === 1;
   };
   useEffect(() => {
-    window.scrollTo(0, 0); // Scrolls to the top of the page
+    window.scrollTo(0, 100); // Scrolls to the top of the page
   }, [activeStep]);
 
   const isStepSkipped = (step) => {
@@ -146,25 +146,18 @@ export function ExaminStepper({id}) {
                         flex: '1 1 auto',
                         margin:1,
                         padding:1
-                     }} >
-                      { activeStep == 0 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet} /> }
-                      { activeStep == 1 && <StepExamin id={id} fileCommented={"Consideration Ethique"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 2 && <StepExamin id={id} fileCommented={"fiche Information Arabe"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 3 && <StepExamin id={id} fileCommented={"fiche Information Francais"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 4 && <StepExamin id={id} fileCommented={"fiche Consentement Arabe"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 5 && <StepExamin id={id} fileCommented={"CNDP"} data={projectdata.attestationcndp}/> }
-                      { activeStep == 6 && <StepExamin id={id} fileCommented={"CNDP"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 7 && <StepExamin id={id} fileCommented={"attestation Engagement"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 8 && <StepExamin id={id} fileCommented={"CNDP"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 9 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 10 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 11 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-
-                      { activeStep == 12 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 13 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 14 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-                      { activeStep == 15 && <StepExamin id={id} fileCommented={"descriptif"} data={projectdata.descriptifProjet}/> }
-
+                     }} > 
+                      { activeStep == 0 && <StepExamin id={id} fileCommented={"Descriptif"} data={projectdata.descriptifProjet} /> }
+                      { activeStep == 1 && <StepExamin id={id} fileCommented={"Consideration Ethique"} data={projectdata.considerationEthique}/> }
+                      { activeStep == 2 && <StepExamin id={id} fileCommented={"Fiche Information Arabe"} data={projectdata.ficheInformationArabe}/> }
+                      { activeStep == 3 && <StepExamin id={id} fileCommented={"Fiche Information Francais"} data={projectdata.ficheInformationsFrancais}/> }
+                      { activeStep == 4 && <StepExamin id={id} fileCommented={"fiche Consentement Arabe"} data={projectdata.ficheConsentementArabe}/> }
+                      { activeStep == 5 && <StepExamin id={id} fileCommented={"fiche Consentement Francais"} data={projectdata.ficheConsentementFrancais}/> }
+                      { activeStep == 6 && <StepExamin id={id} fileCommented={"Attestation Engagement"} data={projectdata.attestationEngagement}/> }
+                      { activeStep == 7 && <StepExamin id={id} fileCommented={"attestation CNDP"} data={projectdata.attestationCNDP}/> }
+                      { activeStep == 8 && <StepExamin id={id} fileCommented={"CV Investigateur Principale"} data={projectdata.cvInvestigateurPrincipal}/> }
+                      { activeStep == 9 && <StepExamin id={id} fileCommented={"Autres documents"} data={projectdata.autresDocuments}/> }
+                   
 
                      </Box>
                   <Box sx={{display: 'flex', flexDirection: 'row', pt: 2 }}>

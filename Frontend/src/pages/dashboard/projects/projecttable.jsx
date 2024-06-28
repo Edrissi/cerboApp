@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   Typography,
   Card,
@@ -92,7 +92,39 @@ export function ProjectTable() {
     }
   };
 
+   // search 
+   const [searchTerm, setSearchTerm] = useState('');
+
+   // Function to handle search input change
+   const handleSearchChange = (event) => {
+     setSearchTerm(event.target.value);
+   };
+   const normalizeString = (str) => {
+     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+   };
+   // Filtered projects list based on search term
+   const filteredProjects = Array.isArray(projectslist)
+     ? projectslist.filter((project) =>
+       normalizeString(project.intituleProjet).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
+       )
+     : [];
+
+     
+    function statuscolor(status){
+      if(status==="nouveau") return "orange"
+      if(status==="revisé") return "yellow"
+      if(status==="validé") return "green"
+      
+      // if(status==="pending") return "red"
+      // if(status==="not started") return "blue-gray"
+    }
   
+    function statusText(status){
+      if(status==="revised") return "revisé"
+      if(status==="valider") return "validé"
+      if(status==="nouveau") return "nouveau"
+
+    }
   if(loader) return <Loading/>
 
 return (
@@ -117,15 +149,17 @@ return (
           >
             <div className="flex items-center justify-between gap-4">
               <Typography variant="h5" color="blue-gray" className="mb-1">
-                Projects Table
+                Liste des projets
               </Typography>
             </div>
             <div className="flex items-center justify-between mr-5 gap-4">
-              <Input 
-                  label="Search By Name" 
-                  value={filter}
-                  onChange={e=>setfilter(e.target.value)}
-                      />
+            <input
+              type="text"
+              placeholder="Search Intitule Projet"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="p-2 border border-gray-300 rounded"
+            />
               <Link to=".">
                   <IconButton variant="gradient" color="black">
                     <MagnifyingGlassIcon className="h-5 w-5 text-white" />
@@ -138,7 +172,7 @@ return (
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["id","intitule projet","durre d'etude", "invistigateur principale","status"].map(
+                  {["id","intitule projet","durée d'etude", "investigateur principale","status"].map(
                     (el) => (
                       <th
                         key={el}
@@ -156,7 +190,7 @@ return (
                 </tr>
               </thead>
               <tbody>
-                {projectslist.map(
+                {filteredProjects.map(
                   (project,index) => {
                     const {id ,intituleProjet,dureeEtude ,investigateur,statut}=project;
                     const className = `py-4 px-5`;
@@ -225,8 +259,8 @@ return (
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={statuscolor(statut)}
-                          value={statut}
+                          color={statuscolor(statusText(statut))}
+                          value={statusText(statut)}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
                       </td>

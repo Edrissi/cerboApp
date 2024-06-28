@@ -28,7 +28,7 @@ export const routes = [
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "projects",
+        name: "projets",
         path: "/projects",
         element: <ProjectTable />,
       },
@@ -47,7 +47,7 @@ export const routes = [
       },
       {
         icon: <UsersIcon {...icon} />,
-        name: "Invistigateurs",
+        name: "Investigateurs",
         path: "/invist",
         element: <UserTable userOrInvis={"invis" }/>,
       },

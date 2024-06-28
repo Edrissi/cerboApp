@@ -38,7 +38,7 @@ export default function InputFileUpload({ file, onFileChange }) {
         setLoading(false);
       }, 2000); // Simulated 2 seconds delay for demonstration purposes
     } else {
-      alert('Please upload a PDF file.');
+      alert('Le format du fichier doit être en format PDF.');
     }
   };
 

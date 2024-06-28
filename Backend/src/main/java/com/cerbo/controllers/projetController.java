@@ -102,7 +102,8 @@ public class projetController {
             projet.setAttestationCNDP(attestationCNDP.getBytes());
             projet.setCvInvestigateurPrincipal(cvInvestigateurPrincipal.getBytes());
             projet.setAutresDocuments(autresDocuments.getBytes());
-            projet.setStatut("nouveau");
+
+
             projetService.enregistrerProjet(projet, id);
             return ResponseEntity.ok().body("Projet soumis avec succès !");
         } catch (Exception e) {
@@ -185,7 +186,7 @@ public class projetController {
             nouveauProjet.setQuantitePrelevement(quantitePrelevement);
             nouveauProjet.setSourcefinancement(sourceFinancement);
             nouveauProjet.setProgrammeEmploiFinancement(programmeEmploiFinancement);
-
+            nouveauProjet.setStatut("nouveau");
             // Handle file uploads
             if (descriptifProjet != null && !descriptifProjet.isEmpty()) {
                 nouveauProjet.setDescriptifProjet(saveFile(descriptifProjet));

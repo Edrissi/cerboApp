@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   Typography,
   Card,
@@ -50,12 +50,17 @@ export function MesProjects() {
     setprojetslist(projectsdatanew)
   },[projects])
 
-  
+  function statusText(status){
+    if(status==="revised") return "revisé"
+    if(status==="valider") return "validé"
+    if(status==="nouveau") return "nouveau"
+
+  }
  
   function statuscolor(status){
     if(status==="nouveau") return "orange"
-    if(status==="revised") return "yellow"
-    if(status==="valider") return "green"
+    if(status==="revisé") return "yellow"
+    if(status==="validé") return "green"
     
     // if(status==="pending") return "red"
     // if(status==="not started") return "blue-gray"
@@ -96,6 +101,22 @@ export function MesProjects() {
   };
 
   
+  // search 
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Function to handle search input change
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const normalizeString = (str) => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  };
+  // Filtered projects list based on search term
+  const filteredProjects = Array.isArray(projectslist)
+    ? projectslist.filter((project) =>
+      normalizeString(project.intituleProjet).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
+      )
+    : [];
 
 
 return (
@@ -106,7 +127,7 @@ return (
         <div className="flex justify-end mr-5">
           <Link to="../project/create" className="ml-2">
               <Button variant="gradient" color="black">
-                 + New Project 
+                 + Nouveau Projet 
               </Button>
           </Link>
         </div>
@@ -120,15 +141,17 @@ return (
           >
             <div className="flex items-center justify-between gap-4">
               <Typography variant="h5" color="blue-gray" className="mb-1">
-                Projects Table
+                Mes Projets
               </Typography>
             </div>
             <div className="flex items-center justify-between mr-5 gap-4">
-              <Input 
-                  label="Search By Name" 
-                  value={filter}
-                  onChange={e=>setfilter(e.target.value)}
-                      />
+            <input
+              type="text"
+              placeholder="Search Intitule Projet"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="p-2 border border-gray-300 rounded"
+            />
               <Link to=".">
                   <IconButton variant="gradient" color="black">
                     <MagnifyingGlassIcon className="h-5 w-5 text-white" />
@@ -141,7 +164,7 @@ return (
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["id","intitule projet","durre d'etude", "invistigateur principale,"].map(
+                  {["id","intitule projet","durre d'étude", "investigateur principale","status","voir"].map(
                     (el) => (
                       <th
                         key={el}
@@ -159,8 +182,8 @@ return (
                 </tr>
               </thead>
               <tbody>
-                {projectslist.map(
-                  ({id ,intituleProjet,dureeEtude ,investigateur,statut}) => {
+                {filteredProjects.map(
+                  ({id ,intituleProjet,dureeEtude ,investigateur,statut},index) => {
                     const className = `py-4 px-5`;
                     
                     return (
@@ -172,7 +195,7 @@ return (
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {id}
+                              {index+1} 
                             </Typography>
                           </div>
                         </td>
@@ -209,8 +232,8 @@ return (
                         <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={statuscolor(statut)}
-                          value={statut}
+                          color={statuscolor(statusText(statut))}
+                          value={statusText(statut)}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
                         </td>
@@ -251,7 +274,7 @@ return (
                               </IconButton>
                             </MenuHandler>
                             <MenuList className="w-max border-0">
-                                <Link to={`../project/showMes/${id}`}>
+                                <Link to={`../project/show/${id}`}>
                                   <MenuItem className="flex items-center gap-3">
                                       <EyeIcon className="h-5 w-5 text-blue-gray-500" />
                                     <div>
@@ -266,7 +289,7 @@ return (
                                   </MenuItem>
                                 </Link>
 
-                                <Link to={`../project/edit/${id}`}>
+                                <Link to="../project/create" state={{ isEdit: true, projectId: id }}>
                                 <MenuItem className="flex items-center gap-3">
                                     <PencilSquareIcon className="h-5 w-5 text-blue-gray-500" />
                                     <div>

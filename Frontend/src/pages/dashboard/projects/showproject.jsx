@@ -38,8 +38,6 @@ import ValiderProjet from '@/api/ValiderProjet';
 export function ShowProject(isAdmin) {
  
 
-  console.log(isAdmin)
-  console.log(isAdmin.isAdmin);
   const [showDeletePopup, setShowDeletePopup] = React.useState({
     value:false,
     idvalue:null
@@ -135,24 +133,32 @@ export function ShowProject(isAdmin) {
   });
 
   
-  console.log(projectdata)
+  
   var infosproject=[
 
     {
       title:"Descriptif",
       value:projectdata.descriptifProjet,
+    }, 
+    {
+      title:"Consideration Ethique",
+      value:projectdata.considerationEthique,
     },
     {
       title:"Fiche Information Arabe",
       value:projectdata.ficheInformaionArabe,
     },
     {
-      title:"fiche information Francais",
+      title:"Fiche Information Francais",
       value:projectdata.ficheInformaionFrancais,
     },
     {
-      title:"fiche de Consentement Arabe",
+      title:"fiche Consentement Arabe",
       value:projectdata.ficheConsentementArabe,
+    },
+    {
+      title:"fiche Consentement Francais",
+      value:projectdata.ficheConsentementFrancais,
     },
     {
       title:"Attestation Engagement",
@@ -248,16 +254,28 @@ export function ShowProject(isAdmin) {
  
 
   const handleNext = () => {
+   
     scrollToStepperTop();
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+     
+    setActiveStep((prevActiveStep) => {
+      const newActiveStep = prevActiveStep + 1;
+      const fileName = infosproject[newActiveStep]?.title || 'Unknown file';
+      console.log(fileName);
+      setFileToComment(fileName);
+      return newActiveStep;
+    });
     
-    const fileName = infosproject[activeStep]?.title || 'Unknown file';
-    setFileToComment(fileName);
+   
     setComment('');
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => {
+      const newActiveStep = prevActiveStep - 1;
+      const fileName = infosproject[newActiveStep]?.title || 'Unknown file';
+      console.log(fileName);
+      return newActiveStep;
+    });
   };
 
   const handleReset = () => {
@@ -324,12 +342,12 @@ export function ShowProject(isAdmin) {
         className="flex items-center justify-between p-4 border-b-2  mb-2"
         >
         <div className="flex items-center justify-between w-full">
-          <Typography variant="h5" color="blue-gray" className="mb-1">
-            Project Informations
+          <Typography variant="h5" color="blue-gray" className="mb-1 ml-4">
+             {projectdata.intituleProjet} 
           </Typography>   
           <div className="flex items-center">
-          {isAdmin.isAdmin && projectdata.statut === "revised" && (
-            <div className="ml-auto">
+          {isAdmin.isAdmin && projectdata.statut !== "valider" && (
+            <div className="ml-1 mr-4 flex-shrink-0">
                 <Button  variant="gradient" onClick={handleClickOpen} color="orange">
                   Valider
                 </Button>
@@ -493,7 +511,7 @@ export function ShowProject(isAdmin) {
             <StepLabel
               optional={
                 index === 7 ? (
-                  <Typography variant="caption">Last step</Typography>
+                  <Typography variant="caption">Dernier fichier</Typography>
                 ) : null
               }
             >
@@ -502,28 +520,18 @@ export function ShowProject(isAdmin) {
             <StepContent>
               <Typography>
                           {step.title}
-                          
-                          {/* {data==null &&(
-                            <div className="flex items-center justify-between w-full">
-                              <card>
-                              <CardBody className="overflow-x-auto px-0 sm:px-6 py-4">
-                              Aucun fichier pour afficher
-                              </CardBody>
-                              </card>
-                            </div>
-                              )} */}
-                             
+                         
                           {step.value ? ( 
                             <div className="pdf-overlay">
                               <iframe style={{ maxWidth: 700 , display: 'block', margin: 'auto' }}  src={`${convertByteArrayToFile(step.value, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
-
+                              { (isAdmin.isMember || isAdmin.isAdmin ) &&
                               <div className="mt-4 mx-auto max-w-md bg-white p-4 rounded-lg shadow-md">
                               <card>
                                   <CardBody>
                                   <CommentInput  comment={comment} setComment={setComment} handleSubmit={handleCommentSubmit} />
                                   </CardBody>
                               </card> 
-                            </div>
+                            </div> }
                               
                             </div>
                             
@@ -548,7 +556,7 @@ export function ShowProject(isAdmin) {
                     onClick={handleNext}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    {index === infosproject.length - 1 ? 'Finish' : 'Continue'}
+                    {index === infosproject.length - 1 ? 'Terminer' : 'Continue'}
                   </Button>
                   <Button
                     color="white"
@@ -556,7 +564,7 @@ export function ShowProject(isAdmin) {
                     onClick={handleBack}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    Back
+                    Retour
                   </Button>
                 </div>
               </Box>
@@ -568,7 +576,7 @@ export function ShowProject(isAdmin) {
         <Paper square elevation={0} sx={{ p: 3 }}>
           <Typography>Vous avez terminé tous les Sections - Terminé</Typography>
           <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
+            retour au début 
           </Button>
         </Paper>
       )}

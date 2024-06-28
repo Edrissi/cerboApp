@@ -391,7 +391,7 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                 <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-3">
                         <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                            Current password
+                            Password  actuelle
                         </Typography>                           
                         <Input
                                 type="password"
@@ -409,7 +409,7 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
 
                     <div class="col-span-6 sm:col-span-3">
                       <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                            New password
+                            Nouveau Password
                         </Typography>                           
                         <Input
                                 type="password"

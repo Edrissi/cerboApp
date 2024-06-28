@@ -54,7 +54,7 @@ public class AuthenticationService {
 
     public ResponseEntity<String> registerUser(String code , String email, String password , String specialite , String affiliation , String titre , String nom, String prenom) {
         try {
-            if (codeRegMembreInterface.findByCodeAndEmailUser(code,email).isPresent()) {
+            if (codeRegMembreInterface.findByCode(code).isPresent()) {
 
                 if (userRepository.existsByEmail(email)) {
                     throw new EmailAlreadyExistsException("Email already exists");
@@ -98,7 +98,7 @@ public class AuthenticationService {
     public ResponseEntity<String> registerUserInvi(String code, String email, String password , String specialite , String adresse , String titre , String nom, String prenom){
 
         try {
-        if (codeRegistrationInviInterface.findByCodeAndEmailUser(code,email).isPresent()) {
+        if (codeRegistrationInviInterface.findByCode(code).isPresent()) {
             if (userRepository.existsByEmail(email)) {
                 throw new EmailAlreadyExistsException("Email already exists");
             }
