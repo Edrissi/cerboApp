@@ -264,6 +264,123 @@ public class projetController {
     }
 
 
+    // ediiiit
+    @PutMapping("/{projectId}/edit")
+    public ResponseEntity<?> updateProjet(
+            @PathVariable Long projectId,
+            @RequestParam("intituleProjet") String intituleProjet,
+            @RequestParam("dureeEtude") String dureeEtude,
+            @RequestParam("typeConsentement") String typeConsentement,
+            @RequestParam("populationCible") String populationCible,
+            @RequestParam("typesDonnees") String typesDonnees,
+            @RequestParam("prelevement") boolean prelevement,
+            @RequestParam("typePrelevement") String typePrelevement,
+            @RequestParam("quantitePrelevement") String quantitePrelevement,
+            @RequestParam("sourceFinancement") String sourceFinancement,
+            @RequestParam("programmeEmploiFinancement") String programmeEmploiFinancement,
+            @RequestParam(value = "descriptifProjet", required = false) MultipartFile descriptifProjet,
+            @RequestParam(value = "considerationEthique", required = false) MultipartFile considerationEthique,
+            @RequestParam(value = "ficheInformationArabe", required = false) MultipartFile ficheInformationArabe,
+            @RequestParam(value = "ficheInformationFrancais", required = false) MultipartFile ficheInformationFrancais,
+            @RequestParam(value = "ficheConsentementArabe", required = false) MultipartFile ficheConsentementArabe,
+            @RequestParam(value = "ficheConsentementFrancais", required = false) MultipartFile ficheConsentementFrancais,
+            @RequestParam(value = "attestationEngagement", required = false) MultipartFile attestationEngagement,
+            @RequestParam(value = "attestationCNDP", required = false) MultipartFile attestationCNDP,
+            @RequestParam(value = "cvInvestigateurPrincipal", required = false) MultipartFile cvInvestigateurPrincipal,
+            @RequestParam(value = "autresDocuments", required = false) MultipartFile autresDocuments,
+            @RequestParam("investigateurs") String autresInvestigateursJson) {
+        try {
+            // Fetch the existing project from repository
+            Optional<Projet> optionalProjet = projetRepository.findById(projectId);
+            if (!optionalProjet.isPresent()) {
+                return new ResponseEntity<>("Project not found", HttpStatus.NOT_FOUND);
+            }
+            Projet existingProjet = optionalProjet.get();
+
+            // Update project details
+            existingProjet.setIntituleProjet(intituleProjet);
+            existingProjet.setDureeEtude(dureeEtude);
+            existingProjet.setTypeConsentement(typeConsentement);
+            existingProjet.setPopulationCible(populationCible);
+            existingProjet.setTypesDonnees(typesDonnees);
+            existingProjet.setPrelevement(prelevement);
+            existingProjet.setTypePrelevement(typePrelevement);
+            existingProjet.setQuantitePrelevement(quantitePrelevement);
+            existingProjet.setSourcefinancement(sourceFinancement);
+            existingProjet.setProgrammeEmploiFinancement(programmeEmploiFinancement);
+
+            // Handle file uploads
+
+            existingProjet.setDescriptifProjet(saveFile(descriptifProjet));
+
+
+            existingProjet.setConsiderationEthique(saveFile(considerationEthique));
+
+
+            existingProjet.setFicheInformationArabe(saveFile(ficheInformationArabe));
+
+
+            existingProjet.setFicheInformationFrancais(saveFile(ficheInformationFrancais));
+
+
+            existingProjet.setFicheConsentementArabe(saveFile(ficheConsentementArabe));
+
+
+            existingProjet.setFicheConsentementFrancais(saveFile(ficheConsentementFrancais));
+
+
+            existingProjet.setAttestationEngagement(saveFile(attestationEngagement));
+
+
+            existingProjet.setAttestationCNDP(saveFile(attestationCNDP));
+
+
+            existingProjet.setCvInvestigateurPrincipal(saveFile(cvInvestigateurPrincipal));
+
+
+            existingProjet.setAutresDocuments(saveFile(autresDocuments));
+
+            // Repeat for other files...
+
+            // Save updated project
+            Projet savedProjet = projetRepository.save(existingProjet);
+
+            // Deserialize JSON string to List<AutreInvestigateurDto>
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<AutreInvestigateurDto> autresInvestigateurs;
+            try {
+                autresInvestigateurs = objectMapper.readValue(autresInvestigateursJson, new TypeReference<List<AutreInvestigateurDto>>() {});
+            } catch (IOException e) {
+                System.err.println("Error parsing JSON: " + e.getMessage());
+                return new ResponseEntity<>("Error parsing JSON: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+
+            // Update other investigators
+
+
+            if (autresInvestigateurs != null) {
+                for (AutreInvestigateurDto autreInvestigateurDto : autresInvestigateurs) {
+                    AutreInvestigateur autreInvestigateur = new AutreInvestigateur();
+                    autreInvestigateur.setNom(autreInvestigateurDto.getNom());
+                    autreInvestigateur.setPrenom(autreInvestigateurDto.getPrenom());
+                    autreInvestigateur.setTitre(autreInvestigateurDto.getTitre());
+                    autreInvestigateur.setEmail(autreInvestigateurDto.getEmail());
+                    autreInvestigateur.setAffiliation(autreInvestigateurDto.getAffiliation());
+                    autreInvestigateur.setAdresse(autreInvestigateurDto.getAdresse());
+                    autreInvestigateur.setProjet(savedProjet);
+                    autreInvestigateurRepository.save(autreInvestigateur);
+                }
+            }
+
+            return new ResponseEntity<>(savedProjet, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error saving files", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 
 

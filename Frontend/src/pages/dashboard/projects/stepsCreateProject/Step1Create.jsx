@@ -7,7 +7,7 @@ const FormGrid = styled(Grid)(() => ({
   flexDirection: 'column',
 }));
 
-function Step1Create({ data = {}, setData }) {
+function Step1Create({ data = {}, setData,isEdit}) {
   const handleChange = (key, value) => {
     setData({
       ...data,
@@ -33,6 +33,7 @@ function Step1Create({ data = {}, setData }) {
       <FormGrid item xs={12} md={6}>
         <FormLabel htmlFor="intituleProjet">Intitulé du projet</FormLabel>
         <TextField
+          disabled={isEdit}
           id="intituleProjet"
           value={intituleProjet}
           onChange={(e) => handleChange('intituleProjet', e.target.value)}
@@ -44,6 +45,7 @@ function Step1Create({ data = {}, setData }) {
         <FormLabel htmlFor="dureeEtude">Durée de l'étude</FormLabel>
         <TextField
           id="dureeEtude"
+          disabled={isEdit}
           value={dureeEtude}
           onChange={(e) => handleChange('dureeEtude', e.target.value)}
           fullWidth
@@ -55,6 +57,7 @@ function Step1Create({ data = {}, setData }) {
         <Select
           id="typeConsentement"
           value={typeConsentement}
+          disabled={isEdit}
           onChange={(e) => handleChange('typeConsentement', e.target.value)}
           fullWidth
         >
@@ -68,6 +71,7 @@ function Step1Create({ data = {}, setData }) {
       <FormGrid item xs={12} md={6}>
         <FormLabel htmlFor="populationCible">Population cible</FormLabel>
         <TextField
+        disabled={isEdit}
           id="populationCible"
           value={populationCible}
           onChange={(e) => handleChange('populationCible', e.target.value)}
@@ -78,6 +82,7 @@ function Step1Create({ data = {}, setData }) {
       <FormGrid item xs={12} md={6}>
         <FormLabel htmlFor="typesDonnees">Types de données</FormLabel>
         <TextField
+        disabled={isEdit}
           id="typesDonnees"
           value={typesDonnees}
           onChange={(e) => handleChange('typesDonnees', e.target.value)}
@@ -87,8 +92,10 @@ function Step1Create({ data = {}, setData }) {
 
       <FormGrid item xs={12} md={6}>
         <FormControlLabel
+
           control={
             <Checkbox
+            disabled={isEdit}
               checked={prelevement}
               onChange={(e) => handleChange('prelevement', e.target.checked)}
             />
@@ -97,11 +104,12 @@ function Step1Create({ data = {}, setData }) {
         />
       </FormGrid>
 
-      {prelevement && (
+      {prelevement &&  (
         <>
           <FormGrid item xs={12} md={6}>
             <FormLabel htmlFor="typePrelevement">Type de prélèvement</FormLabel>
             <TextField
+              disabled={isEdit}
               id="typePrelevement"
               value={typePrelevement}
               onChange={(e) => handleChange('typePrelevement', e.target.value)}
@@ -112,6 +120,7 @@ function Step1Create({ data = {}, setData }) {
           <FormGrid item xs={12} md={6}>
             <FormLabel htmlFor="quantitePrelevement">Quantité de prélèvement</FormLabel>
             <TextField
+              disabled={isEdit}
               id="quantitePrelevement"
               value={quantitePrelevement}
               onChange={(e) => handleChange('quantitePrelevement', e.target.value)}
@@ -124,6 +133,7 @@ function Step1Create({ data = {}, setData }) {
       <FormGrid item xs={12} md={6}>
         <FormLabel htmlFor="sourceFinancement">Source de financement</FormLabel>
         <TextField
+        disabled={isEdit}
           id="sourceFinancement"
           value={sourceFinancement}
           onChange={(e) => handleChange('sourceFinancement', e.target.value)}
@@ -134,6 +144,7 @@ function Step1Create({ data = {}, setData }) {
       <FormGrid item xs={12} md={6}>
         <FormLabel htmlFor="programmeEmploiFinancement">Programme d’emploi du financement</FormLabel>
         <TextField
+        disabled={isEdit}
           id="programmeEmploiFinancement"
           value={programmeEmploiFinancement}
           onChange={(e) => handleChange('programmeEmploiFinancement', e.target.value)}

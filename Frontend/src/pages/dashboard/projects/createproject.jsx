@@ -229,8 +229,9 @@ function CreateProject() {
           ) : (
             <>
               <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-              {activeStep === 0 && !isEdit && (
+              {activeStep === 0  && (
                 <Step1Create
+                isEdit={isEdit}
                   data={projectData.step1}
                   setData={(updatedStep1Data) => setProjectData((prevData) => ({
                     ...prevData,
@@ -238,8 +239,9 @@ function CreateProject() {
                   }))}
                 />
               )}
-              {activeStep === 1 && isStep2Editable && (
+              {activeStep === 1 &&  (
                 <Step2Create
+                  isEdit={isEdit}
                   data={projectData.step2}
                   setData={(updatedStep2Data) => setProjectData((prevData) => ({
                     ...prevData,
@@ -247,17 +249,9 @@ function CreateProject() {
                   }))}
                 />
               )}
-              {activeStep === 1 && !isEdit && (
-                <Step2Create
-                  data={projectData.step2}
-                  setData={(updatedStep2Data) => setProjectData((prevData) => ({
-                    ...prevData,
-                    step2: updatedStep2Data
-                  }))}
-                />
-              )}
-              {activeStep === 2 && !isEdit && (
+              {activeStep === 2 && (
                 <Step3Create
+                  isEdit={isEdit}
                   data={projectData.step3}
                   setData={(updatedStep3Data) => setProjectData((prevData) => ({
                     ...prevData,
