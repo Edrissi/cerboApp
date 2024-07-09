@@ -161,8 +161,11 @@ public class projetController {
             @RequestParam("programmeEmploiFinancement") String programmeEmploiFinancement,
             @RequestParam(value = "descriptifProjet", required = false) MultipartFile descriptifProjet,
             @RequestParam(value = "considerationEthique", required = false) MultipartFile considerationEthique,
-            @RequestParam(value = "ficheInformationArabeFrancais", required = false) MultipartFile ficheInformationArabeFrancais,
-            @RequestParam(value = "ficheConsentementArabeFrancais", required = false) MultipartFile ficheConsentementArabeFrancais,
+            @RequestParam(value = "ficheInformationArabe", required = false) MultipartFile ficheInformationArabe,
+            @RequestParam(value = "ficheInformationFrancais", required = false) MultipartFile ficheInformationFrancais,
+            @RequestParam(value = "ficheConsentementFrancais", required = false) MultipartFile ficheConsentementFrancais,
+            @RequestParam(value = "ficheConsentementArabe", required = false) MultipartFile ficheConsentementArabe,
+
             @RequestParam(value = "attestationEngagement", required = false) MultipartFile attestationEngagement,
             @RequestParam(value = "attestationCNDP", required = false) MultipartFile attestationCNDP,
             @RequestParam(value = "cvInvestigateurPrincipal", required = false) MultipartFile cvInvestigateurPrincipal,
@@ -174,7 +177,7 @@ public class projetController {
             String email = jwt.getSubject();
             UserDetails userDetails = userService.loadUserByUsername(email);
             ApplicationUser applicationUser = (ApplicationUser) userDetails;
-
+            System.out.println(descriptifProjet);
             Projet nouveauProjet = new Projet();
             nouveauProjet.setIntituleProjet(intituleProjet);
             nouveauProjet.setDureeEtude(dureeEtude);
@@ -194,17 +197,17 @@ public class projetController {
             if (considerationEthique != null && !considerationEthique.isEmpty()) {
                 nouveauProjet.setConsiderationEthique(saveFile(considerationEthique));
             }
-            if (ficheInformationArabeFrancais != null && !ficheInformationArabeFrancais.isEmpty()) {
-                nouveauProjet.setFicheInformationArabe(saveFile(ficheInformationArabeFrancais));
+            if (ficheInformationArabe != null && !ficheInformationArabe.isEmpty()) {
+                nouveauProjet.setFicheInformationArabe(saveFile(ficheInformationArabe));
             }
-            if (ficheInformationArabeFrancais != null && !ficheInformationArabeFrancais.isEmpty()) {
-                nouveauProjet.setFicheInformationFrancais(saveFile(ficheInformationArabeFrancais));
+            if (ficheInformationFrancais != null && !ficheInformationFrancais.isEmpty()) {
+                nouveauProjet.setFicheInformationFrancais(saveFile(ficheInformationFrancais));
             }
-            if (ficheConsentementArabeFrancais != null && !ficheConsentementArabeFrancais.isEmpty()) {
-                nouveauProjet.setFicheConsentementFrancais(saveFile(ficheConsentementArabeFrancais));
+            if (ficheConsentementFrancais != null && !ficheConsentementFrancais.isEmpty()) {
+                nouveauProjet.setFicheConsentementFrancais(saveFile(ficheConsentementFrancais));
             }
-            if (ficheConsentementArabeFrancais != null && !ficheConsentementArabeFrancais.isEmpty()) {
-                nouveauProjet.setFicheConsentementArabe(saveFile(ficheConsentementArabeFrancais));
+            if (ficheConsentementArabe != null && !ficheConsentementArabe.isEmpty()) {
+                nouveauProjet.setFicheConsentementArabe(saveFile(ficheConsentementArabe));
             }
             if (attestationEngagement != null && !attestationEngagement.isEmpty()) {
                 nouveauProjet.setAttestationEngagement(saveFile(attestationEngagement));
@@ -339,6 +342,8 @@ public class projetController {
 
 
             existingProjet.setAutresDocuments(saveFile(autresDocuments));
+
+                existingProjet.setStatut("torevised");
 
             // Repeat for other files...
 

@@ -24,8 +24,10 @@ function Step2Create({ data = {}, setData }) {
   const templateFiles = {
     descriptifProjet: 'descriptifProjet.docx',
     considerationEthique: 'considerationEthique.docx',
-    ficheInformationArabeFrancais: 'ficheInformationArabe.docx',
-    ficheConsentementArabeFrancais: 'ficheConsentementFrancais.docx',
+    ficheInformationFrancais: 'ficheInformationFrancais.docx',
+    ficheInformationArabe: 'ficheInformationArabe.docx',
+    ficheConsentementFrancais: 'ficheConsentementFrancais.docx',
+    ficheConsentementArabe: 'ficheConsentementArabe.docx',
     attestationEngagement: 'attestationEngagement.docx',
     attestationCNDP: 'attestationCNDP.pdf',
    
@@ -45,8 +47,12 @@ function Step2Create({ data = {}, setData }) {
       {[
         { label: 'Description du projet', name: 'descriptifProjet' },
         { label: 'Consideration Ethique', name: 'considerationEthique' },
-        { label: "Fiche d'informations (arabe ou francais)", name: 'ficheInformationArabeFrancais' },
-        { label: 'Fiche de Consentement', name: 'ficheConsentementArabeFrancais' },
+        { label: "Fiche d'informations francais", name: 'ficheInformationArabe' },
+        { label: "Fiche d'informations arabe ", name: 'ficheInformationFrancais' },
+
+        { label: 'Fiche de Consentement', name: 'ficheConsentementFrancais' },
+        { label: 'Fiche de Consentement', name: 'ficheConsentementArabe' },
+
         { label: "Attestation d'engagment", name: 'attestationEngagement' },
         { label: 'Attestation CNDP', name: 'attestationCNDP' },
         { label: 'Cv Invistigateur Principal', name: 'cvInvestigateurPrincipal' },

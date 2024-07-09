@@ -114,7 +114,7 @@ export function ProjectTable() {
       if(status==="nouveau") return "orange"
       if(status==="revisé") return "yellow"
       if(status==="validé") return "green"
-      
+      if(status==="corrigé") return "pink"
       // if(status==="pending") return "red"
       // if(status==="not started") return "blue-gray"
     }
@@ -123,6 +123,8 @@ export function ProjectTable() {
       if(status==="revised") return "revisé"
       if(status==="valider") return "validé"
       if(status==="nouveau") return "nouveau"
+    if(status==="torevised") return "corrigé"
+
 
     }
   if(loader) return <Loading/>

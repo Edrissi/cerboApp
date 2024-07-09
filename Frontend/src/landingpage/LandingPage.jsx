@@ -1,6 +1,6 @@
 import Apropos from "./Apropos"
 import Contact from "./Contact"
-import Events from "./Events"
+
 import Footer from "./Footer"
 import Hero from "./Hero"
 import Navbar from "./Navbar"
@@ -15,7 +15,7 @@ const LandingPage = () => {
       <Hero/>
       <ServiceSection/>
       <Apropos id="apropos"  />
-      <Events id="evenements" />
+     
       <Contact id="contact" />
       <SignupSection id="signupsection" />
       <Footer/>

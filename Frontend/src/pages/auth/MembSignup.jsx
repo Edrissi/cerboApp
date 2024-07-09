@@ -161,7 +161,7 @@ export default function MembSignup() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5" sx={{ mb: 6, color: '#000080' }}>
-              Espace Member 
+              Espace Membre
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
               <Grid container spacing={2}>
@@ -369,7 +369,7 @@ export default function MembSignup() {
               <Grid container justifyContent="flex-end" sx={{ mb: 6 }}>
                 <Grid item>
                   <Link  href="../../signin" variant="body2" >
-                    Already have an account? Sign in
+                    vous avez un compte ? Sign in
                   </Link>
                 </Grid>
               </Grid>

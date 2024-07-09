@@ -177,10 +177,10 @@ function CreateProject() {
       Object.keys(projectData.step2).forEach(key => formData.append(key, projectData.step2[key]));
       // Step 3 investigators
       formData.append('investigateurs', JSON.stringify(projectData.step3));
-
+      console.log(formData);
       const currentDate = new Date();
       formData.append('dateDepot', currentDate.toISOString());
-
+      console.log(formData)
       const response = await axios({
         method: isEdit ? 'put' : 'post',
         url: isEdit ? `http://localhost:8000/invis/${projectId}/edit` : 'http://localhost:8000/invis/creer',
@@ -192,7 +192,7 @@ function CreateProject() {
       });
 
       console.log('Data submitted successfully:', response.data);
-      navigate('/success');
+      navigate('../myprojects');
     } catch (error) {
       console.error('Error submitting project data:', error);
     }
@@ -219,7 +219,7 @@ function CreateProject() {
           {activeStep === steps.length ? (
             <>
               <Typography sx={{ mt: 2, mb: 1 }}>
-                All steps completed - you&apos;re finished
+                 terminé
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                 <Box sx={{ flex: '1 1 auto' }} />
@@ -228,7 +228,7 @@ function CreateProject() {
             </>
           ) : (
             <>
-              <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+              <Typography sx={{ mt: 2, mb: 1 }}>Etape {activeStep + 1}</Typography>
               {activeStep === 0  && (
                 <Step1Create
                 isEdit={isEdit}
@@ -266,16 +266,16 @@ function CreateProject() {
                   onClick={handleBack}
                   sx={{ mr: 1 }}
                 >
-                  Back
+                  Précèdent
                 </Button>
                 <Box sx={{ flex: '1 1 auto' }} />
                 {activeStep === steps.length - 1 ? (
                   <Button onClick={handleSubmit} endIcon={<SendIcon />}>
-                    {isEdit ? 'Update' : 'Submit'}
+                    {isEdit ? 'Modifier' : 'Envoyer'}
                   </Button>
                 ) : (
                   <Button onClick={handleNext} endIcon={<ArrowForwardIcon />}>
-                    Next
+                    Suivant
                   </Button>
                 )}
               </Box>

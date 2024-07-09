@@ -367,7 +367,7 @@ export default function InvestSignup() {
               <Grid container justifyContent="flex-end" sx={{ mb: 6 }}>
                 <Grid item>
                   <Link href="../../signin" variant="body2" >
-                    Already have an account? Sign in
+                    vous avez un compte ? Sign in
                   </Link>
                 </Grid>
               </Grid>

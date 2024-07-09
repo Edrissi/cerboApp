@@ -145,11 +145,11 @@ export function ShowProject(isAdmin) {
       value:projectdata.considerationEthique,
     },
     {
-      title:"Fiche Information Arabe",
+      title:"fiche Information Arabe",
       value:projectdata.ficheInformaionArabe,
     },
     {
-      title:"Fiche Information Francais",
+      title:"fiche Information Francais",
       value:projectdata.ficheInformaionFrancais,
     },
     {
@@ -556,7 +556,7 @@ export function ShowProject(isAdmin) {
                     onClick={handleNext}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    {index === infosproject.length - 1 ? 'Terminer' : 'Continue'}
+                    {index === infosproject.length - 1 ? 'Terminer' : 'Suivant'}
                   </Button>
                   <Button
                     color="white"
@@ -564,7 +564,7 @@ export function ShowProject(isAdmin) {
                     onClick={handleBack}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    Retour
+                    Précedent
                   </Button>
                 </div>
               </Box>

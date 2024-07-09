@@ -198,7 +198,7 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
       <div class="col-span-2">
             <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
             <Typography variant="h4" color="blue-gray" className="mb-4 ">
-               Profil
+               Profile
             </Typography>
             {error && (
             <div className="mb-4">
@@ -231,7 +231,7 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
 
                         <div class="col-span-6 sm:col-span-3">
                             <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                Prenom
+                                Prénom
                             </Typography>    
                             <Input
                                     type="text"
@@ -302,7 +302,7 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                             </div>
                             <div class="col-span-6 sm:col-span-3">
                             <Typography variant="h6" color="blue-gray" class="mb-3 text-sm font-medium">
-                                   Specialite
+                                   Spécialite
                             </Typography>  
                              <Input
                                     type="text"
@@ -317,9 +317,9 @@ export function Profile({ isAuthenticated, user, isAdmin }) {
                                     name="graduate_at"
                                 /> 
                                 <div className="col-span-1 flex justify-end items-center mt-7">
-                                        <Button className="ml-4" variant="gradient" color="blue" onClick={"handleSubmit"}>
+                                        {/* <Button className="ml-4" variant="gradient" color="blue" onClick={"handleSubmit"}>
                                             Save changes
-                                        </Button>
+                                        </Button> */}
                                     </div>                   
                             </div>
                     </div> 

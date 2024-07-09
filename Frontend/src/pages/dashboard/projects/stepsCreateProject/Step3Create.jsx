@@ -75,7 +75,7 @@ function Step3Create({ data = [], setData ,isEdit}) {
         </Grid>
       ))}
       <Grid item xs={12}>
-        <Button variant="contained" onClick={handleAddUser}>Add User</Button>
+        <Button variant="contained" onClick={handleAddUser}>Ajouter un investigateur</Button>
       </Grid>
     </Grid>
   );

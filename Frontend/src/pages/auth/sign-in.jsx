@@ -51,10 +51,10 @@ export function SignIn() {
   
 
   return (
-    <section className="m-8 flex gap-4">
-      <div className="w-full lg:w-3/5 mt-24">
+    <section className="flex h-screen m-0 p-0">
+  <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 lg:p-24">
         <div className="text-center">
-          <Typography variant="h2" className="font-bold mb-4">
+          <Typography variant="h2" className="font-bold text-blue-900 mb-4">
             Se Connecter
           </Typography>
           <Typography
@@ -66,8 +66,9 @@ export function SignIn() {
           </Typography>
         </div>
       
-        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
-          <div className="mb-1 flex flex-col gap-6">
+       
+    <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-3/4">
+      <div className="mb-1 flex flex-col gap-6">
           {error && (
           <Alert variant="ghost" className="bg-red-500 bg-opacity-20 text-red-700">
           <span>{error}</span>
@@ -110,21 +111,21 @@ export function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button className="mt-6" fullWidth onClick={handleSignIn}>
+          <Button className="mt-6 bg-blue-600" fullWidth onClick={handleSignIn}>
             Sign In
           </Button>
           <Typography variant="body2"  align="center" className="mt-3">
-            Don't have an account? <Link style={{ color: 'blue' }} to="/signup">Sign Up</Link>
+            créer un compte <Link style={{ color: 'blue' }} to="/signup">Sign Up</Link>
           </Typography>
         </form>
       </div>
-      {/* <div className="w-2/5 h-full hidden lg:block">
-        <img
-          src="/img/pattern.png"
-          className="h-full w-full object-cover rounded-3xl"
-          alt="Pattern"
-        />
-      </div> */}
+      <div className="w-1/2 h-full hidden lg:block m-0 p-0">
+    <img
+      src="/img/pattern.png"
+      className="h-full w-full object-cover shadow-xl -ml-1"
+      alt="Pattern"
+    />
+  </div>
     </section>
   );
 }
