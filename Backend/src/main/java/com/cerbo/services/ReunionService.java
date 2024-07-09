@@ -6,6 +6,7 @@ import com.cerbo.models.Projet;
 import com.cerbo.models.Reunion;
 import com.cerbo.repository.ProjetRepository;
 import com.cerbo.repository.ReunionReopository;
+import com.cerbo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class ReunionService {
     @Autowired
     private ReunionReopository reunionReopository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public String ajouterProjetAuReunion(YearMonth date, List<ApplicationUser> users,Long id){
 
         Projet projet;
@@ -37,10 +41,20 @@ public class ReunionService {
 
             reunion = reunionsDansLeMemeMois.get(0);
             reunion.getProjets().add(projet);
+
+            for (ApplicationUser user : users) {
+                ApplicationUser user_n = userRepository.findById(user.getUserId()).orElseThrow(() -> new RuntimeException("user not found"));
+                setLastMeet(date, user_n);
+
+            }
+
             reunionReopository.save(reunion);
 
             return "Reunion deja existe , et le projet ajouter au reunion avec success";
-        } else {
+            }
+
+
+         else {
             // Créer une nouvelle réunion
             reunion = new Reunion();
             reunion.setDate(date); // Vous pouvez définir une autre date si nécessaire
@@ -48,17 +62,19 @@ public class ReunionService {
 
 
             for (ApplicationUser user : users) {
-                reunion.getMembresPresents().add(user);
+
+                    ApplicationUser user_n = userRepository.findById(user.getUserId()).orElseThrow(() -> new RuntimeException("user not found"));
+                    setLastMeet(date, user_n);
+                    reunion.getMembresPresents().add(user);
+
             }
             reunionReopository.save(reunion);
             return "Reunion Crée, et projet ajouter au reunion avec success";
         }
-
-
-
-
-
-
+    }
+    public void setLastMeet(YearMonth lastMeet,ApplicationUser user) {
+        user.setLastMeet(lastMeet);
+        userRepository.save(user);
 
     }
 }

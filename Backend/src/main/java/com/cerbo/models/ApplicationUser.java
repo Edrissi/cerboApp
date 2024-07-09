@@ -1,5 +1,6 @@
 package com.cerbo.models;
 
+import java.time.YearMonth;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,6 +58,9 @@ public class ApplicationUser implements UserDetails{
 
 	@Column(nullable = true)
     private String structureRecherche;
+
+	@Column(nullable = true)
+	private YearMonth lastMeet;
 
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
