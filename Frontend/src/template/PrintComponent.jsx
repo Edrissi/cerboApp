@@ -119,7 +119,7 @@ const InvoiceDocument = ({commentData,dateOf,dateDepot,invis,intitule}) => {
     <Document>
       <Page size="A4" style={styles.page}>
         <View >
-            <Image style={styles.image} src="/public/img/umpCerbo.jpg" />
+            <Image style={styles.image} src="/src/img/umpCerbo.jpg" />
         </View>
         <View style={styles.header}>
           <Text>Oujda le <Text style={styles.blueText}>{dateOf}</Text></Text>
@@ -166,7 +166,7 @@ const InvoiceDocument = ({commentData,dateOf,dateDepot,invis,intitule}) => {
         </View>
 
         <View style={styles.imageContainer} >
-            <Image style={styles.image1} src="/public/img/cerboSignature.jpg" />
+            <Image style={styles.image1} src="/src/img/cerboSignature.jpg" />
         </View>
 
     <View style={styles.footer}>

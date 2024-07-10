@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   spring-app:
-    build: .
+    build: ./Backend
     ports:
       - "8000:8000"
     depends_on:
@@ -15,12 +15,27 @@ services:
   db:
     image: mysql:8.0
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: cerbo_database
       MYSQL_ROOT_PASSWORD: admin
     volumes:
       - db_data:/var/lib/mysql
 
+  frontend:
+    build: ./Frontend  # Adjust path to your frontend directory
+    ports:
+      - "5173:5173"  # Adjust ports as needed
+    depends_on:
+      - spring-app
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8000/  # Backend URL
+    networks:
+      - cerboapp_default  # Use the same network as other services
+
+networks:
+  cerboapp_default:
+    driver: bridge
+  
 volumes:
   db_data:

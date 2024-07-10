@@ -1,8 +1,8 @@
 
-import logo from '/public/img/logo1.png';
-import service1 from '/public/img/service1.png';
-import service2 from '/public/img/service2.png';
-import service3 from '/public/img/service3.png';
+import logo from '/src/img/logo1.png';
+import service1 from '/src/img/service1.png';
+import service2 from '/src/img/service2.png';
+import service3 from '/src/img/service3.png';
 
 const ServiceSection = () => {
   return (

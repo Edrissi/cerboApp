@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import msg_icon from "/public/img/msg_icon.png";
-import mail_icon from "/public/img/mail1.jpg";
-import phone_icon from "/public/img/phone3.png";
-import location_icon from "/public/img/local.jpg";
+import msg_icon from "/src/img/msg_icon.png";
+import mail_icon from "/src/img/mail1.jpg";
+import phone_icon from "/src/img/phone3.png";
+import location_icon from "/src/img/local.jpg";
 
 const Contact = () => {
   const [result, setResult] = useState("");

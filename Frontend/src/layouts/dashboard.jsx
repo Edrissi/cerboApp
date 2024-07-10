@@ -7,7 +7,7 @@ import routesUser from '@/routes-user';
 import { useMaterialTailwindController } from '@/context';
 import { Spinner } from '@material-tailwind/react';
 import { routesInvis } from '@/routes-invis';
-import "../../public/css/color.css"
+import "/app/src/css/color.css"
 export function Dashboard({ isAuthenticated, user, isAdmin,isMember,isInvistigateur }) {
   const [controller] = useMaterialTailwindController();
   const { sidenavType } = controller;
@@ -20,8 +20,8 @@ export function Dashboard({ isAuthenticated, user, isAdmin,isMember,isInvistigat
         routes={isAdmin ? routes :(isMember ? routesUser : routesInvis)}
         brandImg={
           sidenavType === 'dark'
-            ? '/img/logo-ct.png'
-            : '/img/logo-ct-dark.png'
+            ? '/src/img/logo-ct.png'
+            : '/src/img/logo-ct-dark.png'
         }
       user={user} isAdmin={isAdmin} isMember={isMember} isInvistigateur={isInvistigateur} />
       <div className="p-4 xl:ml-60">

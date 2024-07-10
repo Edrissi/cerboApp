@@ -11,7 +11,7 @@ import Cookies from 'js-cookie';
 
 const steps = ['Informations du projet', 'Documents', 'Users'];
 
-function CreateProject() {
+export function CreateProject() {
   const location = useLocation();
   const isEdit = location.state?.isEdit || false;
   const projectId = location.state?.projectId || null; // Get projectId from state
@@ -286,5 +286,3 @@ function CreateProject() {
     </div>
   );
 }
-
-export default CreateProject;

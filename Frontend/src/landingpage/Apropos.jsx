@@ -1,6 +1,6 @@
 import React from 'react';
-import about_img from '/public/img/apropos.png';
-import play_icon from  '/public/img/play-icon.png';
+import about_img from '/src/img/apropos.png';
+import play_icon from  '/src/img/play-icon.png';
 
 const Apropos = () => {
   return (

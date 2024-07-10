@@ -4,6 +4,13 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: [{ find: "@", replacement: "/src" }],
+    alias: [{ find: "@", replacement: "/src" },
+      { find: '@public', 
+      replacement: "/public" }],
   },
+  server: {
+    host: true, // Listen on all network interfaces
+    port: 5173, //   Default Vite port
+  },
+ 
 });
