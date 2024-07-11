@@ -47,7 +47,9 @@ public class ProjetValide {
     // Attributs pour les fichiers PDF
 
     // decision final
+
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] decisionFinal;
 
     @Lob
@@ -55,30 +57,39 @@ public class ProjetValide {
     private byte[] descriptifProjet;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] considerationEthique;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] ficheInformationArabe;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] ficheInformationFrancais;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] ficheConsentementArabe;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] ficheConsentementFrancais;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] attestationEngagement;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] attestationCNDP;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] cvInvestigateurPrincipal;
 
     @Lob
+    @Column( nullable = true, columnDefinition = "LONGBLOB")
     private byte[] autresDocuments;
 
 
