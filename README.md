@@ -9,8 +9,6 @@ Ce projet vise à développer une plateforme de gestion des projets de recherche
   - [Télécharger Java](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 - Spring Boot 2.5.4 ou version supérieure
   - [Documentation Spring Boot](https://spring.io/projects/spring-boot)
-- Maven 3.8.4 ou version supérieure
-  - [Télécharger Maven](https://maven.apache.org/download.cgi)
 - MySQL 8.0 ou version supérieure
   - [Télécharger MySQL](https://dev.mysql.com/downloads/mysql/)
 ### Frontend
@@ -65,7 +63,7 @@ Ce projet vise à développer une plateforme de gestion des projets de recherche
      COPY target/cerbo-backend.jar /app/cerbo-backend.jar
      ENTRYPOINT ["java", "-jar", "/app/cerbo-backend.jar"]
      - Backend Dockerfile
-    -Frontend Dockerfile
+    - Frontend Dockerfile
      ```bash
      # Frontend Dockerfile
      FROM node:14 as build
