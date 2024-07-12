@@ -83,8 +83,8 @@ Ce projet vise à développer une plateforme de gestion des projets de recherche
    docker build -t frontend .
 3. Lancer les conteneurs Docker:
    ```bash
-   docker run -d -p 8000:8000 cerbo-backend
-   docker run -d -p 00:00 cerbo-frontend
+   docker run -d -p 8000:8000 backend
+   docker run -d -p 00:00 frontend
 
    
 
