@@ -60,8 +60,8 @@ Ce projet vise à développer une plateforme de gestion des projets de recherche
      ```bash
      # Backend Dockerfile
      FROM openjdk:11-jre-slim
-     COPY target/cerbo-backend.jar /app/cerbo-backend.jar
-     ENTRYPOINT ["java", "-jar", "/app/cerbo-backend.jar"]
+     COPY target/cerbo-backend.jar /app/backend.jar
+     ENTRYPOINT ["java", "-jar", "/app/backend.jar"]
      - Backend Dockerfile
     - Frontend Dockerfile
      ```bash
@@ -78,9 +78,9 @@ Ce projet vise à développer une plateforme de gestion des projets de recherche
 2. Construire les images Docker:
    ```bash
    cd backend
-   docker build -t cerbo-backend .
+   docker build -t backend .
    cd ../frontend
-   docker build -t cerbo-frontend .
+   docker build -t frontend .
 3. Lancer les conteneurs Docker:
    ```bash
    docker run -d -p 8000:8000 cerbo-backend
