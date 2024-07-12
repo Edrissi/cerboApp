@@ -22,16 +22,74 @@ Ce projet vise à développer une plateforme de gestion des projets de recherche
 - Tailwind CSS 2.1.0 ou version supérieure
   - [Documentation Tailwind CSS](https://tailwindcss.com/docs)
 
-## Instructions d'installation
-#### Backend
-
-1. **Installer Java**:
-   - [Télécharger Java](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-
-2. **Installer Maven**:
-   - [Télécharger Maven](https://maven.apache.org/download.cgi)
-
-3. **Cloner le repository**:
+## Instructions d'installation et de lancement
+### Lancement avec Docker
+1. Cloner le repository:
    ```bash
-   git clone https://github.com/votre-repository/cerbo-project.git
-   cd cerbo-project/backend
+   git clone https://github.com/Edrissi/cerboApp.git
+   cd cerboApp
+2. Lancer les conteneurs Docker:
+   ```bash
+   docker-compose build
+   docker-compose up
+3. Accéder à l'application:
+   - Backend : http://localhost:8000
+   - Frontend : http://localhost:5173
+
+## Procédures de Déploiement
+### Sans Docker
+1. Backend
+   - Compilez le projet avec Maven:
+     ```bash
+     mvn clean package
+   - Copiez le fichier JAR généré sur votre serveur:
+     ```bash
+     scp target/cerbo-backend.jar user@server:/path/to/deploy
+   - Lancez l'application sur le serveur:
+     ```bash
+     java -jar /path/to/deploy/cerbo-backend.jar
+2. Frontend
+   - Compilez le projet avec npm:
+     ```bash
+     npm run build
+   - Copiez le contenu du dossier build sur votre serveur web (Apache, Nginx, etc.):
+     ```bash
+     scp -r build/* user@server:/path/to/webroot
+   
+### Avec Docker
+1. Créer des fichiers Dockerfile pour le backend et le frontend:
+   - Backend Dockerfile
+     ```bash
+     # Backend Dockerfile
+     FROM openjdk:11-jre-slim
+     COPY target/cerbo-backend.jar /app/cerbo-backend.jar
+     ENTRYPOINT ["java", "-jar", "/app/cerbo-backend.jar"]
+     - Backend Dockerfile
+    -Frontend Dockerfile
+     ```bash
+     # Frontend Dockerfile
+     FROM node:14 as build
+     WORKDIR /app
+     COPY package*.json ./
+     RUN npm install
+     COPY . .
+     RUN npm run build
+
+     FROM nginx:alpine
+     COPY --from=build /app/build /usr/share/nginx/html
+2. Construire les images Docker:
+   ```bash
+   cd backend
+   docker build -t cerbo-backend .
+   cd ../frontend
+   docker build -t cerbo-frontend .
+3. Lancer les conteneurs Docker:
+   ```bash
+   docker run -d -p 8000:8000 cerbo-backend
+   docker run -d -p 00:00 cerbo-frontend
+
+   
+
+
+ 
+   
