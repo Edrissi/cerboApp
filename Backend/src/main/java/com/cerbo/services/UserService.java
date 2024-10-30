@@ -23,9 +23,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        System.out.println("In the user details service");
-
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user is not valid"));
     }
 
@@ -51,5 +48,7 @@ public class UserService implements UserDetailsService {
         return BCrypt.checkpw(oldPassword, user.getPassword());
     }
 
-
+    public boolean userExistByEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
 }

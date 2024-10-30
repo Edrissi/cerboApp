@@ -3,11 +3,12 @@ package com.cerbo.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.cerbo.Dto.ResetPasswordRequest;
 import com.cerbo.exception.EmailAlreadyExistsException;
 import com.cerbo.exception.InvalidRegistrationCodeException;
 import com.cerbo.models.CodeRegistrationInvistigateur;
-import com.cerbo.repository.CodeRegMembreInterface;
-import com.cerbo.repository.CodeRegistrationInviInterface;
+import com.cerbo.models.ResetPasswordCode;
+import com.cerbo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.Dto.LoginResponseDTO;
 import com.cerbo.models.Role;
-import com.cerbo.repository.RoleRepository;
-import com.cerbo.repository.UserRepository;
 
 @Service
 @Transactional
@@ -49,6 +48,16 @@ public class AuthenticationService {
 
     @Autowired
     private CodeRegistrationInviInterface codeRegistrationInviInterface;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private CodeGeneratorService generatorService;
+
+    @Autowired
+    private ResetPasswordCodeRepository resetPasswordCodeRepository;
+
 
     // authentication member -----------
 
@@ -149,5 +158,47 @@ public class AuthenticationService {
             return new LoginResponseDTO(null, "");
         }
     }
+
+    // send code for reseting password
+    public void  sendCodeResetPassword(String email){
+
+        String code = generatorService.generateCode();
+        String encodedCode = passwordEncoder.encode(code);
+        resetPasswordCodeRepository.save(new ResetPasswordCode(0L,email, encodedCode));
+
+        emailService.sendEmail(email,"Code pour réinitialiser le mot de passe",code);
+    }
+
+    public ResponseEntity<?> resetPassword(ResetPasswordRequest body) {
+
+        // Récupérer le code de réinitialisation
+        ResetPasswordCode resetPasswordCode = resetPasswordCodeRepository.findByEmail(body.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Code expired"));
+
+        // Vérifier si le code fourni correspond à celui dans la base de données (sans re-encoder)
+        if (!resetPasswordCode.getCode().equals(passwordEncoder.encode(body.getCode()))) {
+            System.out.println(resetPasswordCode.getCode());
+            System.out.println(passwordEncoder.encode(body.getCode()));
+            System.out.println(body.getCode());
+            return new ResponseEntity<>("Code invalid", HttpStatus.BAD_REQUEST);  // Ajouter HttpStatus.BAD_REQUEST ici
+        }
+
+        // Récupérer l'utilisateur avec l'email correspondant
+        ApplicationUser user = userRepository.findByEmail(body.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Mettre à jour le mot de passe de l'utilisateur
+        String encodedPassword = passwordEncoder.encode(body.getNewPassword());
+        user.setPassword(encodedPassword);
+
+        // Enregistrer l'utilisateur mis à jour
+        userRepository.save(user);
+
+        // Supprimer le code de réinitialisation une fois utilisé
+        resetPasswordCodeRepository.deleteByEmail(body.getEmail());
+
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
 
 }

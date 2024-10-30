@@ -8,6 +8,7 @@ import com.cerbo.models.ApplicationUser;
 import com.cerbo.repository.UserRepository;
 import com.cerbo.services.*;
 
+import com.nimbusds.jose.crypto.impl.ECDH;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-
-
 public class AdminController {
 
     @Autowired
@@ -45,6 +44,9 @@ public class AdminController {
 
     @Autowired
     private ReunionService reunionService;
+    @Autowired
+    private UserService userService;
+
     //
     @GetMapping("/")
     public Boolean helloAdmineController(){
@@ -92,21 +94,32 @@ public class AdminController {
     }
 
     @PostMapping("/gencode/membre")
-    public String generateCodeMem(@RequestBody CodeRegistDTO codeRegistDTO){
-        String code = codeGeneratorService.generateSaveCodeMembre(codeRegistDTO.getEmailUser());
-        emailService.sendEmail(codeRegistDTO.getEmailUser(),"code d'inscription",code);
+    public ResponseEntity<?> generateCodeMem(@RequestBody CodeRegistDTO codeRegistDTO){
 
-        return code ;
+        if (userService.userExistByEmail(codeRegistDTO.getEmailUser())) return new ResponseEntity<>("user already exist", HttpStatus.BAD_REQUEST);
+       try {
+           String code = codeGeneratorService.generateSaveCodeMembre(codeRegistDTO.getEmailUser());
+           emailService.sendEmail(codeRegistDTO.getEmailUser(), "code d'inscription", code);
+           return new ResponseEntity<>("Code d'inscription a ete envoye", HttpStatus.OK);
+
+       }catch (Exception e) {
+           return new ResponseEntity<>("Code d'inscription non envoyer", HttpStatus.INTERNAL_SERVER_ERROR);
+       }
     }
 
     @PostMapping("/gencode/investigateur")
-    public String generateCodeInvi(@RequestBody CodeRegistDTO codeRegistDTO){
+    public ResponseEntity<?> generateCodeInvi(@RequestBody CodeRegistDTO codeRegistDTO){
+        if (userService.userExistByEmail(codeRegistDTO.getEmailUser())) return new ResponseEntity<>("user already exist", HttpStatus.BAD_REQUEST);
+        try {
+            String code = codeGeneratorService.generateSaveCodeInvi(codeRegistDTO.getEmailUser());
+            emailService.sendEmail(codeRegistDTO.getEmailUser(), "code d'inscription", code);
 
-        String code = codeGeneratorService.generateSaveCodeInvi(codeRegistDTO.getEmailUser());
-        emailService.sendEmail(codeRegistDTO.getEmailUser(),"code d'inscription",code);
+            return new ResponseEntity<>("Code d'inscription a ete envoye", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Code d'inscription non envoyer", HttpStatus.INTERNAL_SERVER_ERROR);
 
-        return code;
-    }
+        }
+        }
 
     @DeleteMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable Integer id){
@@ -117,7 +130,7 @@ public class AdminController {
     // ajouter ref et statut
     @PutMapping("/projet/ref/{id}")
     public ResponseEntity<String> ajouteRefPourProjet(@RequestBody RefDTO refDTO, @PathVariable Long id){
-        projetService.ajouterReferenceEtFinPremiereExamination(refDTO.getRef(),refDTO.getDate(),id);
+        projetService.ajouterReferenceEtFinDernierExamination(refDTO.getRef(),refDTO.getDate(),id);
         return ResponseEntity.ok("reference ajouter avec success");
     }
 

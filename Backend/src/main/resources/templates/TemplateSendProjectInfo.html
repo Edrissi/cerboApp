@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projet Créé avec Succès</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .project-info {
+            font-size: 1.2em;
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Création du Projet Réussie</h2>
+    </div>
+    <p>Bonjour,</p>
+    <p>Nous avons le plaisir de vous informer que votre projet a été créé avec succès. Voici les détails :</p>
+    <div class="project-info">
+        <strong>Intitulé du Projet :</strong> <span th:text="${intituleProjet}">Intitulé Exemple</span><br>
+        <strong>Référence du Projet :</strong> <span th:text="${referenceProjet}">100/2024</span>
+    </div>
+    <p>Nous vous remercions pour votre contribution en tant que membre du comité. N'hésitez pas à nous contacter pour toute question ou suivi concernant ce projet.</p>
+    <div class="footer">
+        <p>&copy; 2024 CERBO. Comité Ethique.</p>
+    </div>
+</div>
+
+</body>
+</html>

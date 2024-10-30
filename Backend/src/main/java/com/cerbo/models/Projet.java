@@ -4,6 +4,7 @@ import lombok.Data;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -32,7 +33,7 @@ public class Projet {
     private String statut;
 
     @Column(nullable = true)
-    private LocalDate premiereExamination;
+    private LocalDate dernierExamination;
 
     private String intituleProjet;
     private String dureeEtude;
@@ -44,6 +45,7 @@ public class Projet {
     private String quantitePrelevement;
     private String programmeEmploiFinancement;
     private String sourcefinancement;
+    private LocalDateTime createdAt;
 
     // Attributs pour les fichiers PDF
 
