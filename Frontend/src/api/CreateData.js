@@ -15,9 +15,7 @@ const CreateData = async () => {
       return response.data;
     }
   } catch (error) {
-    console.error('Error creating user', error);
-    
-    throw error;
+    return response;
   }
 };
 

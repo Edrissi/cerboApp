@@ -12,6 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface ProjetRepository extends JpaRepository<Projet, Long> {
+
+    Optional<Projet> findTopByRefEndingWith(String annee);
+
     @Override
     List<Projet> findAll();
 

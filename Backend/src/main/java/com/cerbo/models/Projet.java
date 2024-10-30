@@ -35,7 +35,7 @@ public class Projet {
     private LocalDate dateSoumission;
 
     @Column(nullable = true)
-    private LocalDate premiereExamination;
+    private LocalDate dernierExamination;
 
     @Column(nullable = true)
     private LocalDate dateValidationFinal;

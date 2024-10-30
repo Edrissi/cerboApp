@@ -32,6 +32,8 @@ import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Paper from '@mui/material/Paper';
 import InvoiceDocument from '@/template/PrintComponent';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 
 import Dialog from '@mui/material/Dialog';
@@ -58,7 +60,7 @@ export function ShowProject(isAdmin) {
   const navigate = useNavigate();
   const { id } = useParams();
   const {projectdata,loader}=ProjectData(id);
-  
+  const [showAlert, setShowAlert] = useState(false)
   
   const [showPDFViewer, setShowPDFViewer] = useState(false);
 
@@ -94,24 +96,18 @@ export function ShowProject(isAdmin) {
       value:false
     })
   }
-  
-  
-     
-  const handleCommentSubmit = () => {
-    if (window.confirm('Are you sure you want to submit this comment?')) {
-        handleSubmit();
-    }
-    
-    };
-  
 
   const handleSubmit = async () => {
     try {
       // Assume projetId and userId are available from somewhere
       
       const response = await addComment(id, comment ,fileToComment);
-      console.log(response.data)
+      setComment('')
+      setShowAlert(true);
 
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 5000);
       // Handle success (e.g., clear the form, show a success message)
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -154,6 +150,7 @@ export function ShowProject(isAdmin) {
     },
     {
       title:"fiche Information Arabe",
+      value:projectdata.ficheInformationArabe,
       value:projectdata.ficheInformationArabe, 
 
     },
@@ -582,7 +579,7 @@ export function ShowProject(isAdmin) {
                               <div className="mt-4 mx-auto max-w-md bg-white p-4 rounded-lg shadow-md">
                               <card>
                                   <CardBody>
-                                  <CommentInput  comment={comment} setComment={setComment} handleSubmit={handleCommentSubmit} />
+                                  <CommentInput  comment={comment} setComment={setComment} handleSubmit={handleSubmit} />
                                   </CardBody>
                               </card> 
                             </div> }
@@ -642,7 +639,16 @@ export function ShowProject(isAdmin) {
     
    
 
-
+{showAlert && (
+                  <div className="fixed bottom-4 right-4 z-50">
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert variant="filled" severity="success" onClose={() => setShowAlert(false)}>
+                        Message envoyé avec success 
+                      </Alert>
+                    </Stack>
+                    
+                  </div>
+              )} 
   </div>
 
   )

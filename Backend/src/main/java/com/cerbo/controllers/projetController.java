@@ -6,6 +6,7 @@ import com.cerbo.Dto.AutreInvestigateurDto;
 import com.cerbo.Dto.ExaminationDetailsDTO;
 import com.cerbo.Dto.ProjetDTO;
 import com.cerbo.Dto.ProjetDetailsDto;
+import com.cerbo.Dto.ProjetRequestDto;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.AutreInvestigateur;
 import com.cerbo.models.Projet;
@@ -15,6 +16,7 @@ import com.cerbo.services.ExaminationService;
 import com.cerbo.services.ProjetService;
 import com.cerbo.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nullable;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,8 +40,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/invis")
-
-
 public class projetController {
     @Autowired
     private UserService userService;
@@ -53,76 +54,6 @@ public class projetController {
     private ProjetService projetService;
     @Autowired
     private ExaminationService examinationService;
-
-
-    @PostMapping("/soummis")
-    public ResponseEntity<?> soumettreProjet(
-            @RequestParam("intituleProjet") String intituleProjet,
-            @RequestParam("dureeEtude") String dureeEtude,
-            @RequestParam("typeConsentement") String typeConsentement,
-            @RequestParam("populationCible") String populationCible,
-            @RequestParam("typePrelevement") String typePrelevement,
-            @RequestParam("sourceFinancement") String sourceFinancement,
-            @RequestParam("programmeEmploiFinancement") String programmeEmploiFinancement,
-            @RequestParam("descriptifProjet") MultipartFile descriptifProjet,
-            @RequestParam("considerationEthique") MultipartFile considerationEthique,
-            @RequestParam("ficheInformationArabe") MultipartFile ficheInformationArabe,
-            @RequestParam("ficheInformationFrancais") MultipartFile ficheInformationFrancais,
-            @RequestParam("ficheConsentementArabe") MultipartFile ficheConsentementArabe,
-            @RequestParam("ficheConsentementFrancais") MultipartFile ficheConsentementFrancais,
-            @RequestParam("attestationEngagement") MultipartFile attestationEngagement,
-            @RequestParam("attestationCNDP") MultipartFile attestationCNDP,
-            @RequestParam("cvInvestigateurPrincipal") MultipartFile cvInvestigateurPrincipal,
-            @RequestParam("autresDocuments") MultipartFile autresDocuments
-    ) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Integer id;
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        // Access the claims from the JWT token
-        String email = jwt.getSubject();
-        UserDetails userDetails = userService.loadUserByUsername(email);
-        ApplicationUser applicationUser = (ApplicationUser) userDetails;
-        id=applicationUser.getUserId();
-
-
-
-        try {
-            Projet projet = new Projet();
-            projet.setIntituleProjet(intituleProjet);
-            projet.setDureeEtude(dureeEtude);
-            projet.setTypeConsentement(typeConsentement);
-            projet.setPopulationCible(populationCible);
-            projet.setTypePrelevement(typePrelevement);
-            projet.setSourcefinancement(sourceFinancement);
-
-            projet.setDescriptifProjet(descriptifProjet.getBytes());
-            projet.setConsiderationEthique(considerationEthique.getBytes());
-            projet.setFicheInformationArabe(ficheInformationArabe.getBytes());
-            projet.setFicheInformationFrancais(ficheInformationFrancais.getBytes());
-            projet.setFicheConsentementArabe(ficheConsentementArabe.getBytes());
-            projet.setFicheConsentementFrancais(ficheConsentementFrancais.getBytes());
-            projet.setAttestationEngagement(attestationEngagement.getBytes());
-            projet.setAttestationCNDP(attestationCNDP.getBytes());
-            projet.setCvInvestigateurPrincipal(cvInvestigateurPrincipal.getBytes());
-            projet.setAutresDocuments(autresDocuments.getBytes());
-
-
-            projetService.enregistrerProjet(projet, id);
-            return ResponseEntity.ok().body("Projet soumis avec succès !");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erreur lors de la soumission du projet : " + e.getMessage());
-        }
-    }
-
-    private byte[] convertMultipartFileToByteArray(MultipartFile file) {
-        try {
-            return file.getBytes();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to convert MultipartFile to byte array: " + e.getMessage());
-        }
-    }
 
     @GetMapping("/projects")
     public List<ProjetDTO> getAllProjects() {
@@ -154,109 +85,22 @@ public class projetController {
 
     @PostMapping("/creer")
     public ResponseEntity<?> creerProjet(
-            @RequestParam("intituleProjet") String intituleProjet,
-            @RequestParam("dureeEtude") String dureeEtude,
-            @RequestParam("typeConsentement") String typeConsentement,
-            @RequestParam("populationCible") String populationCible,
-            @RequestParam("typesDonnees") String typesDonnees,
-            @RequestParam("prelevement") boolean prelevement,
-            @RequestParam("typePrelevement") String typePrelevement,
-            @RequestParam("quantitePrelevement") String quantitePrelevement,
-            @RequestParam("sourceFinancement") String sourceFinancement,
-            @RequestParam("programmeEmploiFinancement") String programmeEmploiFinancement,
-            @RequestParam(value = "descriptifProjet", required = false) MultipartFile descriptifProjet,
-            @RequestParam(value = "considerationEthique", required = false) MultipartFile considerationEthique,
-            @RequestParam(value = "ficheInformationArabe", required = false) MultipartFile ficheInformationArabe,
-            @RequestParam(value = "ficheInformationFrancais", required = false) MultipartFile ficheInformationFrancais,
-            @RequestParam(value = "ficheConsentementFrancais", required = false) MultipartFile ficheConsentementFrancais,
-            @RequestParam(value = "ficheConsentementArabe", required = false) MultipartFile ficheConsentementArabe,
+            @ModelAttribute ProjetRequestDto body,
+            @RequestParam("descriptifProjet")@Nullable MultipartFile descriptifProjet,
+            @RequestParam("considerationEthique") @Nullable MultipartFile considerationEthique,
+            @RequestParam("ficheInformationArabe")@Nullable MultipartFile ficheInformationArabe,
+            @RequestParam("ficheInformationFrancais")@Nullable MultipartFile ficheInformationFrancais,
+            @RequestParam("ficheConsentementFrancais")@Nullable MultipartFile ficheConsentementFrancais,
+            @RequestParam("ficheConsentementArabe")@Nullable MultipartFile ficheConsentementArabe,
+            @RequestParam("attestationEngagement")@Nullable MultipartFile attestationEngagement,
+            @RequestParam("attestationCNDP")@Nullable MultipartFile attestationCNDP,
+            @RequestParam("cvInvestigateurPrincipal")@Nullable MultipartFile cvInvestigateurPrincipal,
+            @RequestParam("autresDocuments")@Nullable MultipartFile autresDocuments
 
-            @RequestParam(value = "attestationEngagement", required = false) MultipartFile attestationEngagement,
-            @RequestParam(value = "attestationCNDP", required = false) MultipartFile attestationCNDP,
-            @RequestParam(value = "cvInvestigateurPrincipal", required = false) MultipartFile cvInvestigateurPrincipal,
-            @RequestParam(value = "autresDocuments", required = false) MultipartFile autresDocuments,
-            @RequestParam("investigateurs") String autresInvestigateursJson) {
+    ) throws IOException {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            String email = jwt.getSubject();
-            UserDetails userDetails = userService.loadUserByUsername(email);
-            ApplicationUser applicationUser = (ApplicationUser) userDetails;
-            System.out.println(descriptifProjet);
-            Projet nouveauProjet = new Projet();
-            nouveauProjet.setIntituleProjet(intituleProjet);
-            nouveauProjet.setDureeEtude(dureeEtude);
-            nouveauProjet.setTypeConsentement(typeConsentement);
-            nouveauProjet.setPopulationCible(populationCible);
-            nouveauProjet.setTypesDonnees(typesDonnees);
-            nouveauProjet.setPrelevement(prelevement);
-            nouveauProjet.setTypePrelevement(typePrelevement);
-            nouveauProjet.setQuantitePrelevement(quantitePrelevement);
-            nouveauProjet.setSourcefinancement(sourceFinancement);
-            nouveauProjet.setProgrammeEmploiFinancement(programmeEmploiFinancement);
-            nouveauProjet.setStatut("nouveau");
-            // Handle file uploads
-            if (descriptifProjet != null && !descriptifProjet.isEmpty()) {
-                nouveauProjet.setDescriptifProjet(saveFile(descriptifProjet));
-            }
-            if (considerationEthique != null && !considerationEthique.isEmpty()) {
-                nouveauProjet.setConsiderationEthique(saveFile(considerationEthique));
-            }
-            if (ficheInformationArabe != null && !ficheInformationArabe.isEmpty()) {
-                nouveauProjet.setFicheInformationArabe(saveFile(ficheInformationArabe));
-            }
-            if (ficheInformationFrancais != null && !ficheInformationFrancais.isEmpty()) {
-                nouveauProjet.setFicheInformationFrancais(saveFile(ficheInformationFrancais));
-            }
-            if (ficheConsentementFrancais != null && !ficheConsentementFrancais.isEmpty()) {
-                nouveauProjet.setFicheConsentementFrancais(saveFile(ficheConsentementFrancais));
-            }
-            if (ficheConsentementArabe != null && !ficheConsentementArabe.isEmpty()) {
-                nouveauProjet.setFicheConsentementArabe(saveFile(ficheConsentementArabe));
-            }
-            if (attestationEngagement != null && !attestationEngagement.isEmpty()) {
-                nouveauProjet.setAttestationEngagement(saveFile(attestationEngagement));
-            }
-            if (attestationCNDP != null && !attestationCNDP.isEmpty()) {
-                nouveauProjet.setAttestationCNDP(saveFile(attestationCNDP));
-            }
-            if (cvInvestigateurPrincipal != null && !cvInvestigateurPrincipal.isEmpty()) {
-                nouveauProjet.setCvInvestigateurPrincipal(saveFile(cvInvestigateurPrincipal));
-            }
-            if (autresDocuments != null && !autresDocuments.isEmpty()) {
-                nouveauProjet.setAutresDocuments(saveFile(autresDocuments));
-            }
-
-            nouveauProjet.setInvestigateur(applicationUser);
-
-            Projet savedProjet = projetRepository.save(nouveauProjet);
-
-            // Deserialize JSON string to List<AutreInvestigateurDto>
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<AutreInvestigateurDto> autresInvestigateurs;
-            try {
-                autresInvestigateurs = objectMapper.readValue(autresInvestigateursJson, new TypeReference<List<AutreInvestigateurDto>>() {});
-            } catch (IOException e) {
-                System.err.println("Error parsing JSON: " + e.getMessage());
-                return new ResponseEntity<>("Error parsing JSON: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
-
-            // Save other investigators
-            if (autresInvestigateurs != null) {
-                for (AutreInvestigateurDto autreInvestigateurDto : autresInvestigateurs) {
-                    AutreInvestigateur autreInvestigateur = new AutreInvestigateur();
-                    autreInvestigateur.setNom(autreInvestigateurDto.getNom());
-                    autreInvestigateur.setPrenom(autreInvestigateurDto.getPrenom());
-                    autreInvestigateur.setTitre(autreInvestigateurDto.getTitre());
-                    autreInvestigateur.setEmail(autreInvestigateurDto.getEmail());
-                    autreInvestigateur.setAffiliation(autreInvestigateurDto.getAffiliation());
-                    autreInvestigateur.setAdresse(autreInvestigateurDto.getAdresse());
-                    autreInvestigateur.setProjet(savedProjet);
-                    autreInvestigateurRepository.save(autreInvestigateur);
-                }
-            }
-
-            return new ResponseEntity<>(savedProjet, HttpStatus.CREATED);
+            projetService.enregistrerProjet(body, descriptifProjet, considerationEthique, ficheInformationArabe, ficheInformationFrancais, ficheConsentementFrancais, ficheConsentementArabe, attestationEngagement, attestationCNDP, cvInvestigateurPrincipal,autresDocuments);
+            return new ResponseEntity<>("save projet", HttpStatus.CREATED);
         } catch (IOException e) {
             return new ResponseEntity<>("Error saving files", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
@@ -264,131 +108,30 @@ public class projetController {
         }
     }
 
-    private byte[] saveFile(MultipartFile file) throws IOException {
-        if (file != null && !file.isEmpty()) {
-            return file.getBytes(); // Read file content into byte array
-        }
-        return null;
-    }
+
 
 
     // ediiiit
-    @PutMapping("/{projectId}/edit")
-    public ResponseEntity<?> updateProjet(
-            @PathVariable Long projectId,
-            @RequestParam("intituleProjet") String intituleProjet,
-            @RequestParam("dureeEtude") String dureeEtude,
-            @RequestParam("typeConsentement") String typeConsentement,
-            @RequestParam("populationCible") String populationCible,
-            @RequestParam("typesDonnees") String typesDonnees,
-            @RequestParam("prelevement") boolean prelevement,
-            @RequestParam("typePrelevement") String typePrelevement,
-            @RequestParam("quantitePrelevement") String quantitePrelevement,
-            @RequestParam("sourceFinancement") String sourceFinancement,
-            @RequestParam("programmeEmploiFinancement") String programmeEmploiFinancement,
-            @RequestParam(value = "descriptifProjet", required = false) MultipartFile descriptifProjet,
-            @RequestParam(value = "considerationEthique", required = false) MultipartFile considerationEthique,
-            @RequestParam(value = "ficheInformationArabe", required = false) MultipartFile ficheInformationArabe,
-            @RequestParam(value = "ficheInformationFrancais", required = false) MultipartFile ficheInformationFrancais,
-            @RequestParam(value = "ficheConsentementArabe", required = false) MultipartFile ficheConsentementArabe,
-            @RequestParam(value = "ficheConsentementFrancais", required = false) MultipartFile ficheConsentementFrancais,
-            @RequestParam(value = "attestationEngagement", required = false) MultipartFile attestationEngagement,
-            @RequestParam(value = "attestationCNDP", required = false) MultipartFile attestationCNDP,
-            @RequestParam(value = "cvInvestigateurPrincipal", required = false) MultipartFile cvInvestigateurPrincipal,
-            @RequestParam(value = "autresDocuments", required = false) MultipartFile autresDocuments,
-            @RequestParam("investigateurs") String autresInvestigateursJson) {
-        Projet existingProjet = projetRepository.findById(projectId).orElseThrow(
-                ()-> new RuntimeException("Project not found")
-        );
+    @PutMapping("/edit/{projectId}")
+    public ResponseEntity<?> updateProjet(  @PathVariable Long projectId,
+                                            @ModelAttribute ProjetRequestDto body,
+                                            @RequestParam("descriptifProjet")@Nullable MultipartFile descriptifProjet,
+                                            @RequestParam("considerationEthique") @Nullable MultipartFile considerationEthique,
+                                            @RequestParam("ficheInformationArabe")@Nullable MultipartFile ficheInformationArabe,
+                                            @RequestParam("ficheInformationFrancais")@Nullable MultipartFile ficheInformationFrancais,
+                                            @RequestParam("ficheConsentementFrancais")@Nullable MultipartFile ficheConsentementFrancais,
+                                            @RequestParam("ficheConsentementArabe")@Nullable MultipartFile ficheConsentementArabe,
+                                            @RequestParam("attestationEngagement")@Nullable MultipartFile attestationEngagement,
+                                            @RequestParam("attestationCNDP")@Nullable MultipartFile attestationCNDP,
+                                            @RequestParam("cvInvestigateurPrincipal")@Nullable MultipartFile cvInvestigateurPrincipal,
+                                            @RequestParam("autresDocuments")@Nullable MultipartFile autresDocuments
+
+    ){
         try {
-            // Fetch the existing project from repository
-
-
-
-
-            // Update project details
-            existingProjet.setIntituleProjet(intituleProjet);
-            existingProjet.setDureeEtude(dureeEtude);
-            existingProjet.setTypeConsentement(typeConsentement);
-            existingProjet.setPopulationCible(populationCible);
-            existingProjet.setTypesDonnees(typesDonnees);
-            existingProjet.setPrelevement(prelevement);
-            existingProjet.setTypePrelevement(typePrelevement);
-            existingProjet.setQuantitePrelevement(quantitePrelevement);
-            existingProjet.setSourcefinancement(sourceFinancement);
-            existingProjet.setProgrammeEmploiFinancement(programmeEmploiFinancement);
-
-            // Handle file uploads
-            if(descriptifProjet != null) {
-                existingProjet.setDescriptifProjet(saveFile(descriptifProjet));
-            }
-            if(considerationEthique != null) {
-                existingProjet.setConsiderationEthique(saveFile(considerationEthique));
-            }
-            if(ficheInformationArabe != null) {
-                existingProjet.setFicheInformationArabe(saveFile(ficheInformationArabe));
-            }
-            if(ficheInformationFrancais != null) {
-            existingProjet.setFicheInformationFrancais(saveFile(ficheInformationFrancais));
-            }
-            if(ficheConsentementArabe != null) {
-            existingProjet.setFicheConsentementArabe(saveFile(ficheConsentementArabe));
-              }
-            if(ficheConsentementFrancais != null) {
-                existingProjet.setFicheConsentementFrancais(saveFile(ficheConsentementFrancais));
-            }
-
-            if(attestationEngagement != null) {
-                existingProjet.setAttestationEngagement(saveFile(attestationEngagement));
-            }
-            if(attestationCNDP != null) {
-            existingProjet.setAttestationCNDP(saveFile(attestationCNDP));
-            }
-            if(cvInvestigateurPrincipal != null) {
-            existingProjet.setCvInvestigateurPrincipal(saveFile(cvInvestigateurPrincipal));
-            }
-            if(autresDocuments != null) {
-            existingProjet.setAutresDocuments(saveFile(autresDocuments));
-            }
-            existingProjet.setStatut("torevised");
-
-
-
-            // Save updated project
-            Projet savedProjet = projetRepository.save(existingProjet);
-
-            // Deserialize JSON string to List<AutreInvestigateurDto>
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<AutreInvestigateurDto> autresInvestigateurs;
-            try {
-                autresInvestigateurs = objectMapper.readValue(autresInvestigateursJson, new TypeReference<List<AutreInvestigateurDto>>() {});
-            } catch (IOException e) {
-                System.err.println("Error parsing JSON: " + e.getMessage());
-                return new ResponseEntity<>("Error parsing JSON: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
-
-            // Update other investigators
-
-
-            if (autresInvestigateurs != null) {
-                for (AutreInvestigateurDto autreInvestigateurDto : autresInvestigateurs) {
-                    AutreInvestigateur autreInvestigateur = new AutreInvestigateur();
-                    autreInvestigateur.setNom(autreInvestigateurDto.getNom());
-                    autreInvestigateur.setPrenom(autreInvestigateurDto.getPrenom());
-                    autreInvestigateur.setTitre(autreInvestigateurDto.getTitre());
-                    autreInvestigateur.setEmail(autreInvestigateurDto.getEmail());
-                    autreInvestigateur.setAffiliation(autreInvestigateurDto.getAffiliation());
-                    autreInvestigateur.setAdresse(autreInvestigateurDto.getAdresse());
-                    autreInvestigateur.setProjet(savedProjet);
-                    autreInvestigateurRepository.save(autreInvestigateur);
-                }
-            }
-
-            return new ResponseEntity<>(savedProjet, HttpStatus.OK);
+            projetService.updateProject(projectId ,body, descriptifProjet, considerationEthique, ficheInformationArabe, ficheInformationFrancais, ficheConsentementFrancais, ficheConsentementArabe, attestationEngagement, attestationCNDP, cvInvestigateurPrincipal,autresDocuments);
+            return new ResponseEntity<>("update project", HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>("Error saving files", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

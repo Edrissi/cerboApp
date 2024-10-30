@@ -37,5 +37,26 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+    public void sendProjectInfos(String to, String subject, String intituleProjet, String referenceProjet) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+
+
+            Context context = new Context();
+            context.setVariable("intituleProjet", intituleProjet);
+            context.setVariable("referenceProjet", referenceProjet);
+
+            String htmlBody = templateEngine.process("TemplateSendProjectInfo", context);
+            helper.setText(htmlBody, true);
+
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

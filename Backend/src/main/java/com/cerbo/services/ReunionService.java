@@ -39,7 +39,7 @@ public class ReunionService {
 
         //ajouter dernier date examination
         LocalDate datenow = LocalDate.now();
-        projet.setPremiereExamination(datenow);
+        projet.setDernierExamination(datenow);
 
         //changer statut apres revision
         projet.setStatut(reunionReqDTO.getStatut());
