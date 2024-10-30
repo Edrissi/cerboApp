@@ -13,5 +13,6 @@ import java.util.List;
 public interface ReunionReopository extends JpaRepository<Reunion, Long> {
 
     List<Reunion> findByDate(YearMonth date);
+    List<Reunion> findAll();
 
 }
