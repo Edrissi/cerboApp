@@ -49,14 +49,7 @@ export function CreateUser() {
       }, 2000);
 
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.errors) {
-        const errorMessages = Object.values(error.response.data.errors);
-        setError(errorMessages[0]);
-        setSuccess(null);
-        console.log(errorMessages[0]);
-      } else {
-        console.error('Failed to create user:', error);
-      }
+      console.log(error.message);
     }
   };
   
@@ -82,11 +75,11 @@ export function CreateUser() {
               
               <div className="grid grid-cols-6 gap-6">
               {error && (
-              <div className="col-span-6 sm:col-full mt-4 mb-4">
-              <Alert variant="ghost" className="bg-red-500 bg-opacity-20 text-red-700">
-              <span>{error}</span>
-              </Alert>
-              </div>
+                <div className="col-span-6 sm:col-full mt-4 mb-4">
+                  <Alert variant="ghost" className="bg-red-500 bg-opacity-20 text-red-700">
+                  <span>{error}</span>
+                  </Alert>
+                </div>
               )}
               {success.value && <SuccessPopup closepopup={closepopup} message={success.message}/>}
 

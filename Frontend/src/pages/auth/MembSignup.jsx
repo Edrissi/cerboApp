@@ -23,6 +23,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import ConditionsAccordion from './ConditionsAccordion';
 
 const defaultTheme = createTheme();
 
@@ -45,7 +46,7 @@ export default function MembSignup() {
   const [snackMessage, setSnackMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showCodeRegistration, setShowCodeRegistration] = useState(false);
-
+  const [isAllConditionsChecked, setIsAllConditionsChecked] = useState(false); 
 
 
   const handleChange = (event) => {
@@ -54,10 +55,15 @@ export default function MembSignup() {
     setFormErrors({ ...formErrors, [name]: '' });
   };
 
+  const handleConditionsChange = (updatedConditions) => {
+    const allAccepted = Object.values(updatedConditions).every((isAccepted) => isAccepted === true);
+    setIsAllConditionsChecked(allAccepted);
+  };
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
   const validateForm = () => {
     const errors = {};
+    if (!isAllConditionsChecked) errors.conditions = 'Vous devez accepter toutes les conditions avant de vous inscrire';
 
     if (!formValues.nom) errors.nom = 'First Name is required';
     if (!formValues.prenom) errors.prenom = 'Last Name is required';
@@ -138,7 +144,7 @@ export default function MembSignup() {
     <ThemeProvider theme={defaultTheme}>
       <Box
         sx={{
-          backgroundImage: 'url(/src/assets/Singup.jpeg)', // Remplacez l'URL par l'URL de votre image
+          backgroundImage: 'url(/public/img/Hero.jpg)', // Remplacez l'URL par l'URL de votre image
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '100vh',
@@ -147,23 +153,23 @@ export default function MembSignup() {
           alignItems: 'center'
         }}
       >
-        <Container component="main" maxWidth="sm" sx={{ backgroundColor: '#eff6ff', opacity: '0.95', boxShadow: 6, borderRadius: 3, padding: 1, marginTop: 6, marginBottom: 6 }}>
+        <Container component="main" maxWidth="lg" sx={{ backgroundColor: '#ffff',opacity: 0.9, boxShadow: 6, borderRadius: 3, padding: 1, marginTop: 6, marginBottom: 6 }}>
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 2,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5" sx={{ mb: 6, color: '#000080' }}>
+            </Avatar> */}
+            <Typography component="h1" variant="h5" sx={{ mb: 1, color: '#000080' }}>
               Espace Membre
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -249,7 +255,7 @@ export default function MembSignup() {
                     sx={{ width: '100%' }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     fullWidth
@@ -277,7 +283,7 @@ export default function MembSignup() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     fullWidth
@@ -305,13 +311,13 @@ export default function MembSignup() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     fullWidth
                     name="codeRegistration"
                     label="Code Registration"
-                    type={showCodeRegistration ? 'text' : 'password'}
+                    type="text"
                     id="codeRegistration"
                     autoComplete="code-registration"
                     value={formValues.codeRegistration}
@@ -319,21 +325,9 @@ export default function MembSignup() {
                     error={!!formErrors.codeRegistration}
                     helperText={formErrors.codeRegistration}
                     sx={{ width: '100%' }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowCodeRegistration(!showCodeRegistration)}
-                            edge="end"
-                          >
-                            {showCodeRegistration ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     fullWidth
@@ -348,20 +342,29 @@ export default function MembSignup() {
                     sx={{ width: '100%' }}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={<Checkbox value="Accept all agreements" color="primary" />}
-                    label="Accept all agreements"
-                  />
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
                 
+              </Grid>
+              <br />
+              
+              <Grid item xs={12} sx={{ mb: 3, border: '1px solid #e0e0e0', borderRadius: '4px', padding :2 }}>
+                <p style={{ 
+                      textAlign: 'center',
+                      fontSize: '1rem', 
+                      fontWeight: 'bold', 
+                      color: 'rgb(255, 0, 0)', 
+                      borderBottom: '2px solid rgb(255, 0, 0)', // Correction de la bordure
+                      marginBottom: '16px' // Ajout d'une marge en bas
+                    }}>
+                  Vous devez accepter toutes les conditions avant de vous inscrire
+                </p>
+                
+                <ConditionsAccordion onConditionsChange={handleConditionsChange} />
               </Grid>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
+                disabled={!isAllConditionsChecked} 
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign Up

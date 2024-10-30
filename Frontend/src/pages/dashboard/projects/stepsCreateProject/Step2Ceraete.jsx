@@ -14,8 +14,7 @@ function Step2Create({ data = {}, setData }) {
     setData({
       ...data,
       [name]: file
-    });
-    console.log('Updated Step 2 Data:', { ...data, [name]: file });
+    }); 
   };
 
   // Ensure default values or empty object for data.step2

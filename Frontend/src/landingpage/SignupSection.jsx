@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import membre from '/src/img/2.png';
-import investigateur from '/src/img/3.png';
+import membre from '/public/img/2.png';
+import investigateur from '/public/img/3.png';
 
 const SignupSection = () => {
   const navigate = useNavigate(); // Using the useNavigate hook

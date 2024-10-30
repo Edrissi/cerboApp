@@ -13,7 +13,8 @@ import {
   MenuList,
   MenuItem,
   Button,
-  Alert
+  Alert,
+  Stack
 } from "@material-tailwind/react";
 import { EyeIcon, TrashIcon, MagnifyingGlassIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { Link, Navigate } from "react-router-dom";
@@ -25,11 +26,52 @@ import SuccessPopup from "@/layouts/SuccessPopup";
 import fetchTableData from "@/api/fetchTableData";
 import { useLocation } from "react-router-dom";
 import { data } from "autoprefixer";
-
+import CodeMember from "../generateCode.jsx/CodeMember";
+import fetchGenerate from "@/api/Generate";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 export function UserTable({userOrInvis}) {
   
   const [filter, setFilter] = React.useState('');
   const [reloaded, setReloaded] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [error, setError] = useState('');
+  const handleClickOpen = () => {
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      setError('Veuillez entrer une adresse email valide.');
+      setShowAlertError(true);
+      return;
+    }
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // -----------------
+  const [email, setEmail] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [showAlertError, setShowAlertError] = useState(false);
+
+
+
+  const [selectedValue, setSelectedValue] = useState('');
+
+
+  
+
+  const handleEmailChange = (event) => {
+    setShowAlertError(false);
+    setEmail(event.target.value);
+  };
+
 
   
   const [showDeletePopup, setShowDeletePopup] = React.useState({
@@ -74,56 +116,32 @@ export function UserTable({userOrInvis}) {
     dataLoaded,
   } = AuthorsTableData(userOrInvis); 
   
-  
-  // const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  //   return (
-  //     <div className="flex justify-end">
-  //     <button
-  //         disabled={currentPage === 1}
-  //         className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-  //         onClick={() => onPageChange(currentPage - 1)}
-  //       >
-  //         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-  //           aria-hidden="true" className="w-4 h-4">
-  //           <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
-  //         </svg>
-  //         Previous
-  //       </button>
-        
-  //       <div className="flex items-center gap-2">
-  //         {[...Array(totalPages).keys()].map((index) => (
-  //           <button
-  //             key={index}
-  //             onClick={() => onPageChange(index + 1)}
-  //             className={`relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg ${
-  //               index + 1 === currentPage
-  //                 ? 'bg-gray-900 text-white shadow-md shadow-gray-900/10'
-  //                 : 'text-gray-900 hover:bg-gray-900/10 active:bg-gray-900/20'
-  //             } transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`}
-  //             type="button"
-  //           >
-  //             <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-  //               {index + 1}
-  //             </span>
-  //           </button>
-  //         ))}
-  //       </div>
-  
-  //       <button
-  //         disabled={currentPage === totalPages}
-  //         className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-  //         onClick={() => onPageChange(currentPage + 1)}
-  //       >
-  //         Next
-  //         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-  //           aria-hidden="true" className="w-4 h-4">
-  //           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-  //         </svg>
-  //       </button>
-  //     </div>
-  //   );
-  // };
-  
+  const handleClick = async () => {
+    try {
+      setOpen(false);
+      const response = await fetchGenerate(selectedValue,email);
+      const data = await response; // assuming response is JSON
+      console.log(data);// assuming data contains the generated code
+      setShowAlert(true);
+      setEmail('');
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 5000);
+    } catch (error) {
+      setShowAlertError(true);
+      setError(error.response.data)
+      setTimeout(() => {
+        setShowAlertError(false);
+      }, 7000);
+      console.error('Error:', error.response.data);
+    }
+  };
+  const handleSelectChange = (value) => {
+      
+    setSelectedValue(value);
+    setShowAlertError(false);
+    console.log(selectedValue)
+};  
   const deleteclick=(id)=>{
     setShowDeletePopup({
       value:true,
@@ -149,6 +167,81 @@ export function UserTable({userOrInvis}) {
 
     return (
       <div className="mt-12 mb-8 flex flex-col gap-12">
+
+<Card>
+          <CardHeader
+            floated={false}
+            shadow={false}
+            color="transparent"
+            className="m-0 flex items-center justify-between p-6"
+          >
+            <div className="flex items-center justify-between gap-4 bg-white-100 p-4 rounded-lg">
+                <CodeMember  onSelectChange={handleSelectChange} email={email} onHandleEmailChange={handleEmailChange}/>
+                <div class="col-span-1 flex justify-end items-center mt-4">
+                  
+                <Button variant="gradient" color="blue" onClick={handleClickOpen} style={{ marginTop: '60px' }}>
+                  Génerer un Code et l'envoyer
+                </Button>  
+
+                {showAlertError && (
+                  <div className="fixed bottom-4 right-4 z-50">
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert variant="filled" severity="warning" onClose={() => setShowAlertError(false)}>
+                        {error} 
+                      </Alert>
+                    </Stack>
+                    
+                  </div>
+              )}        
+                    
+                    {/* dialogue afficher apres click sur le button  */}
+                    
+                    <Dialog
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                    >
+                      <DialogTitle id="alert-dialog-title">
+                        {"Are You Sure That you Want to Send Code Registration ? "}
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                          Ce Code va permet au {email} d'inscrire en tant que {selectedValue}. 
+                          confirmer ?
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button color="white" onClick={handleClose}>Cancel</Button>
+                        <Button  color="blue" onClick={handleClick} autoFocus>
+                          envoyer
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+    
+
+                {showAlert && (
+                  <div className="fixed bottom-4 right-4 z-50">
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert variant="filled" severity="success" onClose={() => setShowAlert(false)}>
+                        Code envoyé avec success 
+                      </Alert>
+                    </Stack>
+                    
+                  </div>
+              )}      
+              </div>  
+
+            </div>
+          </CardHeader>
+          <CardBody className=" px-0 pt-0 pb-2">
+          <div className="flex items-center justify-center gap-4">
+                  
+              
+                    
+          </div>
+          </CardBody>
+        </Card>
         {showDeletePopup.value &&<PermissionPopup id={showDeletePopup.idvalue} closepopup={closepopup} handleDelete={handleDeleteUser} object="user" />}
         {showSuccessPopup.value &&<SuccessPopup closepopup={closepopup} message={showSuccessPopup.message}/>}
 

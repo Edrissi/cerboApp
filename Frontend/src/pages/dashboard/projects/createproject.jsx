@@ -48,12 +48,7 @@ export function CreateProject() {
   const [isStep2Editable, setIsStep2Editable] = useState(false); // State to manage Step 2 editability
 
   useEffect(() => {
-    console.log('useEffect triggered');
-    console.log('isEdit:', isEdit);
-    console.log('projectId:', projectId);
-
     if (isEdit && projectId) {
-      console.log('Fetching project data for edit mode');
       fetchProjectData(projectId); // Pass the projectId to the fetch function
     }
   }, [isEdit, projectId]);
@@ -98,8 +93,9 @@ export function CreateProject() {
           cvInvestigateurPrincipal: project.cvInvestigateurPrincipal || null,
           autresDocuments: project.autresDocuments || null
         },
-        step3: project.investigateurs || []
+        step3: project.autreInvestigateurDtos || []
       });
+      
 
       // Enable Step 2 editing when data is fetched
       setIsStep2Editable(true);
@@ -176,14 +172,17 @@ export function CreateProject() {
       // Step 2 files
       Object.keys(projectData.step2).forEach(key => formData.append(key, projectData.step2[key]));
       // Step 3 investigators
-      formData.append('investigateurs', JSON.stringify(projectData.step3));
-      console.log(formData);
-      const currentDate = new Date();
-      formData.append('dateDepot', currentDate.toISOString());
-      console.log(formData)
+      projectData.step3.forEach((investigator, index) => {
+        formData.append(`autreInvestigateurDtos[${index}].nom`, investigator.nom);
+        formData.append(`autreInvestigateurDtos[${index}].prenom`, investigator.prenom);
+        formData.append(`autreInvestigateurDtos[${index}].titre`, investigator.titre);
+        formData.append(`autreInvestigateurDtos[${index}].email`, investigator.email);
+        formData.append(`autreInvestigateurDtos[${index}].affiliation`, investigator.affiliation);
+        formData.append(`autreInvestigateurDtos[${index}].adresse`, investigator.adresse);
+    });
       const response = await axios({
         method: isEdit ? 'put' : 'post',
-        url: isEdit ? `http://localhost:8000/invis/${projectId}/edit` : 'http://localhost:8000/invis/creer',
+        url: isEdit ? `http://localhost:8000/invis/edit/${projectId}` : 'http://localhost:8000/invis/creer',
         data: formData,
         headers: {
           'Authorization': `Bearer ${jwtCookie}`,

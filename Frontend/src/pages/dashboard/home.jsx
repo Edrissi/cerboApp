@@ -103,15 +103,16 @@ export function Home() {
       setGeneratedCode(data); // assuming data contains the generated code
       setShowAlert(true);
       setEmail('');
-     
-      
-      
-      
       setTimeout(() => {
         setShowAlert(false);
       }, 5000);
     } catch (error) {
-      console.error('Error:', error);
+      setShowAlertError(true);
+      setError(error.response.data)
+      setTimeout(() => {
+        setShowAlertError(false);
+      }, 7000);
+      console.error('Error:', error.response.data);
     }
   };
   const handleSelectChange = (value) => {
@@ -176,21 +177,7 @@ export function Home() {
   if(loader) return <Loading />
 
   return (
-    <div className="mt-12">
-      {/* <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-        {statisticsCardsData.map(({ icon, title, ...rest }) => (
-          <StatisticsCard
-            key={title}
-            {...rest}
-            title={title} 
-            color="gray"
-            icon={React.createElement(icon, {
-              className: "w-6 h-6 text-white",
-            })}
-          />
-        ))}
-      </div> */}
-       
+    <div className="mt-12">   
       <Card>
           <CardHeader
             floated={false}
@@ -253,9 +240,6 @@ export function Home() {
                     
                   </div>
               )}      
-                {/* <div className="flex flex-col">
-                  {generatedCode && <p>Generated Code: {generatedCode}</p>}
-                </div> */}
               </div>  
 
             </div>
