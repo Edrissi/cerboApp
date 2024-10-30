@@ -4,14 +4,16 @@ import {
   TableCellsIcon,
   UsersIcon,
   
-  ClipboardDocumentListIcon 
+  ClipboardDocumentListIcon, 
+  UserGroupIcon
 } from "@heroicons/react/24/solid";
 import { Home,ExaminProject,Profile, UserTable , ProjectTable ,  CreateProject, EditProject ,ShowMesProject, 
 
-  ShowProject , CreateUser , ShowUser
+  ShowProject , CreateUser , ShowUser,Reunions
   } from "@/pages/dashboard";
 import MesProjects from "./pages/dashboard/projects/mesprojects";
 import ExaminProjectRapport from "./pages/dashboard/projects/examinprojectrapport";
+import { ShowReunion } from "./pages/dashboard/reunions/showReunion";
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
@@ -25,6 +27,12 @@ export const routes = [
         name: "home",
         path: "/home",
         element: <Home />,
+      },
+      {
+        icon: <UserGroupIcon {...icon} />,
+        name: "reunions",
+        path: "/reunions",
+        element: <Reunions />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
@@ -88,6 +96,10 @@ export const routes = [
       {
         path: "/user/show/:id",
         element: <ShowUser />,
+      },
+      {
+        path: "/reunion/show/:id",
+        element: <ShowReunion />,
       },
       {
         path: "/user/delete/:id",

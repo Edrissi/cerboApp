@@ -20,7 +20,7 @@
       const [selectedValue, setSelectedValue] = useState('');
     
       const handleChange = (event) => {
-        onSelectChange(event.target.value);
+        setSelectedValue(event.target.value);
         console.log(selectedValue)
       };
     

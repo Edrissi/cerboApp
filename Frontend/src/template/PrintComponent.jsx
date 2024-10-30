@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   
 });
 
-const InvoiceDocument = ({commentData,dateOf,dateDepot,invis,intitule}) => {
+const InvoiceDocument = ({commentData,dateOf,reference,dateDepot,invis,intitule}) => {
   console.log(commentData)
   
 
@@ -119,14 +119,14 @@ const InvoiceDocument = ({commentData,dateOf,dateDepot,invis,intitule}) => {
     <Document>
       <Page size="A4" style={styles.page}>
         <View >
-            <Image style={styles.image} src="/src/img/umpCerbo.jpg" />
+            <Image style={styles.image} src="/public/img/umpCerbo.jpg" />
         </View>
         <View style={styles.header}>
           <Text>Oujda le <Text style={styles.blueText}>{dateOf}</Text></Text>
         </View>
 
         <View style={styles.header2} >
-          <Text  > A Monsieur/Madame le Pr.<Text style={styles.blueText} >{invis}</Text>.
+          <Text  > A Monsieur/Madame le Pr.<Text style={styles.blueText} >{invis}</Text>
               {'\n'} Structure de recherche. 
         </Text>
         </View>
@@ -140,7 +140,7 @@ const InvoiceDocument = ({commentData,dateOf,dateDepot,invis,intitule}) => {
         </View>
 
         <View style={styles.header3}>
-          <Text>Demande classée sous le N° d’ordre : Reference </Text>
+          <Text>Demande classée sous le N° d’ordre : {reference} </Text>
         </View>
 
         <View style={styles.header3}>
@@ -160,13 +160,15 @@ const InvoiceDocument = ({commentData,dateOf,dateDepot,invis,intitule}) => {
           </View>
         ))}
 
+       
+
 
         <View style={styles.header5}>
           <Text style={{ fontWeight: 'bold' }}>En vous remerciant Professeur, veuillez croire en nos salutations chaleureuses.</Text>
         </View>
 
         <View style={styles.imageContainer} >
-            <Image style={styles.image1} src="/src/img/cerboSignature.jpg" />
+            <Image style={styles.image1} src="/public/img/cerboSignature.jpg" />
         </View>
 
     <View style={styles.footer}>

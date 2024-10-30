@@ -7,6 +7,10 @@ import InvoiceDocument from '@/template/PrintComponent';
 import FetchCommentTrue from '@/api/fetchCommentTrue';
 import { useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 import { pink } from '@mui/material/colors';
 import Checkbox from '@mui/material/Checkbox';
 import { ajouteRef, ajouteReunion } from '@/api/ValiderRapp';
@@ -43,17 +47,8 @@ const ExaminProjectRapport= () => {
 
   const [isValid, setIsValid] = useState(true);
 
-  const [valueRef, setValueRef] = useState('');
   
-  const handleChangeRef = (event) => {
-    const newValue = event.target.value;
-    setValueRef(newValue);
 
-    // Regular expression to validate the format "XX/XX"
-    const regex = /^\d{2}\/\d{2}$/;
-    setIsValid(regex.test(newValue));
-
-  };
   
 
 
@@ -86,15 +81,15 @@ const ExaminProjectRapport= () => {
   };
   console.log(getCheckedItems())
 
-
+  const [status,setStatus] = React.useState("revision mineur")
   const handleSubmit = async () => {
     try {
       // Assume projetId and userId are available from somewhere
-      console.log(valueRef);
+      
       console.log(getCheckedItems());
-      const response = await ajouteRef(id,valueRef);
-      const responsee = await ajouteReunion(id,getCheckedItems());
-      console.log(response)
+      // const response = await ajouteRef(id,valueRef);
+      const responsee = await ajouteReunion(id,getCheckedItems(),status);
+      
       console.log(responsee)
       
       navigate('/admin/home');
@@ -106,6 +101,11 @@ const ExaminProjectRapport= () => {
     }
     
   }
+
+ 
+  const handleChange = (event) => {
+    setStatus(event.target.value);
+  };
 
   if(loader) return <Loading/>
   return (
@@ -205,7 +205,9 @@ const ExaminProjectRapport= () => {
               </div>
 
               
-    <div className="mx-2 mt-4 w-2/5">
+   
+
+      <div className="mx-2 mt-4 w-2/5">
     <Card>
         <div class="ml-6 mr-6">
                 
@@ -214,54 +216,30 @@ const ExaminProjectRapport= () => {
           <CardBody className=" px-0 pt-0 pb-2">
           <div className="flex flex-col ">
                 <label htmlFor="outlined-required" className="text-lg font-bold mr-4 mb-6 padding-4 ">
-                  Reference : 
+                  type de revision : 
                 </label>
                 <div className="flex flex-row mb-6 items-center">
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Num Reference"
-                  value={valueRef}
-                  onChange={handleChangeRef}
-                  placeholder="05/49"
-                  className={`p-2 border-2 ${isValid ? 'border-black' : 'border-red-500'} rounded`}
-                />
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={status}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel value="revision mineur" control={<Radio />} label="revision mineur" />
+                  <FormControlLabel value="revision majeur" control={<Radio />} label="revision majeur" />
+                </RadioGroup>
                 
                 </div>
                 {!isValid && <span className="text-red-500">Format must be 99/99</span>}
               </div>
                 
-              {/* <PDFDownloadLink document={<InvoiceDocument commentData={comments} dateOf={"20/06/2024"} invis={"Edrissi"} intitule={"BIO medical"}/>} fileName="rapport.pdf">
-                  {({ blob, url, loading, error }) =>
-                    loading ? 'Loading document...' : <div className='underline text-blue-600'>Download Rapport</div>
-                  }
-                </PDFDownloadLink> */}
-
-                    <div> 
-                     {/* affichage du rapport -------------- */}
-                      {/* <BlobProvider document={<InvoiceDocument commentData={comments} dateOf="20/06/2024" invis={"Edrissi"}  intitule={"BIO medical"}/>}>
-                              {({ blob, url, loading, error }) => ( 
-                                <div >
-                                  {console.log(blob)}
-                                  {loading ? 'Loading document...' : (
-                                    
-                                    <iframe
-                                    className="pdf-iframe"
-                                      title="PDF Viewer"
-                                      style={{ width: '500px', height: '300px' }}  // Adjust the width here
-                              height="600px"
-                                      src={`${url}#toolbar=0`}  // Use the Blob URL here
-                                    />
-                                  )}
-                                </div>
-                        )}
-                      </BlobProvider> */}
-                    </div>
              
           </CardBody>
         </div>
       </Card> 
       </div>
+
+
       <div className=" fixed right-0 bottom-0 mb-8 ml-4 mr-8">
                         <Button 
                           variant="gradient" 

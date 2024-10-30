@@ -20,7 +20,7 @@ import ProjectData
 import StepExamin from "./stepsCreateProject/StepExamin";
 
 
-const steps = ["descriptif", 'Consideration ethique', 'Informations AR',"Informations FR","Consentement FR","Consentement FR","Engagement","CNDP","CV","autre"];
+const steps = ["descriptif", 'Consideration ethique', 'Informations AR',"Informations FR","Consentement AR","Consentement FR","Engagement","CNDP","CV","autre"];
 
 export function ExaminStepper({id}) {
   
@@ -150,7 +150,7 @@ export function ExaminStepper({id}) {
                       { activeStep == 0 && <StepExamin id={id} fileCommented={"Descriptif"} data={projectdata.descriptifProjet} /> }
                       { activeStep == 1 && <StepExamin id={id} fileCommented={"Consideration Ethique"} data={projectdata.considerationEthique}/> }
                       { activeStep == 2 && <StepExamin id={id} fileCommented={"Fiche Information Arabe"} data={projectdata.ficheInformationArabe}/> }
-                      { activeStep == 3 && <StepExamin id={id} fileCommented={"Fiche Information Francais"} data={projectdata.ficheInformationsFrancais}/> }
+                      { activeStep == 3 && <StepExamin id={id} fileCommented={"Fiche Information Francais"} data={projectdata.ficheInformationFrancais}/> }
                       { activeStep == 4 && <StepExamin id={id} fileCommented={"fiche Consentement Arabe"} data={projectdata.ficheConsentementArabe}/> }
                       { activeStep == 5 && <StepExamin id={id} fileCommented={"fiche Consentement Francais"} data={projectdata.ficheConsentementFrancais}/> }
                       { activeStep == 6 && <StepExamin id={id} fileCommented={"Attestation Engagement"} data={projectdata.attestationEngagement}/> }

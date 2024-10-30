@@ -15,6 +15,7 @@ public class ProjetDTO {
     }
    public ProjetDTO(Long id,
                     String intituleProjet,
+                    LocalDate dateSoumission,
                     String dureeEtude,
                     ApplicationUser investigateur,
                     String populationCible, String statut,
@@ -23,6 +24,7 @@ public class ProjetDTO {
                     ){
        this.id=id;
        this.intituleProjet=intituleProjet;
+       this.dateSoumission=dateSoumission;
        this.investigateur=investigateur;
        this.dureeEtude=dureeEtude;
        this.populationCible=populationCible;
@@ -34,7 +36,7 @@ public class ProjetDTO {
 
     private Long id;
 
-
+    private LocalDate dateSoumission;
     private String intituleProjet;
     private String dureeEtude;
     private String typeConsentement;

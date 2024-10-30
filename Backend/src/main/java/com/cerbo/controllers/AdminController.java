@@ -3,7 +3,9 @@ package com.cerbo.controllers;
 import com.cerbo.Dto.CodeRegistDTO;
 import com.cerbo.Dto.RefDTO;
 import com.cerbo.Dto.ReunionReqDTO;
+import com.cerbo.Dto.ValiderDto;
 import com.cerbo.models.ApplicationUser;
+
 
 import com.cerbo.repository.UserRepository;
 import com.cerbo.services.*;
@@ -45,6 +47,9 @@ public class AdminController {
 
     @Autowired
     private ReunionService reunionService;
+    @Autowired
+    private ExaminationService examinationService;
+
     //
     @GetMapping("/")
     public Boolean helloAdmineController(){
@@ -124,21 +129,29 @@ public class AdminController {
     // creer une Reunion si n'existe pas
 
     @PutMapping("/Reunion/addprojet/{id}")
-    public ResponseEntity<String> CreerReunion(@RequestBody ReunionReqDTO reunionReqDTO, @PathVariable Long id){
-        String message = reunionService.ajouterProjetAuReunion(reunionReqDTO.getDate(),reunionReqDTO.getMembersPresent(),id);
+    public ResponseEntity<String> CreerReunion(@RequestBody ReunionReqDTO reunionReqDTO, @PathVariable Long id ){
+        String message = reunionService.ajouterProjetAuReunion(reunionReqDTO,id);
+        examinationService.ajouter_commentaires_examination(id);
         return ResponseEntity.ok(message);
     }
 
     @PutMapping("/valider/{id}")
-    public ResponseEntity<String> validerProjet(@PathVariable Long id , @RequestParam("file") MultipartFile file){
-        try {
-        byte[] finalDecision = file.getBytes();
-        return ResponseEntity.ok(projetService.validerProjet(id,finalDecision));
+    public ResponseEntity<String> validerProjet(@PathVariable Long id , @RequestBody ValiderDto validerDto){
 
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
-        }
+
+
+            if (validerDto.getAvis().equals("favorable") || validerDto.getAvis().equals("defavorable")) {
+                return ResponseEntity.ok(projetService.validerProjet(id,validerDto.getAvis()));
+            } else {
+                // Return error response with a message and 400 Bad Request status
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Invalid avis value: " + validerDto.getAvis());
+            }
+
+
     }
+
 
 
 

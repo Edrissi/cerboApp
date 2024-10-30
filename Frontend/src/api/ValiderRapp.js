@@ -33,14 +33,14 @@ export const ajouteRef = async (id,ref) => {
 
 
 
-export const ajouteReunion = async (id,members) => {
+export const ajouteReunion = async (id,members,status) => {
     try {
       const localDateTime = new Date();
       const year = localDateTime.getFullYear();
       const month = ('0' + (localDateTime.getMonth() + 1)).slice(-2); // Ensure two digits for the month
       const formattedYearMonth = `${year}-${month}`;
       console.log(formattedYearMonth)
-      const dataFin = { date: formattedYearMonth , membersPresent:members };
+      const dataFin = { date: formattedYearMonth , membersPresent:members ,statut:status};
 
       console.log(dataFin)
       const jwtCookie = Cookies.get('jwt');

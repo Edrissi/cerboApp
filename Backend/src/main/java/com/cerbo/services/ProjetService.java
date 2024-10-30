@@ -2,6 +2,7 @@ package com.cerbo.services;
 
 
 import com.cerbo.Dto.ProjetDTO;
+import com.cerbo.Dto.ProjetDetailsDto;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.Projet;
 import com.cerbo.models.ProjetValide;
@@ -9,9 +10,11 @@ import com.cerbo.repository.ProjetRepository;
 import com.cerbo.repository.ProjetValideRepository;
 import com.cerbo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +33,7 @@ public class ProjetService {
     public void enregistrerProjet(Projet projet, Integer id) {
 
 
-        ApplicationUser applicationUser= new ApplicationUser();
+        ApplicationUser applicationUser = new ApplicationUser();
         applicationUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         projet.setInvestigateur(applicationUser);
         // Enregistrer le projet dans la base de données
@@ -42,16 +45,17 @@ public class ProjetService {
         List<Projet> projets = projetRepository.findAll();
         return projets.stream()
                 .map(projet -> new ProjetDTO(projet.getId(),
-                                            projet.getIntituleProjet(),
-                                            projet.getDureeEtude(),
-                                            projet.getInvestigateur(),
-                                            projet.getPopulationCible(),projet.getStatut(),
+                        projet.getIntituleProjet(),
+                        projet.getDateSoumission(),
+                        projet.getDureeEtude(),
+                        projet.getInvestigateur(),
+                        projet.getPopulationCible(), projet.getStatut(),
                         projet.getRef(),
                         projet.getPremiereExamination()))
                 .collect(Collectors.toList());
     }
 
-    public void ajouterReferenceEtFinPremiereExamination(String ref, LocalDate date, Long id){
+    public void ajouterReferenceEtFinPremiereExamination(String ref, LocalDate date, Long id) {
         Projet projet;
         projet = projetRepository.findById(id).orElseThrow(() -> new RuntimeException("Projet not found"));
         projet.setRef(ref);
@@ -60,72 +64,60 @@ public class ProjetService {
         projetRepository.save(projet);
     }
 
-    public String validerProjet(Long id , byte[] finalDecision){
+    public String validerProjet(Long id, String avis) {
         Projet projet;
         projet = projetRepository.findById(id).orElseThrow(() -> new RuntimeException("Projet not found"));
 
-        ProjetValide projetValide = new ProjetValide() ;
 
-        // code de projet
-        projetValide.setCode(projet.getRef());
-
-        //
-        projetValide.setIntituleProjet(projet.getIntituleProjet());
-        projetValide.setInvestigateur(projet.getInvestigateur());
-
-        // date a regler
-        projetValide.setDateDepot(projet.getPremiereExamination());
-        projetValide.setDateValidation(projet.getPremiereExamination());
-
-
-        projetValide.setDureeEtude(projet.getDureeEtude());
-        projetValide.setTypeConsentement(projet.getTypeConsentement());
-        projetValide.setPopulationCible(projet.getPopulationCible());
-        projetValide.setPrelevement(projet.getPrelevement());
-
-        projetValide.setTypePrelevement(projet.getTypePrelevement());
-        projetValide.setQuantitePrelevement(projet.getQuantitePrelevement());
-        projetValide.setSourcefinancement(projet.getSourcefinancement());
-
-
-        // ajouter les files -----------------
-        projetValide.setDecisionFinal(finalDecision);
-        projetValide.setDescriptifProjet(projet.getDescriptifProjet());
-        projetValide.setAttestationCNDP(projet.getAttestationCNDP());
-        projetValide.setAttestationEngagement(projet.getAttestationEngagement());
-
-        projetValide.setFicheInformationFrancais(projet.getFicheInformationFrancais());
-        projetValide.setFicheConsentementFrancais(projet.getFicheConsentementFrancais());
-
-        projetValide.setFicheInformationArabe(projet.getFicheInformationArabe());
-        projetValide.setFicheConsentementArabe(projet.getFicheConsentementArabe());
-
-        projetValide.setConsiderationEthique(projet.getConsiderationEthique());
-        projetValide.setCvInvestigateurPrincipal(projet.getCvInvestigateurPrincipal());
-        projetValide.setAutresDocuments(projet.getAutresDocuments());
-
-        projetValideRepository.save(projetValide);
-        projet.setDecisionFinal(finalDecision);
-
-        projet.setDescriptifProjet(null);
-        projet.setAttestationCNDP(null);
-        projet.setAttestationEngagement(null);
-
-        projet.setFicheInformationFrancais(null);
-        projet.setFicheConsentementFrancais(null);
-
-        projet.setFicheInformationArabe(null);
-        projet.setFicheConsentementArabe(null);
-
-        projet.setConsiderationEthique(null);
-        projet.setCvInvestigateurPrincipal(null);
-        projet.setAutresDocuments(null);
-
-        projet.setStatut("valider");
+        if (avis.equals("favorable")) {
+            projet.setStatut("valider");
+        } else if (avis.equals("defavorable")) {
+            projet.setStatut("valider");
+        }
 
         projetRepository.save(projet);
 
         return "projet validé avec success";
+
+    }
+
+    public ProjetDetailsDto getDetailsProjet(Long projetId) {
+
+        Projet projet = projetRepository.findById(projetId).orElseThrow(() -> new RuntimeException("Projet not found"));
+        ProjetDetailsDto projetDetailsDto = new ProjetDetailsDto();
+
+        projetDetailsDto.setId(projet.getId());
+        projetDetailsDto.setIntituleProjet(projet.getIntituleProjet());
+        projetDetailsDto.setDureeEtude(projet.getDureeEtude());
+        projetDetailsDto.setRef(projet.getRef());
+        projetDetailsDto.setPopulationCible(projet.getPopulationCible());
+        projetDetailsDto.setStatut(projet.getStatut());
+        projetDetailsDto.setInvestigateur(projet.getInvestigateur());
+
+        if (projet.getStatut().equals("valider") && projet.getDateValidationFinal() != null) {
+            LocalDate DateNow = LocalDate.now();
+            Period period = Period.between(projet.getDateValidationFinal(), DateNow);
+            int years = period.getYears();
+            int months = period.getMonths();
+
+            if (years > 0 || months > 1) {
+                projetDetailsDto.setPasAccessible(true);
+                return projetDetailsDto;
+            }
+        }
+            projetDetailsDto.setDescriptifProjet(projet.getDescriptifProjet());
+            projetDetailsDto.setAttestationCNDP(projet.getAttestationCNDP());
+            projetDetailsDto.setAttestationEngagement(projet.getAttestationEngagement());
+            projetDetailsDto.setAutresDocuments(projet.getAutresDocuments());
+            projetDetailsDto.setConsiderationEthique(projet.getConsiderationEthique());
+            projetDetailsDto.setCvInvestigateurPrincipal(projet.getCvInvestigateurPrincipal());
+            projetDetailsDto.setFicheConsentementArabe(projet.getFicheConsentementArabe());
+            projetDetailsDto.setFicheConsentementFrancais(projet.getFicheConsentementFrancais());
+            projetDetailsDto.setFicheInformationArabe(projet.getFicheInformationArabe());
+            projetDetailsDto.setFicheInformationFrancais(projet.getFicheInformationFrancais());
+            return projetDetailsDto;
+
+
 
     }
 }

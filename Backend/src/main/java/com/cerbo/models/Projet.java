@@ -32,7 +32,13 @@ public class Projet {
     private String statut;
 
     @Column(nullable = true)
+    private LocalDate dateSoumission;
+
+    @Column(nullable = true)
     private LocalDate premiereExamination;
+
+    @Column(nullable = true)
+    private LocalDate dateValidationFinal;
 
     private String intituleProjet;
     private String dureeEtude;

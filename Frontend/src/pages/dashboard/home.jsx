@@ -128,8 +128,12 @@ export function Home() {
 
   const desiredStatus1= 'revised'; // Replace 'specificRole' with the actual role you want to filter by
   const desiredStatus2 = 'valider';
+  const desiredStatus3 = 'revision mineur';
+  const desiredStatus4 = 'revision majeur';
+
+
   useEffect(() => {
-    const projectsdatanew = projects.filter(project => project.statut === desiredStatus1 || project.statut === desiredStatus2);
+    const projectsdatanew = projects.filter(project => project.statut === desiredStatus1 || project.statut === desiredStatus2 || project.statut === desiredStatus3 || project.statut === desiredStatus4 );
     setProjectslist(projectsdatanew);
   }, [projects]);
 
@@ -159,6 +163,8 @@ export function Home() {
       if(status==="revisé") return "yellow"
       if(status==="validé") return "green"
        if(status==="corrigé") return "pink"
+      if(status==="revision mineur") return "yellow"
+      if(status==="revision majeur") return "yellow"
 
 
       
@@ -170,11 +176,13 @@ export function Home() {
       if(status==="revised") return "revisé"
       if(status==="valider") return "validé"
       if(status==="torevised") return "corrigé"
+      if(status==="revision mineur") return "revision mineur"
+      if(status==="revision majeur") return "revision majeur"
 
     }
    
   if(loader) return <Loading />
-
+  console.log(filteredProjects)
   return (
     <div className="mt-12">
       {/* <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
@@ -304,7 +312,7 @@ export function Home() {
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["Ref", "Intitule", "Date Examination" , "rapport" , "Status" , "voir"].map(
+                  {["Ref", "Intitule", "Date de soummission" , "Dernier Examination" , "Status" , "voir"].map(
                     (el) => (
                       <th
                         key={el}
@@ -324,7 +332,7 @@ export function Home() {
               <tbody>
                 {filteredProjects
                 .map(
-                  ({id,ref,intituleProjet,date, investigateur ,statut }) => {
+                  ({id,ref,intituleProjet,date,dateSoumission, investigateur ,statut }) => {
                     const className = `py-4 px-5`;
                    
 
@@ -356,7 +364,7 @@ export function Home() {
                             variant="small"
                             className="text-xs font-medium text-blue-gray-600"
                           >
-                            {date} 
+                            {dateSoumission} 
                           </Typography>
                         </td>
 

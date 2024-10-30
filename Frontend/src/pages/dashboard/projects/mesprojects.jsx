@@ -55,6 +55,8 @@ export function MesProjects() {
     if(status==="valider") return "validé"
     if(status==="nouveau") return "nouveau"
     if(status==="torevised") return "corrigé"
+    if(status==="revision mineur") return "revision mineur"
+      if(status==="revision majeur") return "revision majeur"
 
   }
  
@@ -63,6 +65,8 @@ export function MesProjects() {
     if(status==="revisé") return "yellow"
     if(status==="validé") return "green"
     if(status==="corrigé") return "pink"
+    if(status==="revision mineur") return "yellow"
+      if(status==="revision majeur") return "yellow"
     
     // if(status==="pending") return "red"
     // if(status==="not started") return "blue-gray"
@@ -120,6 +124,9 @@ export function MesProjects() {
       )
     : [];
 
+    if (loader) {
+      return <Loading/>;
+    }
 
 return (
       <div className="mt-12 mb-8 flex flex-col gap-12">

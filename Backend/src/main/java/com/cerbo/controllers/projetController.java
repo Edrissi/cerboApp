@@ -3,12 +3,15 @@ package com.cerbo.controllers;
 
 
 import com.cerbo.Dto.AutreInvestigateurDto;
+import com.cerbo.Dto.ExaminationDetailsDTO;
 import com.cerbo.Dto.ProjetDTO;
+import com.cerbo.Dto.ProjetDetailsDto;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.AutreInvestigateur;
 import com.cerbo.models.Projet;
 import com.cerbo.repository.AutreInvestigateurRepository;
 import com.cerbo.repository.ProjetRepository;
+import com.cerbo.services.ExaminationService;
 import com.cerbo.services.ProjetService;
 import com.cerbo.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,6 +51,8 @@ public class projetController {
 
     @Autowired
     private ProjetService projetService;
+    @Autowired
+    private ExaminationService examinationService;
 
 
     @PostMapping("/soummis")
@@ -125,8 +130,8 @@ public class projetController {
     }
 
     @GetMapping("/projet/{id}")
-    public Optional<Projet> getProjet(@PathVariable Long id) {
-        return projetRepository.findById(id);
+    public ProjetDetailsDto getProjet(@PathVariable Long id) {
+        return projetService.getDetailsProjet(id);
 
     }
     @GetMapping("myprojects")
@@ -292,13 +297,14 @@ public class projetController {
             @RequestParam(value = "cvInvestigateurPrincipal", required = false) MultipartFile cvInvestigateurPrincipal,
             @RequestParam(value = "autresDocuments", required = false) MultipartFile autresDocuments,
             @RequestParam("investigateurs") String autresInvestigateursJson) {
+        Projet existingProjet = projetRepository.findById(projectId).orElseThrow(
+                ()-> new RuntimeException("Project not found")
+        );
         try {
             // Fetch the existing project from repository
-            Optional<Projet> optionalProjet = projetRepository.findById(projectId);
-            if (!optionalProjet.isPresent()) {
-                return new ResponseEntity<>("Project not found", HttpStatus.NOT_FOUND);
-            }
-            Projet existingProjet = optionalProjet.get();
+
+
+
 
             // Update project details
             existingProjet.setIntituleProjet(intituleProjet);
@@ -313,39 +319,40 @@ public class projetController {
             existingProjet.setProgrammeEmploiFinancement(programmeEmploiFinancement);
 
             // Handle file uploads
-
-            existingProjet.setDescriptifProjet(saveFile(descriptifProjet));
-
-
-            existingProjet.setConsiderationEthique(saveFile(considerationEthique));
-
-
-            existingProjet.setFicheInformationArabe(saveFile(ficheInformationArabe));
-
-
+            if(descriptifProjet != null) {
+                existingProjet.setDescriptifProjet(saveFile(descriptifProjet));
+            }
+            if(considerationEthique != null) {
+                existingProjet.setConsiderationEthique(saveFile(considerationEthique));
+            }
+            if(ficheInformationArabe != null) {
+                existingProjet.setFicheInformationArabe(saveFile(ficheInformationArabe));
+            }
+            if(ficheInformationFrancais != null) {
             existingProjet.setFicheInformationFrancais(saveFile(ficheInformationFrancais));
-
-
+            }
+            if(ficheConsentementArabe != null) {
             existingProjet.setFicheConsentementArabe(saveFile(ficheConsentementArabe));
+              }
+            if(ficheConsentementFrancais != null) {
+                existingProjet.setFicheConsentementFrancais(saveFile(ficheConsentementFrancais));
+            }
 
-
-            existingProjet.setFicheConsentementFrancais(saveFile(ficheConsentementFrancais));
-
-
-            existingProjet.setAttestationEngagement(saveFile(attestationEngagement));
-
-
+            if(attestationEngagement != null) {
+                existingProjet.setAttestationEngagement(saveFile(attestationEngagement));
+            }
+            if(attestationCNDP != null) {
             existingProjet.setAttestationCNDP(saveFile(attestationCNDP));
-
-
+            }
+            if(cvInvestigateurPrincipal != null) {
             existingProjet.setCvInvestigateurPrincipal(saveFile(cvInvestigateurPrincipal));
-
-
+            }
+            if(autresDocuments != null) {
             existingProjet.setAutresDocuments(saveFile(autresDocuments));
+            }
+            existingProjet.setStatut("torevised");
 
-                existingProjet.setStatut("torevised");
 
-            // Repeat for other files...
 
             // Save updated project
             Projet savedProjet = projetRepository.save(existingProjet);
@@ -383,6 +390,13 @@ public class projetController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    @GetMapping("/rapports/{projet_id}")
+    public List<ExaminationDetailsDTO> getRapports(@PathVariable Long projet_id){
+        return examinationService.getExaminationDetailsForRapport(projet_id);
+
     }
 
 

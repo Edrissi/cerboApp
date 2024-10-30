@@ -30,4 +30,9 @@ public class Commentaire {
 
     @Column(name="file_comment")
     private String fileComment;
+
+    @Column(name="old_comment")
+    private Boolean oldComment =false;
+
+
 }

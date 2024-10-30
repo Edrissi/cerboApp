@@ -7,7 +7,7 @@ export * from "@/pages/dashboard/projects/editproject";
 export * from "@/pages/dashboard/projects/showproject";
 export * from "@/pages/dashboard/projects/showMesProject";
 
-
+export * from "@/pages/dashboard/reunions"
 export * from "@/pages/dashboard/projects/examinProject";
 export * from "@/pages/dashboard/projects/examinStepper";
 export * from "@/pages/dashboard/projects/examinprojectrapport"

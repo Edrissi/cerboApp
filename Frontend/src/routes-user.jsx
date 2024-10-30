@@ -15,6 +15,7 @@ import {
   import { ProjectTable ,CreateProject,EditProject,ShowProject} from "@/pages/dashboard";
   import { ShowMesProject } from "@/pages/dashboard";
   import MesProjects from "./pages/dashboard/projects/mesprojects";
+import { ShowReunion } from "./pages/dashboard/reunions/showReunion";
   const icon = {
     className: "w-5 h-5 text-inherit",
   };
@@ -54,6 +55,10 @@ import {
         {
           path: "/project/show/:id",
           element: <ShowProject />,
+        },
+        {
+          path: "/reunion/show/:id",
+          element: <ShowReunion />,
         },
         {
           path: "/project/showMes/:id",

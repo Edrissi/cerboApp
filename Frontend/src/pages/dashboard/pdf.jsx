@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Document, Page } from 'react-pdf';
 
-import "/app/src/css/pdf.css"
+import "/public/css/pdf.css"
 class MyPDFViewer extends Component {
   state = {
     error: null

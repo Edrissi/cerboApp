@@ -121,7 +121,7 @@ export function SignIn() {
       </div>
       <div className="w-1/2 h-full hidden lg:block m-0 p-0">
     <img
-      src="/src/img/pattern.png"
+      src="/public/img/pattern.png"
       className="h-full w-full object-cover shadow-xl -ml-1"
       alt="Pattern"
     />

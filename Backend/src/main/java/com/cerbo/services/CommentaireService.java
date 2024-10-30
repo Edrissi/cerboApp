@@ -1,7 +1,5 @@
 package com.cerbo.services;
 
-
-import com.cerbo.Dto.CommentDTO;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.Commentaire;
 import com.cerbo.models.Projet;
@@ -12,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+
 
 @Service
 public class CommentaireService {
@@ -50,7 +50,7 @@ public class CommentaireService {
     }
 
     public List<Commentaire> getAllCommentByProjectAndFile(Long id,String fileComment){
-        return commentRepository.findByProjetIdAndFileComment(id,fileComment);
+        return commentRepository.findByProjetIdAndFileCommentAndOldComment(id,fileComment,false);
 
     }
 
@@ -65,4 +65,17 @@ public class CommentaireService {
 
 
     }
+
+    public void changeOldStatut(Long projet_id){
+
+        Set<Commentaire> commentaires = commentRepository.findByProjetIdAndOldComment(projet_id,false);
+        commentaires.forEach(comment -> {
+            comment.setOldComment(true);
+            commentRepository.save(comment);
+            });
+
+    }
+
+
+
 }

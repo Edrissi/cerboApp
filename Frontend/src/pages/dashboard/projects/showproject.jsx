@@ -9,7 +9,13 @@ import {
 } from "@material-tailwind/react";
 import{ShowDetails} from "@/widgets/layout/ShowDetails";
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import FetchCommentTrue from '@/api/fetchCommentTrue';
+import FormLabel from '@mui/material/FormLabel';
+import Grid from '@mui/material/Grid';
+import {  MenuItem , Select,InputLabel } from '@mui/material';
+
+// import FetchCommentTrue from '@/api/fetchCommentTrue';
+import FetchRapports from '@/api/fetchCommentTrue';
+import { styled } from '@mui/system';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ProjectData from "@/data/project-data";
 import Loading from "@/layouts/loading";
@@ -34,6 +40,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import ValiderProjet from '@/api/ValiderProjet';
+import TemplateAvisFinal from '@/template/templateAvisFinal';
 
 export function ShowProject(isAdmin) {
  
@@ -51,6 +58,7 @@ export function ShowProject(isAdmin) {
   const navigate = useNavigate();
   const { id } = useParams();
   const {projectdata,loader}=ProjectData(id);
+  
   
   const [showPDFViewer, setShowPDFViewer] = useState(false);
 
@@ -112,7 +120,7 @@ export function ShowProject(isAdmin) {
     
   }
 
-// Assuming projectdata is loaded asynchronously
+
 
 
 // Access data
@@ -146,11 +154,12 @@ export function ShowProject(isAdmin) {
     },
     {
       title:"fiche Information Arabe",
-      value:projectdata.ficheInformaionArabe,
+      value:projectdata.ficheInformationArabe, 
+
     },
     {
       title:"fiche Information Francais",
-      value:projectdata.ficheInformaionFrancais,
+      value:projectdata.ficheInformationFrancais,
     },
     {
       title:"fiche Consentement Arabe",
@@ -282,7 +291,11 @@ export function ShowProject(isAdmin) {
     setActiveStep(0);
   };
   // nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-
+  
+  const FormGrid = styled(Grid)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+  }));
   const stepperRef = useRef(null);
 
   // Function to scroll to the top of the stepper
@@ -290,7 +303,7 @@ export function ShowProject(isAdmin) {
     stepperRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const {comments , loading }= FetchCommentTrue(id);
+  const {rapports , loading }= FetchRapports(id);
 
   const [pdfFile, setPdfFile] = useState(null);
 
@@ -298,20 +311,18 @@ export function ShowProject(isAdmin) {
     setPdfFile(event.target.files[0]);
     
   };
-  console.log(pdfFile)
-
+  
   const [successValider, setSuccessValider] = useState(false);
 
   const handleSubmitValider = async () => {
 
-    try{if (!pdfFile) {
-      alert('Please select a file first.');
+    try{
+      if (selectedValue == "none" ) {
+      alert('choisir le type de validation');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', pdfFile);
-    const response = await ValiderProjet(id,formData);
+    const response = await ValiderProjet(id,selectedValue);
     setSuccessValider(true);
 
     setTimeout(() => {
@@ -325,9 +336,18 @@ export function ShowProject(isAdmin) {
     
 
   };
-  console.log(projectdata.decisionFinal)
+  console.log(projectdata)
 
+  console.log(rapports);
 
+  const [selectedValue, setSelectedValue] = useState('none');
+    
+      const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+        console.log(selectedValue)
+      };
+
+  console.log(selectedValue);
   if (loader===true) return <Loading />
   return (
     
@@ -368,15 +388,31 @@ export function ShowProject(isAdmin) {
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                           </svg>
 
-                          Il faut prendre en considération qu'après la validation du projet, <span style={{ color: 'red' }} >ni les membres ni l'administrateur </span>ne seront capables d'accéder aux données de ce projet .
-                          </DialogContentText>
-                          <input
-                            type="file"
-                            accept="application/pdf"
+                          Il faut prendre en considération qu'après un <span style={{ color: 'red' }} >mois</span> après la validation du projet, <span style={{ color: 'red' }} >ni les membres ni l'administrateur </span>ne seront capables d'accéder aux données de ce projet .
+                          </DialogContentText>.
+                          {/* <input
+                            type="text"
+                           
                             className="mt-5 p-2 text-lg border-2 border-gray-300 rounded-md bg-gray-100 cursor-pointer hover:border-gray-500 focus:outline-none focus:border-blue-500"
                             onChange={handleFileChange}
                             style={{ marginTop: '20px' }}
-                          />
+                          /> */}
+                          <FormGrid item xs={2} md={2}>
+                            <FormLabel htmlFor="role" required>
+                              Choisir un type de Validation
+                            </FormLabel>
+
+                            <Select
+                              labelId="role"
+                              id="type-validation"
+                              value={selectedValue}
+                              onChange={handleChange} 
+                            >
+                              <MenuItem value="none">none</MenuItem>
+                              <MenuItem value="favorable">Favorable</MenuItem>
+                              <MenuItem value="defavorable">Défavorable</MenuItem>
+                            </Select>
+                          </FormGrid>
                         </DialogContent>
                         <DialogActions>
                           {successValider ? (<span style={{color:"green",}} > Success ! The page will reload shortly...</span>) :(<>
@@ -474,19 +510,23 @@ export function ShowProject(isAdmin) {
                   )}  
                 
               </thead> */}
-             { (projectdata.statut === "revised") && <div>
+             { (projectdata.statut !== "nouveau") && <div>
                 <Typography
                           variant="small"
                           className="text-[20px] font-medium uppercase text-orange-600"
                         >
-                          Rapport : 
-                        </Typography>
-                        <PDFDownloadLink document={<InvoiceDocument commentData={comments} dateOf={projectdata.premiereExamination} dateDepot={projectdata.premiereExamination} invis={projectdata.investigateur.nom +''+ projectdata.investigateur.prenom} intitule={projectdata.intituleProjet}/>} fileName="rapport.pdf">
+                          Rapports : 
+              </Typography>
+              {rapports.map((item,index) => (
+                    <div key={index}> 
+                        Rapport {index+1} : saisi le {item.examinationDate} 
+                        <PDFDownloadLink  document={<InvoiceDocument commentData={item.commentaires} dateOf={item.examinationDate} reference={projectdata.ref} dateDepot={projectdata.premiereExamination} invis={projectdata.investigateur.nom +' '+ projectdata.investigateur.prenom} intitule={projectdata.intituleProjet}/>} fileName="rapport.pdf">
                           {({ blob, url, loading, error }) =>
-                            loading ? 'Loading document...' : <div className='underline text-blue-600'>Download Rapport</div>
+                            loading ? 'Loading document...' : <div className='underline text-blue-600'>Download Rapport {index +1}</div>
                           }
                         </PDFDownloadLink>
-
+                        </div>
+                )) }
                         </div>
                 }
 
@@ -497,13 +537,27 @@ export function ShowProject(isAdmin) {
                         >
                           Decision Final : 
                         </Typography>
-                        <iframe style={{ maxWidth: 500 , display: 'block', margin: 'auto' }}  src={`${convertByteArrayToFile(projectdata.decisionFinal, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
+                        <PDFDownloadLink  document={<TemplateAvisFinal   />} fileName="rapport.pdf">
+                          {({ blob, url, loading, error }) =>
+                            loading ? 'Loading document...' : <div className='underline text-blue-600'>PV final 1</div>
+                          }
+                        </PDFDownloadLink>
+                        {/* <iframe style={{ maxWidth: 500 , display: 'block', margin: 'auto' }}  src={`${convertByteArrayToFile(projectdata.decisionFinal, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe> */}
 
                         </div>
                 }
     </CardBody>
         {/* ndndnd
      new stepper  */}
+  
+    <div>
+      {projectdata.pasAccessible ? (<div className="flex items-center justify-between w-full">
+                              <card>
+                              <CardBody className="overflow-x-auto px-0 sm:px-6 py-4">
+                              les fichies ne sont plus accessible
+                              </CardBody>
+                              </card>
+                            </div>) :(
     <Box> 
       <Stepper ref={stepperRef} activeStep={activeStep} orientation="vertical">
         {infosproject.map((step, index) => (
@@ -581,29 +635,12 @@ export function ShowProject(isAdmin) {
         </Paper>
       )}
     </Box>
+      )}
+</div>
       </CardBody>
     </Card> 
     
-    <div className="pdf-container  mx-20" ref={pdfContainerRef}>
-    {/* {showPDFViewer && data!=null &&(<div>
-  <div className="pdf-overlay " >
-    <iframe src={`${convertByteArrayToFile(data, 'application/pdf')}#toolbar=0`} className="pdf-iframe" title="PDF Viewer"></iframe>
-  </div>
-     
-      <card>
-        <CardBody>
-        <CommentInput comment={comment} setComment={setComment} handleSubmit={handleCommentSubmit} />
-        </CardBody>
-      </card> 
-      </div>
-    )} */}
-    <div>
-      
-
-
-    
-    </div>
-</div>
+   
 
 
   </div>

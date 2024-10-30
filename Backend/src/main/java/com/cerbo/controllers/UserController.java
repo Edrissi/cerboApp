@@ -1,7 +1,11 @@
 package com.cerbo.controllers;
 
+import com.cerbo.Dto.ReunionDto;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.Commentaire;
+import com.cerbo.models.Reunion;
+import com.cerbo.repository.ReunionRepository;
+import com.cerbo.services.ReunionService;
 import com.cerbo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/user")
 
@@ -18,6 +25,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ReunionService reunionService;
+    @Autowired
+    private ReunionRepository reunionRepository;
 
     @GetMapping("/")
     public String helloUserController(){
@@ -52,6 +63,18 @@ public class UserController {
         return ResponseEntity.ok("dddddddd");
 
     }
+
+    @GetMapping("/reunions")
+    public List<ReunionDto> reunions(){
+        return reunionService.getReunions();
+    }
+
+    @GetMapping("/reunion/{reunionid}")
+    public Optional<Reunion> getInfoReunion(@PathVariable Long reunionid){
+        
+        return reunionRepository.findById(reunionid);
+    }
+
 
 
 }

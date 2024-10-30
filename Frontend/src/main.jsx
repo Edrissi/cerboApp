@@ -16,7 +16,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
 import { MaterialTailwindControllerProvider } from "@/context";
 import { SnackbarProvider } from 'notistack';
-import "/app/src/css/tailwind.css";
+import "/public/css/tailwind.css";
 
 
 

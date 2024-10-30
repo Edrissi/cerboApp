@@ -117,6 +117,8 @@ export function ProjectTable() {
       if(status==="corrigé") return "pink"
       // if(status==="pending") return "red"
       // if(status==="not started") return "blue-gray"
+      if(status==="revision mineur") return "yellow"
+      if(status==="revision majeur") return "yellow"
     }
   
     function statusText(status){
@@ -124,6 +126,9 @@ export function ProjectTable() {
       if(status==="valider") return "validé"
       if(status==="nouveau") return "nouveau"
     if(status==="torevised") return "corrigé"
+    if(status==="revision mineur") return "revision mineur"
+      if(status==="revision majeur") return "revision majeur"
+
 
 
     }
@@ -174,7 +179,7 @@ return (
           <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["id","intitule projet","durée d'etude", "investigateur principale","status"].map(
+                  {["ref","intitule projet","durée d'etude", "investigateur principale","status"].map(
                     (el) => (
                       <th
                         key={el}
@@ -194,7 +199,7 @@ return (
               <tbody>
                 {filteredProjects.map(
                   (project,index) => {
-                    const {id ,intituleProjet,dureeEtude ,investigateur,statut}=project;
+                    const {id,ref ,intituleProjet,dureeEtude ,investigateur,statut}=project;
                     const className = `py-4 px-5`;
                     
                     return (
@@ -206,7 +211,7 @@ return (
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {index+1}
+                              {ref}
                             </Typography>
                           </div>
                         </td>

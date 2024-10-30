@@ -21,7 +21,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import SuccessPopup from "@/layouts/SuccessPopup";
-import amine from '/src/img/amine.png'
+import amine from '/public/img/amine.png'
 
 export function Profile({ isAuthenticated, user, isAdmin }) {
 

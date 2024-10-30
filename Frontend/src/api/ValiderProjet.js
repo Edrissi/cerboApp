@@ -1,14 +1,19 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const ValiderProjet = async (id , formData) => {
+const ValiderProjet = async (id , avisType) => {
+  console.log(avisType)
   try {
     const jwtCookie = Cookies.get('jwt');
+
     if (jwtCookie) {
-      const response = await axios.put(`http://localhost:8000/admin/valider/${id}`, formData, {
+      const validerData = {
+        avis : avisType
+      }
+      const response = await axios.put(`http://localhost:8000/admin/valider/${id}`, validerData, {
         headers: {
           Authorization: `Bearer ${jwtCookie}`,
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
       });
       
