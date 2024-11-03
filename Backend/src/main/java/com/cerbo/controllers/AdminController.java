@@ -1,9 +1,6 @@
 package com.cerbo.controllers;
 
-import com.cerbo.Dto.CodeRegistDTO;
-import com.cerbo.Dto.RefDTO;
-import com.cerbo.Dto.ReunionReqDTO;
-import com.cerbo.Dto.ValiderDto;
+import com.cerbo.Dto.*;
 import com.cerbo.models.ApplicationUser;
 
 
@@ -51,6 +48,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PvReunionService pvReunionService;
 
     //
     @GetMapping("/")
@@ -165,7 +165,26 @@ public class AdminController {
 
     }
 
+    @GetMapping("/reunion/getPvReunionDetails/{reunionId}")
+    public ResponseEntity<List<PvReunionDto>> getPvReunionDetails(@PathVariable Long reunionId){
+        try{
 
+            List<PvReunionDto> pvReunionDtoList = pvReunionService.getPvReunionDetails(reunionId);
+            return ResponseEntity.ok(pvReunionDtoList);
+        }catch (Exception e){
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/reunion/getAllPvReunions/{reunionId}")
+    public ResponseEntity<PvReunionResponse> getAllPvReunions(@PathVariable Long reunionId){
+        try{
+
+            PvReunionResponse pvReunionResponse = pvReunionService.getAllPvReunions(reunionId);
+            return ResponseEntity.ok(pvReunionResponse);
+        }catch (Exception e){
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 

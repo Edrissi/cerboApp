@@ -5,8 +5,10 @@ import com.cerbo.models.ApplicationUser;
 
 import com.cerbo.models.Projet;
 import com.cerbo.models.Reunion;
+import com.cerbo.models.Role;
 import com.cerbo.repository.ProjetRepository;
 import com.cerbo.repository.ReunionRepository;
+import com.cerbo.repository.RoleRepository;
 import com.cerbo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.YearMonth;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,17 +32,26 @@ public class ReunionService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PvReunionService pvReunionService;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private EmailService emailService;
+
     public String ajouterProjetAuReunion(ReunionReqDTO reunionReqDTO, Long id){
 
         Projet projet;
         projet = projetRepository.findById(id).orElseThrow(() -> new RuntimeException("Projet not found"));
 
-        // ajouter ref
-        projet.setRef("555/55");
+
 
         //ajouter dernier date examination
         LocalDate datenow = LocalDate.now();
         projet.setDernierExamination(datenow);
+
+        boolean isNew = false;
+        if(projet.getStatut().equalsIgnoreCase("nouveau")) isNew = true;
 
         //changer statut apres revision
         projet.setStatut(reunionReqDTO.getStatut());
@@ -60,7 +72,8 @@ public class ReunionService {
 
             }
 
-            reunionReopository.save(reunion);
+            Reunion savedReunion = reunionReopository.save(reunion);
+            pvReunionService.savePvReunion(savedReunion.getId(), projet.getRef(),projet.getStatut(),isNew);
 
 
             return "Reunion deja existe , et le projet ajouter au reunion avec success";
@@ -75,15 +88,22 @@ public class ReunionService {
             reunion.setDate(reunionReqDTO.getDate()); // Vous pouvez définir une autre date si nécessaire
             reunion.getProjets().add(projet);
 
+            List<ApplicationUser> presentMembers = reunionReqDTO.getMembersPresent();
 
-            for (ApplicationUser user : reunionReqDTO.getMembersPresent()) {
+            for (ApplicationUser user : presentMembers) {
 
                     ApplicationUser user_n = userRepository.findById(user.getUserId()).orElseThrow(() -> new RuntimeException("user not found"));
-                    setLastMeet(reunionReqDTO.getDate(), user_n);
+                    user_n.setNumberOfAbsences(0);
                     reunion.getMembresPresents().add(user);
 
             }
-            reunionReopository.save(reunion);
+            List<ApplicationUser> absenceList = userRepository.findAll().stream()
+                    .filter(user -> !presentMembers.contains(user))
+                    .toList();
+            CheckNumberOfAbsencesAndNotifyOrDeleteIt(absenceList);
+            Reunion savedReunion = reunionReopository.save(reunion);
+            pvReunionService.savePvReunion(savedReunion.getId(),projet.getRef(), projet.getStatut(),isNew);
+
             return "Reunion Crée, et projet ajouter au reunion avec success";
         }
     }
@@ -109,5 +129,23 @@ public class ReunionService {
         dto.setReunionsId(reunion.getId());
         dto.setMonthYearOfReunion(reunion.getDate());
         return dto;
+    }
+    public void CheckNumberOfAbsencesAndNotifyOrDeleteIt(List<ApplicationUser> absences){
+            for (ApplicationUser user : absences){
+                user.setNumberOfAbsencesPerYear(user.getNumberOfAbsencesPerYear() + 1);
+                user.setNumberOfAbsences(user.getNumberOfAbsences() + 1);
+                if (user.getNumberOfAbsencesPerYear() == 5) {
+                    Role roleInvistigateur = roleRepository.findByAuthority("INVISTIGATOR").orElseThrow(
+                            ()-> new RuntimeException("role not found")
+                    );
+                    HashSet<Role> roles = new HashSet<>();
+                    roles.add(roleInvistigateur);
+                    user.setAuthorities(roles);
+                    userRepository.save(user);
+                }
+                if(user.getNumberOfAbsences() >= 3){
+                    emailService.sendAlerteAbsences(user.getEmail());
+                }
+            }
     }
 }
