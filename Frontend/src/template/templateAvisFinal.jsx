@@ -10,11 +10,12 @@ import {
    Image,
 } from "@react-pdf/renderer";
 
+import ItemsTable from "./itemsTble";
 
 // Define styles (unchanged)
 
 
-const TemplateAvisFinal = () => {
+const TemplateAvisFinal = ({reference,intitule,investigateurNom,investigateurPrenom,dateSoummission,statut}) => {
  
     const styles = StyleSheet.create({
         page: {
@@ -39,8 +40,8 @@ const TemplateAvisFinal = () => {
         header: {
           fontSize: 10,
           textAlign: "right",
-          marginBottom: 30,
-          marginTop:20,
+          marginBottom: 15,
+          marginTop:10,
           fontWeight: 800,
         },
         header3: {
@@ -100,11 +101,24 @@ const TemplateAvisFinal = () => {
           alignItems: 'center',
           
         },
-        image1:{
+        imageContainerTable: {
+         
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop:13
+        },
+        imageSignature:{
           marginTop:20,
           textAlign: 'center',
-          width: 100, 
-          height: 80,
+          width: 160, 
+          marginBottom:5,
+          height: 55,
+        },
+        imageTable:{
+          
+          
+          
         },
         text: {
             fontSize: 10,
@@ -120,66 +134,92 @@ const TemplateAvisFinal = () => {
             marginBottom: 10,
             fontWeight: "bold",
           },
+          centeredText: {
+            textAlign: 'center',           // Center the text horizontally // Add strikethrough effect  
+            fontSize: 13, // taille plus grande pour un titre
+          fontWeight: 'bold', // texte en gras
+          textAlign: 'center', // centrer le texte
+        
+          marginLeft:70,
+          marginRight:70,          // Adjust font size if needed
+                        // Add vertical margin if needed
+          },
+          textIns:{
+            fontSize: 10,
+            marginBottom: 5,
+            marginLeft:10
+          }
         
       });
-
+      const data = {
+        id: "5df3180a09ea16dc4b95f910",
+        items: [
+          {
+            sr: 1,
+            desc: "desc1",
+            xyz: 5,
+          },
+          {
+            sr: 2,
+            desc: "desc2",
+            xyz: 6,
+          },
+        ],
+      };
  
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+      
+      
+
+
         <View >
             <Image style={styles.image} src="/public/img/umpCerbo.jpg" />
         </View>
+        <Text style={styles.centeredText}>AVIS DU COMITE D’ETHIQUE POUR LA RECHERCHE 
+        BIOMEDICALE D’OUJDA (CERBO)
+        </Text>
         <View style={styles.header}>
           <Text>Oujda le <Text style={styles.blueText}>{"dateOf"}</Text></Text>
         </View>
-
         
-        <View style={styles.imageContainer} >
-            <Image style={styles.image1} src="/public/img/cerboSignature.jpg" />
-        </View>
-
+        <View style={styles.imageContainerTable} >
+          <Image style={styles.imageTable} src="/public/img/titrePvProjet.jpg" />
+      </View>
         <View>
-          <Text style={styles.sectionTitle}>Titre et références du projet de recherche</Text>
-          <Text style={styles.text}>• Référence : {"project.reference"}</Text>
-          <Text style={styles.text}>• Intitulé : {"project.title"}</Text>
-          <Text style={styles.text}>
-            • Investigateur(rice) principal(e) : Pr. {"project.investigator"}
+          <Text style={styles.textIns}>• Référence : {reference}</Text>
+          <Text style={styles.textIns}>• Intitulé : {intitule}</Text>
+          <Text style={styles.textIns}>
+            • Investigateur(rice) principal(e) : Pr. {investigateurNom} {investigateurPrenom}
           </Text>
-          <Text style={styles.text}>• Promoteur : {"project.sponsor"}</Text>
-          <Text style={styles.text}>
-            • Début de l’étude : {"project.startDate"} &nbsp;&nbsp;&nbsp;
-            Durée de l’étude : {"project.duration"}
-          </Text>
-        </View>
-
-        <View>
-          <Text style={styles.deliberation}>Délibération</Text>
-          <Text style={styles.text}>
-            Après examen et évaluation, le Comité d’Ethique (CERBO) a adopté à
-            l’unanimité la délibération suivante :
-          </Text>
-          <Text style={styles.deliberation}>Avis favorable</Text>
-          <Text style={styles.text}>
-            à la réalisation du projet de recherche sus-référencé et cet avis ne
-            sera valable que pour ce projet.
-          </Text>
-          <Text style={styles.text}>
-            L’investigateur(rice) principal(e) est prié(e) d’informer le CERBO :
-          </Text>
-          <Text style={styles.text}>
-            • De tous les incidents ou accidents éventuels survenus pendant
-            l’exécution des activités de recherche de ce projet ;
-          </Text>
-          <Text style={styles.text}>
-            • De la clôture de l’étude avec un rapport succinct sur son
-            déroulement.
+        <Text style={styles.textIns}>• Promoteur : {"project.sponsor"}</Text>
+          <Text style={styles.textIns}>
+            • Début de l’étude : {dateSoummission} &nbsp;&nbsp;&nbsp;
+            Durée de l’étude : {"durree"}
           </Text>
         </View>
-
-    <View style={styles.footer}>
-        <view style={styles.footerLine}/>
+      
+       { statut==="favorable" ? (
+        <View style={styles.imageContainerTable} >
+          <Image style={styles.imageTable} src="/public/img/DeliberationFavorable.jpg" />
+      </View>
+       ):
+       <View style={styles.imageContainerTable} >
+          <Image style={styles.imageTable} src="/public/img/DeliberationDefavorable.jpg" />
+      </View>
+        }
+       <View style={styles.imageContainerTable} >
+          <Image style={styles.imageTable} src="/public/img/refTravailComite.jpg" />
+      </View> 
+      
+      <View style={styles.imageContainer} >
+          <Image style={styles.imageSignature} src="/public/img/signaturePvFinal.jpg" />
+      </View>
+     
+      <View style={styles.footer} fixed>
+           <view style={styles.footerLine}/>
         <Text>Secrétariat : CERBO, Faculté de Médecine et de Pharmacie d’Oujda, Hay al Hikma, BP, 4867, {'\n'} Oujda, 60049, Maroc. Site Web : <Link src="http://fmpo.ump.ma/fr/recherche/comite-dethique" style={styles.link} >http://fmpo.ump.ma/fr/recherche/comite-dethique </Link></Text>
       </View>
       </Page>

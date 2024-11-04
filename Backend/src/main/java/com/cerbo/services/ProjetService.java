@@ -222,7 +222,7 @@ public class ProjetService {
         projetDetailsDto.setPopulationCible(projet.getPopulationCible());
         projetDetailsDto.setStatut(projet.getStatut());
         projetDetailsDto.setInvestigateur(projet.getInvestigateur());
-
+        projetDetailsDto.setDateSoumission(projet.getDateSoumission());
         if (projet.getStatut().equals("valider") && projet.getDateValidationFinal() != null) {
             LocalDate DateNow = LocalDate.now();
             Period period = Period.between(projet.getDateValidationFinal(), DateNow);

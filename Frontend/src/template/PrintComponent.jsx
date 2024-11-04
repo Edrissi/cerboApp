@@ -171,9 +171,9 @@ const InvoiceDocument = ({commentData,dateOf,reference,dateDepot,invis,intitule}
             <Image style={styles.image1} src="/public/img/cerboSignature.jpg" />
         </View>
 
-    <View style={styles.footer}>
+    <View style={styles.footer} fixed>
         <view style={styles.footerLine}/>
-        <Text>Secrétariat : CERBO, Faculté de Médecine et de Pharmacie d’Oujda, Hay al Hikma, BP, 4867, {'\n'} Oujda, 60049, Maroc. Site Web : <Link src="http://fmpo.ump.ma/fr/recherche/comite-dethique" style={styles.link} >http://fmpo.ump.ma/fr/recherche/comite-dethique </Link></Text>
+        <Text fixed>Secrétariat : CERBO, Faculté de Médecine et de Pharmacie d’Oujda, Hay al Hikma, BP, 4867, {'\n'} Oujda, 60049, Maroc. Site Web : <Link src="http://fmpo.ump.ma/fr/recherche/comite-dethique" style={styles.link} >http://fmpo.ump.ma/fr/recherche/comite-dethique </Link></Text>
       </View>
       </Page>
     </Document>

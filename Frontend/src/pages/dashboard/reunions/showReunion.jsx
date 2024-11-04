@@ -43,6 +43,7 @@ import ValiderProjet from '@/api/ValiderProjet';
 import TemplateAvisFinal from '@/template/templateAvisFinal';
 import FetchReunion from '@/api/FetchReunion';
 import { Reunions } from '..';
+import TemplatePvReunion from '@/template/pvReunion';
 
 export function ShowReunion(isAdmin) {
  
@@ -284,7 +285,7 @@ export function ShowReunion(isAdmin) {
   };
 
 
-  console.log(reunion);
+console.log(Array.isArray(reunion.membresPresents)); 
 
   if (loader===true) return <Loading />
   return (
@@ -304,7 +305,16 @@ export function ShowReunion(isAdmin) {
           </Typography>
         </div>
         </CardHeader>
+        
         <CardBody>
+        {reunion?.membresPresents?.length > 0 ? (
+        <div><PDFDownloadLink document={<TemplatePvReunion dateSession={reunion.date} dateReunion={reunion.date} membresPresents={reunion.membresPresents} projets={reunion.projets}/>} fileName="pvReunion.pdf">
+                          {({ blob, url, loading, error }) =>
+                            loading ? 'Loading document...' : <div className='underline text-blue-600'>PV Reunion</div>
+                          }
+                        </PDFDownloadLink></div>
+        ):<div>en cours ...</div>}
+
         <Typography variant="h6">Liste des Membres Présents :</Typography>
           <ul>
             {reunion?.membresPresents?.length > 0 ? (
@@ -320,6 +330,8 @@ export function ShowReunion(isAdmin) {
           </CardBody>
 
           <CardBody>
+           
+          
         <Typography variant="h6">Liste des Projets examinées:</Typography>
           <ul>
             {reunion?.projets?.length > 0 ? (

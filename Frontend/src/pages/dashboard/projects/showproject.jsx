@@ -151,8 +151,6 @@ export function ShowProject(isAdmin) {
     {
       title:"fiche Information Arabe",
       value:projectdata.ficheInformationArabe,
-      value:projectdata.ficheInformationArabe, 
-
     },
     {
       title:"fiche Information Francais",
@@ -534,7 +532,7 @@ export function ShowProject(isAdmin) {
                         >
                           Decision Final : 
                         </Typography>
-                        <PDFDownloadLink  document={<TemplateAvisFinal   />} fileName="rapport.pdf">
+                        <PDFDownloadLink  document={<TemplateAvisFinal reference={projectdata.ref} intitule={projectdata.intituleProjet} investigateurNom={projectdata.investigateur.nom} investigateurPrenom={projectdata.investigateur.prenom} dateSoummission={projectdata.dateSoumission} statut={"favorable"} />} fileName="rapport.pdf">
                           {({ blob, url, loading, error }) =>
                             loading ? 'Loading document...' : <div className='underline text-blue-600'>PV final 1</div>
                           }

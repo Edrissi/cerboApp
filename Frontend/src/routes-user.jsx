@@ -7,9 +7,10 @@ import {
     Cog6ToothIcon,
     UsersIcon,
     TableCellsIcon,
-    ClipboardDocumentListIcon 
+    ClipboardDocumentListIcon, 
+    UserGroupIcon
   } from "@heroicons/react/24/solid";
-  import { Profile} from "@/pages/dashboard";
+  import { Profile, Reunions} from "@/pages/dashboard";
  
   import UserProjects from "./pages/dashboard/projects/userprojects";
   import { ProjectTable ,CreateProject,EditProject,ShowProject} from "@/pages/dashboard";
@@ -24,6 +25,12 @@ import { ShowReunion } from "./pages/dashboard/reunions/showReunion";
     {
       layout: "user",
       pages: [
+        {
+          icon: <UserGroupIcon {...icon} />,
+          name: "reunions",
+          path: "/reunions",
+          element: <Reunions />,
+        },
         {
           icon: <TableCellsIcon  {...icon} />,
           name: "projets",
