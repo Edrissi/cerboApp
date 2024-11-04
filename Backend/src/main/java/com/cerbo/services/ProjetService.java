@@ -8,12 +8,10 @@ import com.cerbo.Dto.ProjetRequestDto;
 import com.cerbo.mapper.ProjectMapper;
 import com.cerbo.models.ApplicationUser;
 import com.cerbo.models.Projet;
-import com.cerbo.models.ProjetValide;
 import com.cerbo.repository.ProjetRepository;
 import com.cerbo.repository.ProjetValideRepository;
 import com.cerbo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +19,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import static com.cerbo.mapper.ProjectMapper.convertMultipartFileToByteArray;
@@ -98,6 +95,7 @@ public class ProjetService {
         projet.setQuantitePrelevement(projetRequestDto.getQuantitePrelevement());
         projet.setSourcefinancement(projetRequestDto.getSourceFinancement());
         projet.setProgrammeEmploiFinancement(projetRequestDto.getProgrammeEmploiFinancement());
+        if(!projet.getStatut().equalsIgnoreCase("nouveau")) projet.setStatut("corrigé");
 
         projet.setDescriptifProjet(null);
         if (descriptifProjet != null && !descriptifProjet.isEmpty()) {
@@ -152,7 +150,6 @@ public class ProjetService {
         try {
            savedProject = projetRepository.save(projet);
         }catch (Exception e){
-            System.out.println("Il exist un problemme dans la mise a jour de projet");
             throw new RuntimeException(e.getMessage(), e.getCause());
         }
         List<AutreInvestigateurDto> autreInvestigateurDtoList = projetRequestDto.getAutreInvestigateurDtos();
@@ -179,18 +176,6 @@ public class ProjetService {
                         projet.getRef(),
                         projet.getDernierExamination()))
                 .collect(Collectors.toList());
-    }
-
-    public void ajouterReferenceEtFinDernierExamination(String ref, LocalDate date, Long id){
-        Projet projet;
-        LocalDate dateNow = LocalDate.now();
-        String refe = "";
-        projet = projetRepository.findById(id).orElseThrow(() -> new RuntimeException("Projet not found"));
-        projet.setRef(ref);
-
-        projet.setDernierExamination(dateNow);
-        projet.setStatut("revised");
-        projetRepository.save(projet);
     }
 
     public String validerProjet(Long id, String avis) {
@@ -253,22 +238,16 @@ public class ProjetService {
     private String genererReferenceProjet() {
         int annee = LocalDate.now().getYear();
         int dernierNumeroProjet = getDernierNumeroProjet(annee);
-
-
-            int nouveauNumero = (dernierNumeroProjet == 0) ? 100 : dernierNumeroProjet + 1;
-
-
+        int nouveauNumero = (dernierNumeroProjet == 0) ? 100 : dernierNumeroProjet + 1;
         return String.format("%03d/%d", nouveauNumero, annee);
     }
 
     private int getDernierNumeroProjet(int annee) {
-        Projet dernierProjet = projetRepository.findTopByRefEndingWith(String.valueOf(annee)).orElseThrow(
+        Projet dernierProjet = projetRepository.findFirstByOrderByIdDesc().orElseThrow(
                 ()-> new RuntimeException("Project not found")
         );
-        if (dernierProjet != null) {
-            String[] parts = dernierProjet.getRef().split("/");
-            return Integer.parseInt(parts[0]);
-        }
-        return 0;
+        String[] parts = dernierProjet.getRef().split("/");
+        if(Integer.parseInt(parts[1]) != annee) return 0;
+        return Integer.parseInt(parts[0]);
     }
 }

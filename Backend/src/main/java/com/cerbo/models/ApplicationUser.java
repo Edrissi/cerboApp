@@ -62,6 +62,10 @@ public class ApplicationUser implements UserDetails{
 	@Column(nullable = true)
 	private YearMonth lastMeet;
 
+	private int numberOfAbsences;
+
+	private int numberOfAbsencesPerYear;
+
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
         name="user_role_junction",

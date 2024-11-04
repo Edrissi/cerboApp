@@ -15,6 +15,9 @@ public interface ProjetRepository extends JpaRepository<Projet, Long> {
 
     Optional<Projet> findTopByRefEndingWith(String annee);
 
+    Optional<Projet> findTopByOrderByDateSoumissionDesc();
+    Optional<Projet> findFirstByOrderByIdDesc();
+
     @Override
     List<Projet> findAll();
 

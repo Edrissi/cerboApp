@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Alerte d'Absences</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .alert {
+            font-size: 1.2em;
+            color: #D9534F; /* Rouge pour signaler une alerte */
+            text-align: center;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Alerte d'Absences Consécutives</h2>
+    </div>
+    <p>Bonjour,</p>
+    <p>Nous vous informons que vous avez dépassé trois absences consécutives lors des réunions du comité.</p>
+    <div class="alert">Veuillez noter qu'une telle régularité d'absence pourrait entraîner des conséquences.</div>
+    <p>Merci de bien vouloir nous contacter si vous avez des questions ou besoin d'assistance.</p>
+    <div class="footer">
+        <p>&copy; 2024 CERBO. Comité Éthique.</p>
+    </div>
+</div>
+
+</body>
+</html>

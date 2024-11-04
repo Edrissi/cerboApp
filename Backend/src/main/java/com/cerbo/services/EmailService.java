@@ -59,4 +59,24 @@ public class EmailService {
         }
     }
 
+    public void sendAlerteAbsences(String to){
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject("Alerte d'Absences");
+
+
+            Context context = new Context();
+
+            String htmlBody = templateEngine.process("templateEmailForAbsence", context);
+            helper.setText(htmlBody, true);
+
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
